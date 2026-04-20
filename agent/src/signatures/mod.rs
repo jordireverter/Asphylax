@@ -6,7 +6,7 @@ use sha2::{Digest, Sha256};
 
 use crate::models::MalwareSignature;
 
-const SIGNATURES_FILE: &str = "signatures.json";
+const SIGNATURES_FILE: &str = "../data/signatures.json";
 
 pub fn check_file_signature(path_str: &str) -> Result<Option<String>, String> {
     let path = Path::new(path_str);
