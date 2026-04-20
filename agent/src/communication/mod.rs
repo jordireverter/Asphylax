@@ -67,7 +67,7 @@ fn handle_client(mut stream: TcpStream) -> std::io::Result<()> {
                     },
                 }
             }
-
+            
             _ => ResponseMessage {
                 status: "error".to_string(),
                 message: format!("Acció desconeguda: {}", req.action),
