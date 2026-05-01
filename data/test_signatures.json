@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "updated_at": null,
+  "source": {
+    "name": "manual_test",
+    "type": "test"
+  },
+  "entries": [
+    {
+      "id": "sha256:ABC...",
+      "name": "Asphylax-Test-Detection",
+      "family": "test",
+      "hash_type": "sha256",
+      "hash_value": "d85f2533613c246b17d2700fb5fc274021e1f174a6665c53620ce29b295f3dbf",
+      "severity": "high",
+      "confidence": 100,
+      "tags": ["test"],
+      "source": "manual",
+      "first_seen": null,
+      "last_seen": null,
+      "reference": null,
+      "enabled": true
+    }
+  ]
+}

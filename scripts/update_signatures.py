@@ -5,7 +5,9 @@ import tempfile
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-
+import io
+import zipfile
+import gzip
 import requests
 
 
@@ -76,7 +78,7 @@ def save_state(state: Dict[str, Any]) -> None:
 
 
 def load_existing_signatures() -> Dict[str, Any]:
-    return load_json_file(
+    db = load_json_file(
         SIGNATURES_FILE,
         {
             "version": 1,
@@ -85,6 +87,27 @@ def load_existing_signatures() -> Dict[str, Any]:
             "entries": [],
         },
     )
+
+    if isinstance(db, list):
+        return {
+            "version": 1,
+            "updated_at": now_iso(),
+            "source": {"name": "legacy", "type": "converted"},
+            "entries": db,
+        }
+
+    if not isinstance(db, dict):
+        return {
+            "version": 1,
+            "updated_at": now_iso(),
+            "source": {"name": "custom", "type": "manual"},
+            "entries": [],
+        }
+
+    if "entries" not in db:
+        db["entries"] = []
+
+    return db
 
 
 def should_update(state: Dict[str, Any]) -> bool:
@@ -179,35 +202,106 @@ def download_malwarebazaar_csv(auth_key: str, output_csv: Path) -> None:
     output_csv.write_bytes(response.content)
 
 
+def clean_csv_value(value: str) -> str:
+    return value.strip().strip('"').strip()
+
+
 def build_entries_from_csv(csv_path: Path) -> List[Dict[str, Any]]:
     entries: List[Dict[str, Any]] = []
 
-    with csv_path.open("r", encoding="utf-8", newline="") as f:
-        reader = csv.DictReader(f)
+    with open_csv_text(csv_path) as f:
+        reader = csv.reader(f)
 
         for row in reader:
-            sha256 = (row.get("sha256_hash") or row.get("sha256") or "").strip().lower()
-            if not sha256:
+            if not row:
                 continue
+
+            if row[0].startswith("#"):
+                continue
+
+            # Format MalwareBazaar:
+            # 0 first_seen
+            # 1 sha256_hash
+            # 2 md5_hash
+            # 3 sha1_hash
+            # 4 reporter
+            # 5 file_name
+            # 6 file_type_guess
+            # 7 mime_type
+            # 8 signature
+            # ...
+            if len(row) < 2:
+                continue
+
+            first_seen = clean_csv_value(row[0])
+            sha256 = clean_csv_value(row[1]).lower()
+
+            if len(sha256) != 64:
+                continue
+
+            file_name = clean_csv_value(row[5]) if len(row) > 5 else DEFAULT_NAME
+            signature_name = clean_csv_value(row[8]) if len(row) > 8 else None
+
+            if signature_name == "n/a" or not signature_name:
+                signature_name = file_name or DEFAULT_NAME
 
             entry = normalize_entry(
                 hash_value=sha256,
-                name=row.get("signature") or row.get("file_name") or DEFAULT_NAME,
-                family=row.get("signature"),
+                name=signature_name,
+                family=signature_name,
                 source="malwarebazaar",
                 tags=["imported", "hash", "malwarebazaar"],
-                first_seen=row.get("first_seen"),
-                last_seen=row.get("last_seen"),
-                reference=row.get("sha256_hash"),
+                first_seen=first_seen,
+                last_seen=None,
+                reference=sha256,
             )
+
             entries.append(entry)
 
+    print(f"Entrades llegides: {len(entries)}", flush=True)
     return entries
+
+def open_csv_text(csv_path: Path):
+    with csv_path.open("rb") as f:
+        magic = f.read(4)
+
+    if magic.startswith(b"PK"):
+        zip_file = zipfile.ZipFile(csv_path)
+        csv_names = [name for name in zip_file.namelist() if name.endswith(".csv")]
+
+        if not csv_names:
+            raise RuntimeError("El ZIP descarregat no conté cap fitxer CSV")
+
+        return io.TextIOWrapper(
+            zip_file.open(csv_names[0], "r"),
+            encoding="utf-8",
+            errors="replace",
+            newline=""
+        )
+
+    if magic.startswith(b"\x1f\x8b"):
+        return gzip.open(
+            csv_path,
+            "rt",
+            encoding="utf-8",
+            errors="replace",
+            newline=""
+        )
+
+    return csv_path.open(
+        "r",
+        encoding="utf-8",
+        errors="replace",
+        newline=""
+    )
 
 
 def update_signatures() -> bool:
     ensure_data_dir()
+    print("Llegint estat...", flush=True)
     state = load_state()
+
+    print("Comprovant si toca actualitzar...", flush=True)
 
     if not should_update(state):
         print("No toca actualitzar encara.")
@@ -224,10 +318,14 @@ def update_signatures() -> bool:
         raise RuntimeError("Falta MALWAREBAZAAR_AUTH_KEY")
 
     try:
+        print("Descarregant CSV de MalwareBazaar...", flush=True)
         download_malwarebazaar_csv(auth_key, TEMP_CSV_FILE)
 
         db = load_existing_signatures()
+        print("Construint signatures des del CSV...", flush=True)
         new_entries = build_entries_from_csv(TEMP_CSV_FILE)
+
+        print(f"Entrades llegides: {len(new_entries)}", flush=True)
         changed = upsert_entries(db, new_entries)
 
         db["version"] = 1

@@ -1,57 +1,92 @@
+use std::collections::HashMap;
 use std::fs;
-use std::io::Read;
-use std::path::Path;
 
 use sha2::{Digest, Sha256};
 
-use crate::models::MalwareSignature;
+use crate::models::{MalwareSignature, SignaturesDatabase};
 
 const SIGNATURES_FILE: &str = "../data/signatures.json";
+const TEST_SIGNATURES_FILE: &str = "../data/test_signatures.json";
 
-pub fn check_file_signature(path_str: &str) -> Result<Option<String>, String> {
-    let path = Path::new(path_str);
+pub type SignaturesMap = HashMap<String, MalwareSignature>;
 
-    if !path.exists() {
-        return Err("El fitxer no existeix".to_string());
-    }
 
-    if !path.is_file() {
-        return Err("El path indicat no és un fitxer".to_string());
-    }
+fn load_signatures_file(
+    path: &str,
+    map: &mut SignaturesMap,
+) -> Result<usize, String> {
 
-    let file_hash = calculate_sha256(path)?;
-    let signatures = load_signatures()?;
+    println!("Carregant signatures des de: {}", path);
 
-    for signature in signatures {
-        if signature.hash_type.to_lowercase() == "sha256"
-            && signature.hash_value.to_lowercase() == file_hash
-        {
-            return Ok(Some(signature.name));
+    let content = fs::read_to_string(path)
+        .map_err(|e| format!("Error llegint {}: {}", path, e))?;
+
+    let db: SignaturesDatabase =
+        serde_json::from_str(&content)
+            .map_err(|e| format!("Error parsejant JSON {}: {}", path, e))?;
+
+    let mut loaded = 0;
+
+    for signature in db.entries {
+        if signature.enabled {
+            map.insert(signature.hash_value.clone(), signature);
+            loaded += 1;
         }
     }
 
-    Ok(None)
+    Ok(loaded)
 }
 
-fn load_signatures() -> Result<Vec<MalwareSignature>, String> {
-    let content = fs::read_to_string(SIGNATURES_FILE)
-        .map_err(|_| "No s'ha pogut llegir el fitxer de signatures".to_string())?;
 
-    serde_json::from_str(&content)
-        .map_err(|_| "El fitxer de signatures no és un JSON vàlid".to_string())
+pub fn load_signatures() -> Result<SignaturesMap, String> {
+
+    let mut map = HashMap::new();
+
+    let real_loaded =
+        load_signatures_file(SIGNATURES_FILE, &mut map)?;
+
+    println!("Signatures reals carregades: {}", real_loaded);
+
+    let test_loaded =
+        load_signatures_file(TEST_SIGNATURES_FILE, &mut map)?;
+
+    println!("Signatures test carregades: {}", test_loaded);
+
+    println!("Total signatures al HashMap: {}", map.len());
+
+    Ok(map)
 }
 
-fn calculate_sha256(path: &Path) -> Result<String, String> {
-    let mut file = fs::File::open(path)
-        .map_err(|_| "No s'ha pogut obrir el fitxer".to_string())?;
 
-    let mut buffer = Vec::new();
-    file.read_to_end(&mut buffer)
-        .map_err(|_| "No s'ha pogut llegir el fitxer".to_string())?;
+pub fn check_hash(
+    hash: &str,
+    signatures: &SignaturesMap,
+) -> Option<MalwareSignature> {
+    signatures.get(hash).cloned()
+}
+
+
+pub fn calculate_sha256(path: &str) -> Result<String, String> {
+    let bytes = fs::read(path)
+        .map_err(|e| format!("Error llegint fitxer: {}", e))?;
 
     let mut hasher = Sha256::new();
-    hasher.update(&buffer);
+    hasher.update(bytes);
 
-    let result = hasher.finalize();
-    Ok(format!("{:x}", result))
+    Ok(format!("{:x}", hasher.finalize()))
+}
+
+
+
+pub fn check_file_signature(
+    path: &str,
+    signatures: &SignaturesMap,
+) -> Result<Option<String>, String> {
+
+    let hash = calculate_sha256(path)?;
+
+    match check_hash(&hash, signatures) {
+        Some(signature) => Ok(Some(signature.name)),
+        None => Ok(None),
+    }
 }

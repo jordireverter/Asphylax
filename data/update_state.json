@@ -1,6 +1,6 @@
 {
-  "last_successful_update": null,
-  "last_attempt": "2026-04-20T22:04:54Z",
+  "last_successful_update": "2026-05-01T11:27:40Z",
+  "last_attempt": "2026-05-01T11:19:32Z",
   "source": "malwarebazaar",
-  "status": "error"
+  "status": "ok"
 }

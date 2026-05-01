@@ -3,12 +3,28 @@ mod models;
 mod scanner;
 mod signatures;
 mod updater;
+mod yara_engine;
 
 fn main() {
     updater::start_update_loop();
 
-    if let Err(error) = communication::start_server() {
+    let signatures_map = match signatures::load_signatures() {
+        Ok(map) => map,
+        Err(error) => {
+            eprintln!("Error carregant signatures: {}", error);
+            return;
+        }
+    };
+
+    let yara_engine = match yara_engine::YaraEngine::load() {
+        Ok(engine) => engine,
+        Err(error) => {
+            eprintln!("Error carregant YARA: {}", error);
+            return;
+        }
+    };
+
+    if let Err(error) = communication::start_server(signatures_map, yara_engine) {
         eprintln!("Error iniciant l'agent: {}", error);
     }
 }
-
