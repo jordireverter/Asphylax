@@ -81,12 +81,11 @@ pub fn calculate_sha256(path: &str) -> Result<String, String> {
 pub fn check_file_signature(
     path: &str,
     signatures: &SignaturesMap,
-) -> Result<Option<String>, String> {
-
+) -> Result<Option<MalwareSignature>, String> {
     let hash = calculate_sha256(path)?;
 
     match check_hash(&hash, signatures) {
-        Some(signature) => Ok(Some(signature.name)),
+        Some(signature) => Ok(Some(signature)),
         None => Ok(None),
     }
 }

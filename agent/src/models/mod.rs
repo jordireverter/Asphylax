@@ -6,10 +6,21 @@ pub struct RequestMessage {
     pub path: Option<String>,
 }
 
+#[derive(Debug, Serialize, Clone)]
+pub struct Detection {
+    pub path: String,
+    pub engine: String,
+    pub name: String,
+    pub category: String,
+    pub severity: String,
+    pub confidence: i32,
+    pub source: String,
+}
+
 #[derive(Debug, Serialize)]
 pub struct ScanResult {
     pub scanned_files: usize,
-    pub detections: Vec<String>,
+    pub detections: Vec<Detection>,
 }
 
 #[derive(Debug, Serialize)]
@@ -59,4 +70,10 @@ pub struct PartialSignature {
 pub struct PartialSignaturesDatabase {
     pub version: i32,
     pub entries: Vec<PartialSignature>,
+}
+
+
+#[derive(Debug, Deserialize)]
+pub struct AppConfig {
+    pub max_yara_file_size_mb: u64,
 }

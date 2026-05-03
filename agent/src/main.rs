@@ -4,6 +4,7 @@ mod scanner;
 mod signatures;
 mod updater;
 mod yara_engine;
+mod config;
 
 fn main() {
     updater::start_update_loop();
@@ -24,7 +25,10 @@ fn main() {
         }
     };
 
-    if let Err(error) = communication::start_server(signatures_map, yara_engine) {
+    let config = config::load_config()
+    .expect("No s'ha pogut carregar config.json");
+
+    if let Err(error) = communication::start_server(signatures_map, yara_engine, config) {
         eprintln!("Error iniciant l'agent: {}", error);
     }
 }

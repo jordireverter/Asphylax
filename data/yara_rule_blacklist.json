@@ -1,0 +1,6 @@
+{
+  "disabled_rules": [
+    "gen_impacket_tools.yar",
+    "gen_powershell_invocation.yar"
+  ]
+}

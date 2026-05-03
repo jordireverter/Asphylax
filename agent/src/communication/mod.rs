@@ -1,7 +1,7 @@
 use std::io::{BufRead, BufReader, Write};
 use std::net::{TcpListener, TcpStream};
 
-use crate::models::{RequestMessage, ResponseMessage};
+use crate::models::{AppConfig, RequestMessage, ResponseMessage};
 use crate::scanner;
 use crate::signatures::SignaturesMap;
 use crate::yara_engine::YaraEngine;
@@ -11,6 +11,7 @@ const ADDRESS: &str = "127.0.0.1:7878";
 pub fn start_server(
     signatures_map: SignaturesMap,
     yara_engine: YaraEngine,
+    config: AppConfig
 ) -> std::io::Result<()> {
     let listener = TcpListener::bind(ADDRESS)?;
     println!("Agent escoltant a {}", ADDRESS);
@@ -18,7 +19,7 @@ pub fn start_server(
     for stream in listener.incoming() {
         match stream {
             Ok(stream) => {
-                if let Err(error) = handle_client(stream, &signatures_map, &yara_engine) {
+                if let Err(error) = handle_client(stream, &signatures_map, &yara_engine, &config) {
                     eprintln!("Error gestionant client: {}", error);
                 }
             }
@@ -35,6 +36,7 @@ fn handle_client(
     mut stream: TcpStream,
     signatures_map: &SignaturesMap,
     yara_engine: &YaraEngine,
+    config: &AppConfig,
 ) -> std::io::Result<()> {
     let mut reader = BufReader::new(stream.try_clone()?);
     let mut input = String::new();
@@ -50,9 +52,80 @@ fn handle_client(
                 message: "Agent actiu".to_string(),
                 data: None,
             },
+            "scan_progress" => match req.path {
+                Some(path) => {
+                    let scan_result = scanner::scan_path_with_progress(
+                        &path,
+                        signatures_map,
+                        yara_engine,
+                        config,
+                        |scanned, total| {
+                            let percent = if total == 0 {
+                                100
+                            } else {
+                                (scanned * 100) / total
+                            };
 
+                            let progress_json = serde_json::json!({
+                                "type": "progress",
+                                "percent": percent,
+                                "scanned_files": scanned,
+                                "total_files": total
+                            })
+                            .to_string()
+                                + "\n";
+
+                            stream
+                                .write_all(progress_json.as_bytes())
+                                .map_err(|e| format!("Error enviant progrés: {}", e))?;
+
+                            stream
+                                .flush()
+                                .map_err(|e| format!("Error fent flush: {}", e))?;
+
+                            Ok(())
+                        },
+                    );
+
+                    match scan_result {
+                        Ok(result) => {
+                            let final_json = serde_json::json!({
+                                "type": "done",
+                                "status": "ok",
+                                "message": "Scan completat",
+                                "data": result
+                            })
+                            .to_string()
+                                + "\n";
+
+                            stream.write_all(final_json.as_bytes())?;
+                            stream.flush()?;
+                            return Ok(());
+                        }
+                        Err(error) => {
+                            let error_json = serde_json::json!({
+                                "type": "done",
+                                "status": "error",
+                                "message": error,
+                                "data": null
+                            })
+                            .to_string()
+                                + "\n";
+
+                            stream.write_all(error_json.as_bytes())?;
+                            stream.flush()?;
+                            return Ok(());
+                        }
+                    }
+                }
+                None => ResponseMessage {
+                    status: "error".to_string(),
+                    message: "Falta el camp 'path'".to_string(),
+                    data: None,
+                },
+            },
             "scan" => match req.path {
-                Some(path) => match scanner::scan_path(&path, signatures_map, yara_engine) {
+                Some(path) => match scanner::scan_path(&path, signatures_map, yara_engine, config) {
                     Ok(result) => ResponseMessage {
                         status: "ok".to_string(),
                         message: "Scan completat".to_string(),

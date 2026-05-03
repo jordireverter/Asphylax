@@ -1,0 +1,7 @@
+{
+  "max_yara_file_size_mb": 50,
+  "scan_roots": [
+    "C:\\Users\\jordi\\Asphylax\\proves",
+    "C:\\Users\\jordi\\Downloads"
+  ]
+}
