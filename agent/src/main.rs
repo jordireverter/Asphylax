@@ -5,6 +5,9 @@ mod signatures;
 mod updater;
 mod yara_engine;
 mod config;
+mod decision_engine;
+mod heuristics;
+mod pe_analysis;
 
 fn main() {
     updater::start_update_loop();

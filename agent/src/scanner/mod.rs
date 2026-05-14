@@ -1,11 +1,16 @@
 use std::collections::HashSet;
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
+use std::sync::atomic::{AtomicUsize, Ordering};
 
-use crate::models::{Detection, ScanResult, AppConfig};
+use rayon::prelude::*;
+
+use crate::decision_engine;
+use crate::heuristics;
+use crate::models::{AppConfig, Detection, FileScanResult, ScanResult};
+use crate::pe_analysis;
 use crate::signatures::{self, SignaturesMap};
 use crate::yara_engine::YaraEngine;
-
 
 pub fn scan_path(
     path_str: &str,
@@ -13,119 +18,24 @@ pub fn scan_path(
     yara_engine: &YaraEngine,
     config: &AppConfig,
 ) -> Result<ScanResult, String> {
-    let path = Path::new(path_str);
-
-    if !path.exists() {
-        return Err("El path no existeix".to_string());
-    }
-
-    let mut result = ScanResult {
-        scanned_files: 0,
-        detections: Vec::new(),
-    };
-
-    let mut seen_detections = HashSet::new();
-
-    scan_recursive(path, &mut result, &mut seen_detections, signatures_map, yara_engine, config)?;
-
-    Ok(result)
+    scan_path_with_progress(
+        path_str,
+        signatures_map,
+        yara_engine,
+        config,
+        |_scanned, _total| Ok(()),
+    )
 }
-
-fn scan_recursive(
-    path: &Path,
-    result: &mut ScanResult,
-    seen_detections: &mut HashSet<String>,
-    signatures_map: &SignaturesMap,
-    yara_engine: &YaraEngine,
-    config: &AppConfig,
-) -> Result<(), String> {
-    if path.is_file() {
-        result.scanned_files += 1;
-
-        let path_str = path.to_string_lossy().to_string();
-
-        if let Some(signature) = signatures::check_file_signature(&path_str, signatures_map)? {
-            add_detection(
-                result,
-                seen_detections,
-                Detection {
-                    path: path_str.clone(),
-                    engine: "hash".to_string(),
-                    name: signature.name,
-                    category: "known_malware".to_string(),
-                    severity: signature.severity,
-                    confidence: signature.confidence,
-                    source: signature.source,
-                },
-            );
-        }
-
-        let metadata = fs::metadata(path)
-            .map_err(|e| format!("No es pot llegir metadata del fitxer: {}", e))?;
-
-        let max_size_bytes = config.max_yara_file_size_mb * 1024 * 1024;
-
-        if metadata.len() <= max_size_bytes {
-            let yara_detections = yara_engine.scan_file(&path_str)?;
-
-            for detection in yara_detections {
-                add_detection(result, seen_detections, detection);
-            }
-        }
-
-        return Ok(());
-    }
-
-    if path.is_dir() {
-        let entries = fs::read_dir(path)
-            .map_err(|_| format!("No es pot llegir el directori: {}", path.to_string_lossy()))?;
-
-        for entry in entries {
-            let entry = entry.map_err(|_| "Error llegint entrada del directori".to_string())?;
-            let entry_path = entry.path();
-
-            scan_recursive(
-                &entry_path,
-                result,
-                seen_detections,
-                signatures_map,
-                yara_engine,
-                config,
-            )?;
-        }
-
-        return Ok(());
-    }
-
-    Ok(())
-}
-
-fn add_detection(
-    result: &mut ScanResult,
-    seen_detections: &mut HashSet<String>,
-    detection: Detection,
-) {
-    let key = format!(
-        "{}:{}:{}",
-        detection.path, detection.engine, detection.name
-    );
-
-    if seen_detections.insert(key) {
-        result.detections.push(detection);
-    }
-}
-
-
 
 pub fn scan_path_with_progress<F>(
     path_str: &str,
     signatures_map: &SignaturesMap,
     yara_engine: &YaraEngine,
     config: &AppConfig,
-    mut on_progress: F,
+    on_progress: F,
 ) -> Result<ScanResult, String>
 where
-    F: FnMut(usize, usize) -> Result<(), String>,
+    F: Fn(usize, usize) -> Result<(), String> + Sync,
 {
     let path = Path::new(path_str);
 
@@ -133,100 +43,82 @@ where
         return Err("El path no existeix".to_string());
     }
 
-    let total_files = count_files(path)?;
+    let mut files = Vec::new();
+    collect_files(path, &mut files)?;
 
-    let mut result = ScanResult {
-        scanned_files: 0,
-        detections: Vec::new(),
-    };
+    let total_files = files.len();
 
-    let mut seen_detections = HashSet::new();
-
-    scan_recursive_with_progress(
-        path,
-        &mut result,
-        &mut seen_detections,
-        signatures_map,
-        yara_engine,
-        config,
-        total_files,
-        &mut on_progress,
-    )?;
-
-    Ok(result)
-}
-
-fn count_files(path: &Path) -> Result<usize, String> {
-    if path.is_file() {
-        return Ok(1);
+    if total_files == 0 {
+        return Ok(ScanResult {
+            scanned_files: 0,
+            total_detections: 0,
+            final_score: 0,
+            classification: "clean".to_string(),
+            files: Vec::new(),
+        });
     }
 
-    if path.is_dir() {
-        let mut total = 0;
+    let scanned_counter = AtomicUsize::new(0);
+    let last_percent_sent = AtomicUsize::new(0);
 
-        let entries = fs::read_dir(path)
-            .map_err(|_| format!("No es pot llegir el directori: {}", path.to_string_lossy()))?;
+    let partial_results: Result<Vec<FileScanResult>, String> = files
+        .par_iter()
+        .map(|file_path| {
+            let file_result = scan_single_file(file_path, signatures_map, yara_engine, config)?;
 
-        for entry in entries {
-            let entry = entry.map_err(|_| "Error llegint entrada del directori".to_string())?;
-            total += count_files(&entry.path())?;
-        }
+            let scanned = scanned_counter.fetch_add(1, Ordering::SeqCst) + 1;
+            let percent = (scanned * 100) / total_files;
 
-        return Ok(total);
-    }
+            let mut previous = last_percent_sent.load(Ordering::SeqCst);
 
-    Ok(0)
-}
-
-fn scan_recursive_with_progress<F>(
-    path: &Path,
-    result: &mut ScanResult,
-    seen_detections: &mut HashSet<String>,
-    signatures_map: &SignaturesMap,
-    yara_engine: &YaraEngine,
-    config: &AppConfig,
-    total_files: usize,
-    on_progress: &mut F,
-) -> Result<(), String>
-where
-    F: FnMut(usize, usize) -> Result<(), String>,
-{
-    if path.is_file() {
-        result.scanned_files += 1;
-
-        let path_str = path.to_string_lossy().to_string();
-
-        if let Some(signature) = signatures::check_file_signature(&path_str, signatures_map)? {
-            add_detection(
-                result,
-                seen_detections,
-                Detection {
-                    path: path_str.clone(),
-                    engine: "hash".to_string(),
-                    name: signature.name,
-                    category: "known_malware".to_string(),
-                    severity: signature.severity,
-                    confidence: signature.confidence,
-                    source: signature.source,
-                },
-            );
-        }
-
-        let metadata = fs::metadata(path)
-            .map_err(|e| format!("No es pot llegir metadata del fitxer: {}", e))?;
-
-        let max_size_bytes = config.max_yara_file_size_mb * 1024 * 1024;
-
-        if metadata.len() <= max_size_bytes {
-            let yara_detections = yara_engine.scan_file(&path_str)?;
-
-            for detection in yara_detections {
-                add_detection(result, seen_detections, detection);
+            while percent > previous {
+                match last_percent_sent.compare_exchange(
+                    previous,
+                    percent,
+                    Ordering::SeqCst,
+                    Ordering::SeqCst,
+                ) {
+                    Ok(_) => {
+                        on_progress(scanned, total_files)?;
+                        break;
+                    }
+                    Err(current) => previous = current,
+                }
             }
-        }
 
-        on_progress(result.scanned_files, total_files)?;
+            Ok(file_result)
+        })
+        .collect();
 
+    let mut file_results = partial_results?;
+
+    file_results.retain(|file| !file.detections.is_empty());
+
+    let total_detections = file_results
+        .iter()
+        .map(|file| file.detections.len())
+        .sum::<usize>();
+
+    let final_score = file_results
+        .iter()
+        .map(|file| file.final_score)
+        .max()
+        .unwrap_or(0);
+
+    let classification = classify_global(final_score).to_string();
+
+    Ok(ScanResult {
+        scanned_files: total_files,
+        total_detections,
+        final_score,
+        classification,
+        files: file_results,
+    })
+}
+
+fn collect_files(path: &Path, files: &mut Vec<PathBuf>) -> Result<(), String> {
+    if path.is_file() {
+        files.push(path.to_path_buf());
         return Ok(());
     }
 
@@ -236,19 +128,99 @@ where
 
         for entry in entries {
             let entry = entry.map_err(|_| "Error llegint entrada del directori".to_string())?;
-
-            scan_recursive_with_progress(
-                &entry.path(),
-                result,
-                seen_detections,
-                signatures_map,
-                yara_engine,
-                config,
-                total_files,
-                on_progress,
-            )?;
+            collect_files(&entry.path(), files)?;
         }
     }
 
     Ok(())
+}
+
+fn scan_single_file(
+    path: &Path,
+    signatures_map: &SignaturesMap,
+    yara_engine: &YaraEngine,
+    config: &AppConfig,
+) -> Result<FileScanResult, String> {
+    let mut detections = Vec::new();
+    let path_str = path.to_string_lossy().to_string();
+
+    if let Some(signature) = signatures::check_file_signature(&path_str, signatures_map)? {
+        detections.push(Detection {
+            path: path_str.clone(),
+            engine: "hash".to_string(),
+            name: signature.name,
+            category: "known_malware".to_string(),
+            severity: signature.severity,
+            confidence: signature.confidence,
+            source: signature.source,
+        });
+    }
+
+    let metadata = fs::metadata(path)
+        .map_err(|e| format!("No es pot llegir metadata del fitxer: {}", e))?;
+
+    let max_size_bytes = if config.max_yara_file_size_mb == 0 {
+        u64::MAX
+    } else {
+        config.max_yara_file_size_mb * 1024 * 1024
+    };
+
+    if metadata.len() <= max_size_bytes {
+        let yara_detections = yara_engine.scan_file(&path_str)?;
+
+        for detection in yara_detections {
+            detections.push(detection);
+        }
+    }
+
+    let heuristic_detections = heuristics::analyze_file(path, config)?;
+
+    for detection in heuristic_detections {
+        detections.push(detection);
+    }
+
+    let pe_detections = pe_analysis::analyze_pe(path, config)?;
+
+    for detection in pe_detections {
+        detections.push(detection);
+    }
+
+    let detections = deduplicate_detections(detections);
+
+    let decision = decision_engine::classify(&detections);
+
+    Ok(FileScanResult {
+        path: path_str,
+        detections,
+        final_score: decision.score,
+        classification: decision.classification,
+    })
+}
+
+fn deduplicate_detections(detections: Vec<Detection>) -> Vec<Detection> {
+    let mut seen = HashSet::new();
+    let mut result = Vec::new();
+
+    for detection in detections {
+        let key = format!(
+            "{}:{}:{}",
+            detection.path, detection.engine, detection.name
+        );
+
+        if seen.insert(key) {
+            result.push(detection);
+        }
+    }
+
+    result
+}
+
+fn classify_global(score: i32) -> &'static str {
+    if score >= 80 {
+        "malware"
+    } else if score >= 50 {
+        "suspicious"
+    } else {
+        "clean"
+    }
 }

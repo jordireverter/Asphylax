@@ -14,12 +14,14 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
     QMainWindow,
+    QSizePolicy,
 )
 from PyQt6.QtGui import QIcon, QFont, QPixmap
 from PyQt6.QtCore import Qt, QSize, QPropertyAnimation, QEasingCurve
 
 from app.controllers.scan_controller import ScanController
 from app.controllers.scan_worker import ScanWorker
+
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 GUI_DIR = BASE_DIR / "gui"
@@ -30,9 +32,11 @@ class AsphylaxUI(QMainWindow):
         super().__init__()
 
         self.scan_controller = ScanController()
+        self.selected_scan_path = None
+        self.scan_worker = None
 
         self.setWindowTitle("Asphylax Antivirus")
-        self.setGeometry(200, 200, 1100, 650)
+        self.setGeometry(200, 200, 1200, 750)
         self.setWindowIcon(QIcon(str(GUI_DIR / "icons" / "logo.svg")))
 
         self.current_mode = "light"
@@ -91,7 +95,6 @@ class AsphylaxUI(QMainWindow):
     def create_scan_tab(self):
         widget = QWidget()
         layout = QVBoxLayout()
-        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         title = QLabel("Escaneig Antivirus")
         title.setFont(QFont("Segoe UI", 22, QFont.Weight.Bold))
@@ -133,9 +136,12 @@ class AsphylaxUI(QMainWindow):
         layout.addWidget(self.progress)
 
         self.result_list = QListWidget()
-        layout.addWidget(self.result_list)
-
-        self.selected_scan_path = None
+        self.result_list.setMinimumHeight(350)
+        self.result_list.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Expanding,
+        )
+        layout.addWidget(self.result_list, stretch=1)
 
         widget.setLayout(layout)
         return widget
@@ -166,6 +172,24 @@ class AsphylaxUI(QMainWindow):
         self.start_button.setEnabled(False)
         self.start_button.setText("ESCANEJANT")
 
+        effect = QGraphicsOpacityEffect(self.progress)
+        self.progress.setGraphicsEffect(effect)
+
+        fade = QPropertyAnimation(effect, b"opacity")
+        fade.setDuration(500)
+        fade.setStartValue(0)
+        fade.setEndValue(1)
+        fade.start()
+        self.fade_animation = fade
+
+        self.animation = QPropertyAnimation(self.start_button, b"size")
+        self.animation.setDuration(500)
+        self.animation.setStartValue(self.start_button.size())
+        self.animation.setEndValue(QSize(160, 160))
+        self.animation.setEasingCurve(QEasingCurve.Type.InOutQuad)
+        self.animation.setLoopCount(-1)
+        self.animation.start()
+
         self.scan_worker = ScanWorker(self.selected_scan_path)
         self.scan_worker.progress_changed.connect(self.update_scan_progress)
         self.scan_worker.scan_finished.connect(self.finish_scan)
@@ -177,11 +201,13 @@ class AsphylaxUI(QMainWindow):
     def finish_scan(self, response: dict):
         self.progress.setValue(100)
 
+        if hasattr(self, "animation"):
+            self.animation.stop()
+
         self.start_button.setText("ESCANEJAR")
         self.start_button.setEnabled(True)
 
         self.show_scan_result(response)
-
 
     def show_scan_result(self, response: dict):
         if response.get("status") != "ok":
@@ -193,35 +219,63 @@ class AsphylaxUI(QMainWindow):
             return
 
         data = response.get("data") or {}
+
         scanned_files = data.get("scanned_files", 0)
-        detections = data.get("detections", [])
+        total_detections = data.get("total_detections", 0)
+        final_score = data.get("final_score", 0)
+        classification = data.get("classification", "clean")
+        files = data.get("files", [])
+
+        self.result_list.clear()
 
         self.result_list.addItem(f"Fitxers escanejats: {scanned_files}")
-        self.result_list.addItem(f"Deteccions: {len(detections)}")
+        self.result_list.addItem(f"Fitxers amb deteccions: {len(files)}")
+        self.result_list.addItem(f"Deteccions totals: {total_detections}")
+        self.result_list.addItem(f"Score global: {final_score}")
+        self.result_list.addItem(f"Classificació global: {classification}")
+        self.result_list.addItem("")
 
-        for detection in detections:
-            path = detection.get("path", "")
-            engine = detection.get("engine", "")
-            name = detection.get("name", "")
-            severity = detection.get("severity", "")
-            confidence = detection.get("confidence", "")
-            category = detection.get("category", "")
+        for file_result in files:
+            path = file_result.get("path", "")
+            file_score = file_result.get("final_score", 0)
+            file_classification = file_result.get("classification", "clean")
+            detections = file_result.get("detections", [])
 
             self.result_list.addItem(
-                f"[{engine}] {name} | severity={severity} | confidence={confidence} | category={category} | {path}"
+                f"FITXER: {path}"
             )
+            self.result_list.addItem(
+                f"   Score: {file_score} | Classificació: {file_classification}"
+            )
+
+            for detection in detections:
+                engine = detection.get("engine", "")
+                name = detection.get("name", "")
+                severity = detection.get("severity", "")
+                confidence = detection.get("confidence", "")
+                category = detection.get("category", "")
+
+                self.result_list.addItem(
+                    f"   - [{engine}] {name} | severity={severity} | confidence={confidence} | category={category}"
+                )
+
+            self.result_list.addItem("")
 
         QMessageBox.information(
             self,
             "Escaneig complet",
-            f"Escaneig finalitzat.\nFitxers escanejats: {scanned_files}\nDeteccions: {len(detections)}",
+            f"Escaneig finalitzat.\n"
+            f"Fitxers escanejats: {scanned_files}\n"
+            f"Fitxers amb deteccions: {len(files)}\n"
+            f"Deteccions totals: {total_detections}\n"
+            f"Classificació: {classification}",
         )
 
     def create_heuristic_tab(self):
-        return self.simple_tab("Anàlisi heurística (pendent)", "Opció per activar/desactivar heurística")
+        return self.simple_tab("Anàlisi heurística", "Motor heurístic actiu dins l'escaneig principal.")
 
     def create_monitor_tab(self):
-        return self.simple_tab("Monitorització en temps real (pendent)", "Panell d'esdeveniments")
+        return self.simple_tab("Monitorització en temps real", "Funcionalitat pendent d'implementar.")
 
     def create_quarantine_tab(self):
         widget = QWidget()
@@ -245,7 +299,7 @@ class AsphylaxUI(QMainWindow):
         return widget
 
     def create_settings_tab(self):
-        return self.simple_tab("Configuració", "Botó per actualitzar signatures")
+        return self.simple_tab("Configuració", "Opcions de configuració del motor.")
 
     def simple_tab(self, text1, text2):
         widget = QWidget()

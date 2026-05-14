@@ -1,5 +1,31 @@
 {
-  "max_yara_file_size_mb": 50,
+  "max_yara_file_size_mb": 10,
+  "heuristics": {
+    "enabled": true,
+    "base64_min_length": 40,
+    "entropy_threshold": 7.5,
+
+    "confidence": {
+      "double_extension": 40,
+      "base64": 40,
+      "url": 30,
+      "combination": 60,
+      "high_combination": 70,
+
+      "powershell_encoded": 60,
+      "suspicious_command": 50,
+      "download_execute": 70
+    }
+  },
+  "pe_analysis": {
+    "enabled": true,
+    "confidence": {
+      "suspicious_import": 30,
+      "process_injection": 80,
+      "networking": 15,
+      "packer": 70
+    }
+  },
   "scan_roots": [
     "C:\\Users\\jordi\\Asphylax\\proves",
     "C:\\Users\\jordi\\Downloads"

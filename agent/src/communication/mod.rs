@@ -1,6 +1,6 @@
 use std::io::{BufRead, BufReader, Write};
 use std::net::{TcpListener, TcpStream};
-
+use std::sync::{Arc, Mutex};
 use crate::models::{AppConfig, RequestMessage, ResponseMessage};
 use crate::scanner;
 use crate::signatures::SignaturesMap;
@@ -54,12 +54,15 @@ fn handle_client(
             },
             "scan_progress" => match req.path {
                 Some(path) => {
+                    let progress_stream = Arc::new(Mutex::new(stream.try_clone()?));
+                    let progress_stream_clone = Arc::clone(&progress_stream);
+
                     let scan_result = scanner::scan_path_with_progress(
                         &path,
                         signatures_map,
                         yara_engine,
                         config,
-                        |scanned, total| {
+                        move |scanned, total| {
                             let percent = if total == 0 {
                                 100
                             } else {
@@ -75,11 +78,15 @@ fn handle_client(
                             .to_string()
                                 + "\n";
 
-                            stream
+                            let mut locked_stream = progress_stream_clone
+                                .lock()
+                                .map_err(|_| "No s'ha pogut bloquejar el socket de progrés".to_string())?;
+
+                            locked_stream
                                 .write_all(progress_json.as_bytes())
                                 .map_err(|e| format!("Error enviant progrés: {}", e))?;
 
-                            stream
+                            locked_stream
                                 .flush()
                                 .map_err(|e| format!("Error fent flush: {}", e))?;
 
@@ -89,6 +96,13 @@ fn handle_client(
 
                     match scan_result {
                         Ok(result) => {
+                            println!("================ RESULTAT SCAN ================");
+                            println!("Fitxers escanejats: {}", result.scanned_files);
+                            println!("Deteccions totals: {}", result.total_detections);
+                            println!("Fitxers amb deteccions: {}", result.files.len());
+                            println!("Score global: {}", result.final_score);
+                            println!("Classificació global: {}", result.classification);
+                            println!("===============================================");
                             let final_json = serde_json::json!({
                                 "type": "done",
                                 "status": "ok",

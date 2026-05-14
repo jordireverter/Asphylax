@@ -17,11 +17,23 @@ pub struct Detection {
     pub source: String,
 }
 
+#[derive(Debug, Serialize, Clone)]
+pub struct FileScanResult {
+    pub path: String,
+    pub detections: Vec<Detection>,
+    pub final_score: i32,
+    pub classification: String,
+}
+
 #[derive(Debug, Serialize)]
 pub struct ScanResult {
     pub scanned_files: usize,
-    pub detections: Vec<Detection>,
+    pub total_detections: usize,
+    pub final_score: i32,
+    pub classification: String,
+    pub files: Vec<FileScanResult>,
 }
+
 
 #[derive(Debug, Serialize)]
 pub struct ResponseMessage {
@@ -76,4 +88,43 @@ pub struct PartialSignaturesDatabase {
 #[derive(Debug, Deserialize)]
 pub struct AppConfig {
     pub max_yara_file_size_mb: u64,
+    pub heuristics: HeuristicsConfig,
+    pub pe_analysis: PeAnalysisConfig,
 }
+
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct HeuristicsConfig {
+    pub enabled: bool,
+    pub base64_min_length: usize,
+    pub entropy_threshold: f64,
+    pub confidence: HeuristicsConfidence,
+}
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct HeuristicsConfidence {
+    pub double_extension: i32,
+    pub base64: i32,
+    pub url: i32,
+    pub combination: i32,
+    pub high_combination: i32,
+    pub powershell_encoded: i32,
+    pub suspicious_command: i32,
+    pub download_execute: i32,
+}
+
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct PeAnalysisConfig {
+    pub enabled: bool,
+    pub confidence: PeConfidenceConfig,
+}
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct PeConfidenceConfig {
+    pub suspicious_import: i32,
+    pub process_injection: i32,
+    pub networking: i32,
+    pub packer: i32,
+}
+
