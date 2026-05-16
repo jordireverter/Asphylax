@@ -39,7 +39,7 @@ pub struct ScanResult {
 pub struct ResponseMessage {
     pub status: String,
     pub message: String,
-    pub data: Option<ScanResult>,
+    pub data: Option<serde_json::Value>,
 }
 
 #[derive(Debug, Deserialize, Clone)]

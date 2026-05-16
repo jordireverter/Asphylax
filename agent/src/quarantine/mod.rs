@@ -1,0 +1,83 @@
+use std::fs;
+use std::path::{Path, PathBuf};
+
+use chrono::Utc;
+use serde::{Deserialize, Serialize};
+use uuid::Uuid;
+
+const QUARANTINE_DIR: &str = "../quarantine";
+const QUARANTINE_INDEX: &str = "../quarantine/quarantine_index.json";
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct QuarantineEntry {
+    pub id: String,
+    pub original_path: String,
+    pub quarantine_path: String,
+    pub filename: String,
+    pub quarantined_at: String,
+    pub status: String,
+}
+
+pub fn quarantine_file(path_str: &str) -> Result<QuarantineEntry, String> {
+    let original_path = Path::new(path_str);
+
+    if !original_path.exists() {
+        return Err("El fitxer no existeix".to_string());
+    }
+
+    if !original_path.is_file() {
+        return Err("Només es poden posar fitxers en quarantena".to_string());
+    }
+
+    fs::create_dir_all(QUARANTINE_DIR)
+        .map_err(|e| format!("No es pot crear la carpeta quarantine: {}", e))?;
+
+    let filename = original_path
+        .file_name()
+        .and_then(|name| name.to_str())
+        .unwrap_or("unknown")
+        .to_string();
+
+    let id = Uuid::new_v4().to_string();
+
+    let quarantine_filename = format!("{}_{}", id, filename);
+    let quarantine_path = PathBuf::from(QUARANTINE_DIR).join(quarantine_filename);
+
+    fs::rename(original_path, &quarantine_path)
+        .map_err(|e| format!("Error movent fitxer a quarantena: {}", e))?;
+
+    let entry = QuarantineEntry {
+        id,
+        original_path: path_str.to_string(),
+        quarantine_path: quarantine_path.to_string_lossy().to_string(),
+        filename,
+        quarantined_at: Utc::now().to_rfc3339(),
+        status: "quarantined".to_string(),
+    };
+
+    let mut entries = load_entries();
+    entries.push(entry.clone());
+    save_entries(&entries)?;
+
+    Ok(entry)
+}
+
+fn load_entries() -> Vec<QuarantineEntry> {
+    let content = match fs::read_to_string(QUARANTINE_INDEX) {
+        Ok(content) => content,
+        Err(_) => return Vec::new(),
+    };
+
+    serde_json::from_str(&content).unwrap_or_else(|_| Vec::new())
+}
+
+fn save_entries(entries: &[QuarantineEntry]) -> Result<(), String> {
+    fs::create_dir_all(QUARANTINE_DIR)
+        .map_err(|e| format!("No es pot crear quarantine: {}", e))?;
+
+    let json = serde_json::to_string_pretty(entries)
+        .map_err(|e| format!("Error serialitzant quarantena: {}", e))?;
+
+    fs::write(QUARANTINE_INDEX, json)
+        .map_err(|e| format!("Error guardant quarantine_index.json: {}", e))
+}

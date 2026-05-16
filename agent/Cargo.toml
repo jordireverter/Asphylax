@@ -11,3 +11,5 @@ sha2 = "0.10"
 yara-x = "1.15.0"
 rayon = "1"
 pelite = "0.10"
+uuid = { version = "1", features = ["v4"] }
+chrono = "0.4"

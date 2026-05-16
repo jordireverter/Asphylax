@@ -8,6 +8,7 @@ mod config;
 mod decision_engine;
 mod heuristics;
 mod pe_analysis;
+mod quarantine;
 
 fn main() {
     updater::start_update_loop();

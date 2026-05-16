@@ -5,6 +5,7 @@ use crate::models::{AppConfig, RequestMessage, ResponseMessage};
 use crate::scanner;
 use crate::signatures::SignaturesMap;
 use crate::yara_engine::YaraEngine;
+use crate::quarantine;
 
 const ADDRESS: &str = "127.0.0.1:7878";
 
@@ -143,7 +144,7 @@ fn handle_client(
                     Ok(result) => ResponseMessage {
                         status: "ok".to_string(),
                         message: "Scan completat".to_string(),
-                        data: Some(result),
+                        data: Some(serde_json::to_value(result).unwrap()),
                     },
                     Err(error) => ResponseMessage {
                         status: "error".to_string(),
@@ -156,6 +157,29 @@ fn handle_client(
                     message: "Falta el camp 'path'".to_string(),
                     data: None,
                 },
+            },
+            "quarantine" => {
+                match req.path {
+                    Some(path) => {
+                        match quarantine::quarantine_file(&path) {
+                            Ok(entry) => ResponseMessage {
+                                status: "ok".to_string(),
+                                message: "Fitxer enviat a quarantena".to_string(),
+                                data: Some(serde_json::to_value(entry).unwrap()),
+                            },
+                            Err(error) => ResponseMessage {
+                                status: "error".to_string(),
+                                message: error,
+                                data: None,
+                            },
+                        }
+                    }
+                    None => ResponseMessage {
+                        status: "error".to_string(),
+                        message: "Falta el camp 'path'".to_string(),
+                        data: None,
+                    },
+                }
             },
 
             _ => ResponseMessage {
