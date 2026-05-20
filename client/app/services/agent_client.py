@@ -136,3 +136,21 @@ class AgentClient:
             "action": "delete_quarantine",
             "path": quarantine_id,
         })
+    
+
+    def list_history(self) -> dict:
+        return self.send_request({
+            "action": "list_history",
+        })
+    
+
+    def get_config(self) -> dict:
+        return self.send_request({
+            "action": "get_config",
+        })
+
+    def save_config(self, config: dict) -> dict:
+        return self.send_request({
+            "action": "save_config",
+            "data": config,
+        })

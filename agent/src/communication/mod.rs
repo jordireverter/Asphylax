@@ -6,6 +6,8 @@ use crate::scanner;
 use crate::signatures::SignaturesMap;
 use crate::yara_engine::YaraEngine;
 use crate::quarantine;
+use crate::history;
+use crate::config;
 
 const ADDRESS: &str = "127.0.0.1:7878";
 
@@ -57,12 +59,26 @@ fn handle_client(
                 Some(path) => {
                     let progress_stream = Arc::new(Mutex::new(stream.try_clone()?));
                     let progress_stream_clone = Arc::clone(&progress_stream);
+                    let active_config = match config::load_config() {
+                        Ok(cfg) => cfg,
+                        Err(error) => {
+                            let error_json = serde_json::json!({
+                                "type": "done",
+                                "status": "error",
+                                "message": error,
+                                "data": null
+                            }).to_string() + "\n";
 
+                            stream.write_all(error_json.as_bytes())?;
+                            stream.flush()?;
+                            return Ok(());
+                        }
+                    };
                     let scan_result = scanner::scan_path_with_progress(
                         &path,
                         signatures_map,
                         yara_engine,
-                        config,
+                        &active_config,
                         move |scanned, total| {
                             let percent = if total == 0 {
                                 100
@@ -97,6 +113,17 @@ fn handle_client(
 
                     match scan_result {
                         Ok(result) => {
+                            let _ = history::add_history_entry(
+                                "scan_progress",
+                                Some(path.clone()),
+                                &result.classification,
+                                Some(result.final_score),
+                                &format!(
+                                    "Fitxers escanejats: {}, deteccions totals: {}",
+                                    result.scanned_files,
+                                    result.total_detections
+                                ),
+                            );
                             println!("================ RESULTAT SCAN ================");
                             println!("Fitxers escanejats: {}", result.scanned_files);
                             println!("Deteccions totals: {}", result.total_detections);
@@ -140,32 +167,73 @@ fn handle_client(
                 },
             },
             "scan" => match req.path {
-                Some(path) => match scanner::scan_path(&path, signatures_map, yara_engine, config) {
-                    Ok(result) => ResponseMessage {
-                        status: "ok".to_string(),
-                        message: "Scan completat".to_string(),
-                        data: Some(serde_json::to_value(result).unwrap()),
-                    },
-                    Err(error) => ResponseMessage {
-                        status: "error".to_string(),
-                        message: error,
-                        data: None,
-                    },
-                },
+                Some(path) => {
+                    let active_config = match config::load_config() {
+                        Ok(cfg) => cfg,
+                        Err(error) => {
+                            return Ok(send_plain_response(
+                                &mut stream,
+                                ResponseMessage {
+                                    status: "error".to_string(),
+                                    message: error,
+                                    data: None,
+                                },
+                            )?);
+                        }
+                    };
+
+                    match scanner::scan_path(&path, signatures_map, yara_engine, &active_config) {
+                        Ok(result) => {
+                            let _ = history::add_history_entry(
+                                "scan",
+                                Some(path.clone()),
+                                &result.classification,
+                                Some(result.final_score),
+                                &format!(
+                                    "Fitxers escanejats: {}, deteccions totals: {}",
+                                    result.scanned_files,
+                                    result.total_detections
+                                ),
+                            );
+
+                            ResponseMessage {
+                                status: "ok".to_string(),
+                                message: "Scan completat".to_string(),
+                                data: Some(serde_json::to_value(result).unwrap()),
+                            }
+                        }
+                        Err(error) => ResponseMessage {
+                            status: "error".to_string(),
+                            message: error,
+                            data: None,
+                        },
+                    }
+                }
                 None => ResponseMessage {
                     status: "error".to_string(),
                     message: "Falta el camp 'path'".to_string(),
                     data: None,
                 },
             },
+
             "quarantine" => {
                 match req.path {
                     Some(path) => {
                         match quarantine::quarantine_file(&path) {
-                            Ok(entry) => ResponseMessage {
-                                status: "ok".to_string(),
-                                message: "Fitxer enviat a quarantena".to_string(),
-                                data: Some(serde_json::to_value(entry).unwrap()),
+                            Ok(entry) => {
+                                let _ = history::add_history_entry(
+                                    "quarantine",
+                                    Some(entry.original_path.clone()),
+                                    &entry.status,
+                                    None,
+                                    &format!("Fitxer mogut a: {}", entry.quarantine_path),
+                                );
+
+                                ResponseMessage {
+                                    status: "ok".to_string(),
+                                    message: "Fitxer enviat a quarantena".to_string(),
+                                    data: Some(serde_json::to_value(entry).unwrap()),
+                                }
                             },
                             Err(error) => ResponseMessage {
                                 status: "error".to_string(),
@@ -199,10 +267,20 @@ fn handle_client(
             "restore_quarantine" => {
                 match req.path {
                     Some(id) => match quarantine::restore_quarantine(&id) {
-                        Ok(entry) => ResponseMessage {
-                            status: "ok".to_string(),
-                            message: "Fitxer restaurat correctament".to_string(),
-                            data: Some(serde_json::to_value(entry).unwrap()),
+                        Ok(entry) => {
+                            let _ = history::add_history_entry(
+                                "restore_quarantine",
+                                Some(entry.original_path.clone()),
+                                &entry.status,
+                                None,
+                                "Fitxer restaurat des de quarantena",
+                            );
+
+                            ResponseMessage {
+                                status: "ok".to_string(),
+                                message: "Fitxer restaurat correctament".to_string(),
+                                data: Some(serde_json::to_value(entry).unwrap()),
+                            }
                         },
                         Err(error) => ResponseMessage {
                             status: "error".to_string(),
@@ -222,10 +300,20 @@ fn handle_client(
             "delete_quarantine" => {
                 match req.path {
                     Some(id) => match quarantine::delete_quarantine(&id) {
-                        Ok(entry) => ResponseMessage {
-                            status: "ok".to_string(),
-                            message: "Fitxer eliminat definitivament".to_string(),
-                            data: Some(serde_json::to_value(entry).unwrap()),
+                        Ok(entry) => {
+                            let _ = history::add_history_entry(
+                                "delete_quarantine",
+                                Some(entry.original_path.clone()),
+                                &entry.status,
+                                None,
+                                "Fitxer eliminat definitivament de quarantena",
+                            );
+
+                            ResponseMessage {
+                                status: "ok".to_string(),
+                                message: "Fitxer eliminat definitivament".to_string(),
+                                data: Some(serde_json::to_value(entry).unwrap()),
+                            }
                         },
                         Err(error) => ResponseMessage {
                             status: "error".to_string(),
@@ -239,7 +327,67 @@ fn handle_client(
                         data: None,
                     },
                 }
-            }
+            },
+
+
+            "list_history" => match history::list_history() {
+                Ok(entries) => ResponseMessage {
+                    status: "ok".to_string(),
+                    message: "Historial carregat".to_string(),
+                    data: Some(serde_json::to_value(entries).unwrap()),
+                },
+                Err(error) => ResponseMessage {
+                    status: "error".to_string(),
+                    message: error,
+                    data: None,
+                },
+            },
+
+
+            "get_config" => match config::load_config() {
+                Ok(cfg) => ResponseMessage {
+                    status: "ok".to_string(),
+                    message: "Configuració carregada".to_string(),
+                    data: Some(serde_json::to_value(cfg).unwrap()),
+                },
+
+                Err(error) => ResponseMessage {
+                    status: "error".to_string(),
+                    message: error,
+                    data: None,
+                },
+            },
+
+            "save_config" => match req.data {
+                Some(config_value) => {
+                    let config_data: Result<AppConfig, _> = serde_json::from_value(config_value);
+
+                    match config_data {
+                        Ok(cfg) => match config::save_config(&cfg) {
+                            Ok(_) => ResponseMessage {
+                                status: "ok".to_string(),
+                                message: "Configuració guardada".to_string(),
+                                data: None,
+                            },
+                            Err(error) => ResponseMessage {
+                                status: "error".to_string(),
+                                message: error,
+                                data: None,
+                            },
+                        },
+                        Err(error) => ResponseMessage {
+                            status: "error".to_string(),
+                            message: format!("Config invàlida: {}", error),
+                            data: None,
+                        },
+                    }
+                }
+                None => ResponseMessage {
+                    status: "error".to_string(),
+                    message: "Falta config".to_string(),
+                    data: None,
+                },
+            },
 
             _ => ResponseMessage {
                 status: "error".to_string(),
@@ -259,5 +407,16 @@ fn handle_client(
     stream.write_all(response_json.as_bytes())?;
     stream.flush()?;
 
+    Ok(())
+}
+
+
+fn send_plain_response(
+    stream: &mut TcpStream,
+    response: ResponseMessage,
+) -> std::io::Result<()> {
+    let response_json = serde_json::to_string(&response)? + "\n";
+    stream.write_all(response_json.as_bytes())?;
+    stream.flush()?;
     Ok(())
 }

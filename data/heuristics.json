@@ -1,0 +1,47 @@
+{
+  "max_yara_file_size_mb": 25,
+
+  "heuristics": {
+    "enabled": true,
+    "base64_min_length": 80,
+    "entropy_threshold": 7.2,
+
+    "confidence": {
+      "double_extension": 40,
+      "base64": 40,
+      "url": 30,
+      "combination": 100,
+      "high_combination": 200,
+      "powershell_encoded": 70,
+      "suspicious_command": 50,
+      "download_execute": 70
+    }
+  },
+
+  "pe_analysis": {
+    "enabled": true,
+
+    "confidence": {
+      "suspicious_import": 35,
+      "process_injection": 80,
+      "networking": 45,
+      "packer": 60
+    }
+  },
+
+  "monitoring": {
+    "enabled": true
+  },
+
+  "exclusions": {
+    "paths": [
+      "C:/Windows",
+      "C:/Program Files"
+    ],
+
+    "extensions": [
+      ".tmp",
+      ".log"
+    ]
+  }
+}

@@ -9,6 +9,7 @@ mod decision_engine;
 mod heuristics;
 mod pe_analysis;
 mod quarantine;
+mod history;
 
 fn main() {
     updater::start_update_loop();

@@ -19,8 +19,14 @@ from PyQt6.QtWidgets import (
     QTableWidget,
     QTableWidgetItem,
     QHeaderView,
+    QCheckBox,
+    QSpinBox,
+    QDoubleSpinBox,
+    QTextEdit,
+    QApplication,
 )
-from PyQt6.QtGui import QIcon, QFont, QPixmap
+
+from PyQt6.QtGui import QIcon, QFont, QPixmap, QPalette, QColor
 from PyQt6.QtCore import Qt, QSize, QPropertyAnimation, QEasingCurve, QEvent
 from PyQt6.QtWidgets import QTextEdit
 
@@ -28,6 +34,8 @@ from app.controllers.scan_controller import ScanController
 from app.controllers.scan_worker import ScanWorker
 from app.controllers.monitor_controller import MonitorController
 from app.controllers.quarantine_controller import QuarantineController
+from app.controllers.history_controller import HistoryController
+from app.controllers.config_controller import ConfigController
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 GUI_DIR = BASE_DIR / "gui"
@@ -47,12 +55,14 @@ class AsphylaxUI(QMainWindow):
         self.monitor_threats = 0
         self.quarantine_controller = QuarantineController()
         self.selected_quarantine_file = None
-
+        self.history_controller = HistoryController()
+        self.config_controller = ConfigController()
+        self.current_config = None
         self.setWindowTitle("Asphylax Antivirus")
         self.setGeometry(200, 200, 1200, 750)
         self.setWindowIcon(QIcon(str(GUI_DIR / "icons" / "logo.svg")))
 
-        self.current_mode = "light"
+        self.current_mode = self.detect_system_theme()
         self.apply_style(self.current_mode)
 
         main_layout = QVBoxLayout()
@@ -96,14 +106,22 @@ class AsphylaxUI(QMainWindow):
         main_layout.addWidget(self.tabs)
 
     def apply_style(self, mode):
-        style_file = GUI_DIR / ("style_dark.qss" if mode == "dark" else "style_light.qss")
+        resolved_mode = self.resolve_theme(mode)
+
+        style_file = GUI_DIR / (
+            "style_dark.qss" if resolved_mode == "dark" else "style_light.qss"
+        )
 
         with style_file.open("r", encoding="utf-8") as f:
             self.setStyleSheet(f.read())
 
+        self.current_mode = mode
+
     def change_mode(self, index):
-        self.current_mode = "dark" if index == 1 else "light"
-        self.apply_style(self.current_mode)
+        selected = "dark" if index == 1 else "light"
+        self.current_mode = selected
+        self.apply_style(selected)
+        self.refresh_all_table_colors()
 
     def create_scan_tab(self):
         widget = QWidget()
@@ -414,15 +432,112 @@ class AsphylaxUI(QMainWindow):
     def create_history_tab(self):
         widget = QWidget()
         layout = QVBoxLayout()
-        layout.addWidget(QLabel("Historial d'escaneigs"))
-        history_list = QListWidget()
-        layout.addWidget(history_list)
-        layout.addWidget(QPushButton("Exportar informe"))
+
+        title = QLabel("Historial")
+        title.setFont(QFont("Segoe UI", 20, QFont.Weight.Bold))
+        layout.addWidget(title)
+
+        refresh_button = QPushButton("Actualitzar historial")
+        refresh_button.clicked.connect(self.load_history_list)
+        layout.addWidget(refresh_button)
+
+        self.history_table = QTableWidget()
+        self.history_table.setColumnCount(6)
+        self.history_table.setHorizontalHeaderLabels([
+            "Data",
+            "Acció",
+            "Fitxer",
+            "Resultat",
+            "Score",
+            "Detalls",
+        ])
+
+        self.history_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.history_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+        self.history_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
+
+        layout.addWidget(self.history_table, stretch=1)
+
         widget.setLayout(layout)
         return widget
 
     def create_settings_tab(self):
-        return self.simple_tab("Configuració", "Opcions de configuració del motor.")
+        widget = QWidget()
+        layout = QVBoxLayout()
+
+        title = QLabel("Configuració")
+        title.setFont(QFont("Segoe UI", 20, QFont.Weight.Bold))
+        layout.addWidget(title)
+
+        self.config_yara_size = QSpinBox()
+        self.config_yara_size.setRange(0, 4096)
+        self.config_yara_size.setSuffix(" MB")
+
+        self.config_heuristics_enabled = QCheckBox("Activar heurística")
+        self.config_pe_enabled = QCheckBox("Activar anàlisi PE")
+        self.config_monitoring_enabled = QCheckBox("Activar monitorització")
+
+        self.config_base64_length = QSpinBox()
+        self.config_base64_length.setRange(1, 10000)
+
+        self.config_entropy_threshold = QDoubleSpinBox()
+        self.config_entropy_threshold.setRange(0.0, 10.0)
+        self.config_entropy_threshold.setDecimals(2)
+
+        self.config_excluded_paths = QTextEdit()
+        self.config_excluded_paths.setPlaceholderText("Una ruta per línia")
+
+        self.config_excluded_extensions = QTextEdit()
+        self.config_excluded_extensions.setPlaceholderText("Una extensió per línia, ex: .tmp")
+        self.config_theme = QComboBox()
+        self.config_theme.addItems(["system", "light", "dark"])
+        self.config_auto_quarantine_enabled = QCheckBox("Activar quarantena automàtica")
+
+        self.config_auto_quarantine_level = QComboBox()
+        self.config_auto_quarantine_level.addItems(["malware", "suspicious"])
+
+        layout.addWidget(QLabel("Tema visual"))
+        layout.addWidget(self.config_theme)
+
+        layout.addWidget(QLabel("Mida màxima YARA"))
+        layout.addWidget(self.config_yara_size)
+
+        layout.addWidget(self.config_heuristics_enabled)
+
+        layout.addWidget(QLabel("Longitud mínima Base64"))
+        layout.addWidget(self.config_base64_length)
+
+        layout.addWidget(QLabel("Llindar d'entropia"))
+        layout.addWidget(self.config_entropy_threshold)
+
+        layout.addWidget(self.config_pe_enabled)
+        layout.addWidget(self.config_monitoring_enabled)
+
+        layout.addWidget(self.config_auto_quarantine_enabled)
+        layout.addWidget(QLabel("Nivell mínim per quarantena automàtica"))
+        layout.addWidget(self.config_auto_quarantine_level)
+
+        layout.addWidget(QLabel("Rutes excloses"))
+        layout.addWidget(self.config_excluded_paths)
+
+        layout.addWidget(QLabel("Extensions excloses"))
+        layout.addWidget(self.config_excluded_extensions)
+
+        buttons_layout = QHBoxLayout()
+
+        load_button = QPushButton("Carregar configuració")
+        load_button.clicked.connect(self.load_config_from_agent)
+        buttons_layout.addWidget(load_button)
+
+        save_button = QPushButton("Guardar configuració")
+        save_button.clicked.connect(self.save_config_to_agent)
+        buttons_layout.addWidget(save_button)
+
+        layout.addLayout(buttons_layout)
+
+        widget.setLayout(layout)
+        return widget
+
 
     def simple_tab(self, text1, text2):
         widget = QWidget()
@@ -457,10 +572,24 @@ class AsphylaxUI(QMainWindow):
                 "Selecciona una ruta abans d'iniciar la monitorització.",
             )
             return
+        
+        excluded_paths = []
+        excluded_extensions = []
+
+        config_response = self.config_controller.get_config()
+
+        if config_response.get("status") == "ok":
+            config = config_response.get("data") or {}
+            exclusions = config.get("exclusions", {})
+
+            excluded_paths = exclusions.get("paths", [])
+            excluded_extensions = exclusions.get("extensions", [])
 
         self.monitor_controller.start_monitoring(
             self.monitoring_path,
             self.handle_monitor_event,
+            excluded_paths=excluded_paths,
+            excluded_extensions=excluded_extensions,
         )
 
         self.monitor_status_label.setText("🟢 Protecció en temps real activada")
@@ -533,7 +662,7 @@ class AsphylaxUI(QMainWindow):
         self.monitor_table.setItem(row, 3, QTableWidgetItem(status))
         self.monitor_table.setItem(row, 4, QTableWidgetItem(str(score)))
         self.monitor_table.setItem(row, 5, QTableWidgetItem(result))
-
+        self.apply_row_color(self.monitor_table, row, status)
 
     def show_monitor_cell_details(self, row: int, column: int):
         item = self.monitor_table.item(row, column)
@@ -630,7 +759,7 @@ class AsphylaxUI(QMainWindow):
             self.quarantine_table.setItem(row, 2, QTableWidgetItem(entry.get("original_path", "")))
             self.quarantine_table.setItem(row, 3, QTableWidgetItem(entry.get("quarantined_at", "")))
             self.quarantine_table.setItem(row, 4, QTableWidgetItem(entry.get("status", "")))
-
+            self.apply_row_color(self.quarantine_table, row, entry.get("status", ""))
 
     def restore_selected_quarantine(self):
         selected_row = self.quarantine_table.currentRow()
@@ -724,3 +853,232 @@ class AsphylaxUI(QMainWindow):
         )
 
         self.load_quarantine_list()
+
+    
+    def load_history_list(self):
+        response = self.history_controller.list_history()
+
+        if response.get("status") != "ok":
+            QMessageBox.critical(
+                self,
+                "Error",
+                response.get("message", "No s'ha pogut carregar l'historial."),
+            )
+            return
+
+        entries = response.get("data") or []
+
+        self.history_table.setRowCount(0)
+
+        for entry in entries:
+            row = self.history_table.rowCount()
+            self.history_table.insertRow(row)
+
+            self.history_table.setItem(row, 0, QTableWidgetItem(entry.get("timestamp", "")))
+            self.history_table.setItem(row, 1, QTableWidgetItem(entry.get("action", "")))
+            self.history_table.setItem(row, 2, QTableWidgetItem(entry.get("path", "") or ""))
+            self.history_table.setItem(row, 3, QTableWidgetItem(entry.get("result", "")))
+            self.history_table.setItem(row, 4, QTableWidgetItem(str(entry.get("score", ""))))
+            self.history_table.setItem(row, 5, QTableWidgetItem(entry.get("details", "")))
+            self.apply_row_color(self.history_table, row, entry.get("result", ""))
+
+
+    def load_config_from_agent(self):
+        response = self.config_controller.get_config()
+
+        if response.get("status") != "ok":
+            QMessageBox.critical(
+                self,
+                "Error",
+                response.get("message", "No s'ha pogut carregar la configuració."),
+            )
+            return
+
+        config = response.get("data") or {}
+        self.current_config = config
+
+        ui = config.get("ui", {})
+        theme = ui.get("theme", "system")
+
+        index = self.config_theme.findText(theme)
+        if index >= 0:
+            self.config_theme.setCurrentIndex(index)
+
+
+        self.config_yara_size.setValue(config.get("max_yara_file_size_mb", 25))
+
+        heuristics = config.get("heuristics", {})
+        self.config_heuristics_enabled.setChecked(heuristics.get("enabled", True))
+        self.config_base64_length.setValue(heuristics.get("base64_min_length", 80))
+        self.config_entropy_threshold.setValue(heuristics.get("entropy_threshold", 7.2))
+
+        pe_analysis = config.get("pe_analysis", {})
+        self.config_pe_enabled.setChecked(pe_analysis.get("enabled", True))
+
+        monitoring = config.get("monitoring", {})
+        self.config_monitoring_enabled.setChecked(monitoring.get("enabled", True))
+
+        exclusions = config.get("exclusions", {})
+        self.config_excluded_paths.setPlainText(
+            "\n".join(exclusions.get("paths", []))
+        )
+        self.config_excluded_extensions.setPlainText(
+            "\n".join(exclusions.get("extensions", []))
+        )
+
+        auto_quarantine = config.get("auto_quarantine", {})
+        self.config_auto_quarantine_enabled.setChecked(
+            auto_quarantine.get("enabled", False)
+        )
+
+        level = auto_quarantine.get("minimum_classification", "malware")
+        index = self.config_auto_quarantine_level.findText(level)
+        if index >= 0:
+            self.config_auto_quarantine_level.setCurrentIndex(index)
+
+
+    def save_config_to_agent(self):
+        if self.current_config is None:
+            QMessageBox.warning(
+                self,
+                "Configuració no carregada",
+                "Carrega primer la configuració abans de guardar.",
+            )
+            return
+
+        config = self.current_config
+
+        config["max_yara_file_size_mb"] = self.config_yara_size.value()
+
+        config["heuristics"]["enabled"] = self.config_heuristics_enabled.isChecked()
+        config["heuristics"]["base64_min_length"] = self.config_base64_length.value()
+        config["heuristics"]["entropy_threshold"] = self.config_entropy_threshold.value()
+
+        config["pe_analysis"]["enabled"] = self.config_pe_enabled.isChecked()
+
+        config["monitoring"]["enabled"] = self.config_monitoring_enabled.isChecked()
+
+        config["exclusions"]["paths"] = [
+            line.strip()
+            for line in self.config_excluded_paths.toPlainText().splitlines()
+            if line.strip()
+        ]
+
+        config["exclusions"]["extensions"] = [
+            line.strip()
+            for line in self.config_excluded_extensions.toPlainText().splitlines()
+            if line.strip()
+        ]
+
+        if "ui" not in config:
+            config["ui"] = {}
+
+        config["ui"]["theme"] = self.config_theme.currentText()
+        self.apply_style(config["ui"]["theme"])
+        self.refresh_all_table_colors()
+
+        if "auto_quarantine" not in config:
+            config["auto_quarantine"] = {}
+
+        config["auto_quarantine"]["enabled"] = self.config_auto_quarantine_enabled.isChecked()
+        config["auto_quarantine"]["minimum_classification"] = self.config_auto_quarantine_level.currentText()
+
+        response = self.config_controller.save_config(config)
+
+        if response.get("status") != "ok":
+            QMessageBox.critical(
+                self,
+                "Error",
+                response.get("message", "No s'ha pogut guardar la configuració."),
+            )
+            return
+
+        QMessageBox.information(
+            self,
+            "Configuració",
+            "Configuració guardada correctament.",
+        )    
+
+    
+    def detect_system_theme(self):
+        palette = QApplication.instance().palette()
+        window_color = palette.color(QPalette.ColorRole.Window)
+
+        brightness = (
+            window_color.red() * 0.299
+            + window_color.green() * 0.587
+            + window_color.blue() * 0.114
+        )
+
+        return "dark" if brightness < 128 else "light"
+
+
+    def resolve_theme(self, theme):
+        if theme == "system":
+            return self.detect_system_theme()
+
+        return theme
+    
+
+    def status_color(self, value: str):
+        value = (value or "").lower()
+        theme = self.resolve_theme(self.current_mode)
+
+        if theme == "dark":
+            colors = {
+                "clean": "#143d2b",
+                "suspicious": "#4a3b12",
+                "malware": "#4a1f24",
+                "quarantined": "#4a3212",
+                "restored": "#163a45",
+                "deleted": "#333333",
+                "error": "#5a1f24",
+            }
+            default = "#2b2b2b"
+        else:
+            colors = {
+                "clean": "#d4edda",
+                "suspicious": "#fff3cd",
+                "malware": "#f8d7da",
+                "quarantined": "#ffe5b4",
+                "restored": "#d1ecf1",
+                "deleted": "#e2e3e5",
+                "error": "#f5c6cb",
+            }
+            default = "#ffffff"
+
+        return QColor(colors.get(value, default))
+
+
+    def apply_row_color(self, table, row: int, status: str):
+        background = self.status_color(status)
+        theme = self.resolve_theme(self.current_mode)
+        foreground = QColor("#ffffff") if theme == "dark" else QColor("#111111")
+
+        for column in range(table.columnCount()):
+            item = table.item(row, column)
+            if item is not None:
+                item.setBackground(background)
+                item.setForeground(foreground)
+
+
+    def refresh_all_table_colors(self):
+        if hasattr(self, "monitor_table"):
+            self.recolor_table_by_column(self.monitor_table, 3)
+
+        if hasattr(self, "quarantine_table"):
+            self.recolor_table_by_column(self.quarantine_table, 4)
+
+        if hasattr(self, "history_table"):
+            self.recolor_table_by_column(self.history_table, 3)
+
+
+    def recolor_table_by_column(self, table, status_column: int):
+        for row in range(table.rowCount()):
+            item = table.item(row, status_column)
+
+            if item is None:
+                continue
+
+            status = item.text()
+            self.apply_row_color(table, row, status)

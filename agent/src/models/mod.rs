@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 pub struct RequestMessage {
     pub action: String,
     pub path: Option<String>,
+    pub data: Option<serde_json::Value>,
 }
 
 #[derive(Debug, Serialize, Clone)]
@@ -85,15 +86,20 @@ pub struct PartialSignaturesDatabase {
 }
 
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct AppConfig {
     pub max_yara_file_size_mb: u64,
     pub heuristics: HeuristicsConfig,
     pub pe_analysis: PeAnalysisConfig,
+    pub monitoring: MonitoringConfig,
+    pub exclusions: ExclusionsConfig,
+    pub ui: UiConfig,
+    pub auto_quarantine: AutoQuarantineConfig,
+    pub quick_scan: QuickScanConfig,
 }
 
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct HeuristicsConfig {
     pub enabled: bool,
     pub base64_min_length: usize,
@@ -101,7 +107,7 @@ pub struct HeuristicsConfig {
     pub confidence: HeuristicsConfidence,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct HeuristicsConfidence {
     pub double_extension: i32,
     pub base64: i32,
@@ -113,14 +119,13 @@ pub struct HeuristicsConfidence {
     pub download_execute: i32,
 }
 
-
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct PeAnalysisConfig {
     pub enabled: bool,
     pub confidence: PeConfidenceConfig,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct PeConfidenceConfig {
     pub suspicious_import: i32,
     pub process_injection: i32,
@@ -128,3 +133,36 @@ pub struct PeConfidenceConfig {
     pub packer: i32,
 }
 
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct MonitoringConfig {
+    pub enabled: bool,
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct ExclusionsConfig {
+    pub paths: Vec<String>,
+    pub extensions: Vec<String>,
+}
+
+
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct UiConfig {
+    pub theme: String,
+}
+
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct AutoQuarantineConfig {
+    pub enabled: bool,
+    pub minimum_classification: String,
+}
+
+
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct QuickScanConfig {
+    pub max_file_size_mb: u64,
+    pub extensions: Vec<String>,
+}

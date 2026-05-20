@@ -7,8 +7,13 @@ class MonitorController:
         self.monitor = FileMonitor()
         self.agent_client = AgentClient()
 
-    def start_monitoring(self, path: str, on_event):
-        self.monitor.start(path, on_event)
+    def start_monitoring(self, path: str, on_event, excluded_paths=None, excluded_extensions=None):
+        self.monitor.start(
+            path,
+            on_event,
+            excluded_paths=excluded_paths,
+            excluded_extensions=excluded_extensions,
+        )
 
     def stop_monitoring(self):
         self.monitor.stop()

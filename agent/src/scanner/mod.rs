@@ -11,6 +11,7 @@ use crate::models::{AppConfig, Detection, FileScanResult, ScanResult};
 use crate::pe_analysis;
 use crate::signatures::{self, SignaturesMap};
 use crate::yara_engine::YaraEngine;
+use crate::quarantine;
 
 pub fn scan_path(
     path_str: &str,
@@ -44,7 +45,8 @@ where
     }
 
     let mut files = Vec::new();
-    collect_files(path, &mut files)?;
+    let options = ScanOptions { quick_scan: false };
+    collect_files(path, &mut files, config, &options)?;
 
     let total_files = files.len();
 
@@ -106,6 +108,21 @@ where
         .unwrap_or(0);
 
     let classification = classify_global(final_score).to_string();
+    
+    if config.auto_quarantine.enabled {
+        for file in &mut file_results {
+            if should_auto_quarantine(&file.classification, &config.auto_quarantine.minimum_classification) {
+                match quarantine::quarantine_file(&file.path) {
+                    Ok(_) => {
+                        file.classification = "quarantined".to_string();
+                    }
+                    Err(error) => {
+                        eprintln!("No s'ha pogut posar en quarantena {}: {}", file.path, error);
+                    }
+                }
+            }
+        }
+    }
 
     Ok(ScanResult {
         scanned_files: total_files,
@@ -116,10 +133,40 @@ where
     })
 }
 
-fn collect_files(path: &Path, files: &mut Vec<PathBuf>) -> Result<(), String> {
+fn collect_files(path: &Path, files: &mut Vec<PathBuf>, config: &AppConfig, options: &ScanOptions) -> Result<(), String> {
     if path.is_file() {
         files.push(path.to_path_buf());
         return Ok(());
+    }
+    if is_excluded(path, config) {
+        return Ok(());
+    }
+
+    if options.quick_scan && path.is_file() {
+        let metadata = match fs::metadata(path) {
+            Ok(m) => m,
+            Err(_) => return Ok(()),
+        };
+
+        let max_size = config.quick_scan.max_file_size_mb * 1024 * 1024;
+
+        if metadata.len() > max_size {
+            return Ok(());
+        }
+
+        let extension = path
+            .extension()
+            .and_then(|e| e.to_str())
+            .map(|e| format!(".{}", e.to_lowercase()));
+
+        match extension {
+            Some(ext) => {
+                if !config.quick_scan.extensions.iter().any(|x| x.to_lowercase() == ext) {
+                    return Ok(());
+                }
+            }
+            None => return Ok(()),
+        }
     }
 
     if path.is_dir() {
@@ -128,7 +175,7 @@ fn collect_files(path: &Path, files: &mut Vec<PathBuf>) -> Result<(), String> {
 
         for entry in entries {
             let entry = entry.map_err(|_| "Error llegint entrada del directori".to_string())?;
-            collect_files(&entry.path(), files)?;
+            collect_files(&entry.path(), files, config, options)?;
         }
     }
 
@@ -223,4 +270,100 @@ fn classify_global(score: i32) -> &'static str {
     } else {
         "clean"
     }
+}
+
+fn is_excluded(path: &Path, config: &AppConfig) -> bool {
+    let path_str = path.to_string_lossy().replace("\\", "/").to_lowercase();
+
+    for excluded_path in &config.exclusions.paths {
+        let excluded = excluded_path.replace("\\", "/").to_lowercase();
+
+        if path_str.starts_with(&excluded) {
+            return true;
+        }
+    }
+
+    if let Some(extension) = path.extension().and_then(|e| e.to_str()) {
+        let ext = format!(".{}", extension.to_lowercase());
+
+        for excluded_ext in &config.exclusions.extensions {
+            if ext == excluded_ext.to_lowercase() {
+                return true;
+            }
+        }
+    }
+
+    false
+}
+
+
+fn should_auto_quarantine(classification: &str, minimum: &str) -> bool {
+    let classification_score = classification_level(classification);
+    let minimum_score = classification_level(minimum);
+
+    classification_score >= minimum_score
+}
+
+fn classification_level(value: &str) -> i32 {
+    match value {
+        "clean" => 0,
+        "suspicious" => 1,
+        "malware" => 2,
+        "quarantined" => 3,
+        _ => 0,
+    }
+}
+
+
+#[derive(Clone)]
+pub struct ScanOptions {
+    pub quick_scan: bool,
+}
+
+
+pub fn quick_scan_paths() -> Vec<PathBuf> {
+    let mut paths = Vec::new();
+
+    if let Ok(user_profile) = std::env::var("USERPROFILE") {
+        let critical_paths = vec![
+            "Desktop",
+            "Downloads",
+            "AppData/Local/Temp",
+            "AppData/Roaming",
+        ];
+
+        for relative in critical_paths {
+            paths.push(PathBuf::from(&user_profile).join(relative));
+        }
+    }
+
+    paths
+}
+
+
+pub fn quick_scan(
+    signatures_map: &SignaturesMap,
+    yara_engine: &YaraEngine,
+    config: &AppConfig,
+) -> Result<ScanResult, String> {
+    let options = ScanOptions {
+        quick_scan: true,
+    };
+
+    let quick_paths = quick_scan_paths();
+
+    let mut all_files = Vec::new();
+
+    for path in quick_paths {
+        if path.exists() {
+            collect_files(&path, &mut all_files, config, &options)?;
+        }
+    }
+
+    scan_files(
+        all_files,
+        signatures_map,
+        yara_engine,
+        config,
+    )
 }

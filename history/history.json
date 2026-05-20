@@ -1,0 +1,1685 @@
+[
+  {
+    "id": "75a3e4ef-0c86-4396-b9dd-54bf9686eb66",
+    "timestamp": "2026-05-20T19:18:28.822907100+00:00",
+    "action": "scan_progress",
+    "path": "C:/Users/jordi/Asphylax/client",
+    "result": "clean",
+    "score": 30,
+    "details": "Fitxers escanejats: 42, deteccions totals: 7"
+  },
+  {
+    "id": "c4fe9971-8b64-4976-8baa-9af551534367",
+    "timestamp": "2026-05-20T19:18:51.360620700+00:00",
+    "action": "scan",
+    "path": "C:/Program Files (x86)\\Google\\GoogleUpdater\\updater_history.jsonl",
+    "result": "malware",
+    "score": 200,
+    "details": "Fitxers escanejats: 1, deteccions totals: 1"
+  },
+  {
+    "id": "07612760-ac05-4bca-a101-e543f8543137",
+    "timestamp": "2026-05-20T19:18:52.012756200+00:00",
+    "action": "scan",
+    "path": "C:/Program Files (x86)\\Google\\GoogleUpdater\\updater.log",
+    "result": "clean",
+    "score": 30,
+    "details": "Fitxers escanejats: 1, deteccions totals: 1"
+  },
+  {
+    "id": "645fdc9e-4be5-4d97-a108-3fd22239587e",
+    "timestamp": "2026-05-20T19:18:52.403001700+00:00",
+    "action": "scan",
+    "path": "C:/Program Files (x86)\\Google\\GoogleUpdater\\149.0.7814.0\\Crashpad\\settings.dat",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "0e3f67cd-3446-4f9c-a7a1-139e0ec71d56",
+    "timestamp": "2026-05-20T19:18:53.548077700+00:00",
+    "action": "scan",
+    "path": "C:/Program Files (x86)\\Google\\GoogleUpdater\\updater_history.jsonl",
+    "result": "malware",
+    "score": 200,
+    "details": "Fitxers escanejats: 1, deteccions totals: 1"
+  },
+  {
+    "id": "15bbdb4e-de3e-4269-9bf6-a0f0473f8e90",
+    "timestamp": "2026-05-20T19:18:54.142059300+00:00",
+    "action": "scan",
+    "path": "C:/Program Files (x86)\\Google\\GoogleUpdater\\updater.log",
+    "result": "clean",
+    "score": 30,
+    "details": "Fitxers escanejats: 1, deteccions totals: 1"
+  },
+  {
+    "id": "22f898b2-98dc-435f-9144-c4117f8ae919",
+    "timestamp": "2026-05-20T19:19:17.902306700+00:00",
+    "action": "restore_quarantine",
+    "path": "C:/Users/jordi/Asphylax/proves/yara_test.txt",
+    "result": "restored",
+    "score": null,
+    "details": "Fitxer restaurat des de quarantena"
+  },
+  {
+    "id": "e29e0401-1fc8-4968-80ae-0efaff82e27a",
+    "timestamp": "2026-05-20T20:13:53.034831+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\AppData\\Local\\Google\\Chrome\\User Data\\segmentation_platform\\ukm_db-wal",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "b0c7880f-0e47-450c-bec6-36e0eb582f50",
+    "timestamp": "2026-05-20T20:13:55.612380400+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\AppData\\Local\\Google\\Chrome\\User Data\\segmentation_platform\\ukm_db",
+    "result": "malware",
+    "score": 200,
+    "details": "Fitxers escanejats: 1, deteccions totals: 1"
+  },
+  {
+    "id": "33700ba6-e5a1-4deb-b3ea-b2d34f33de11",
+    "timestamp": "2026-05-20T20:13:55.948843700+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\AppData\\Local\\Google\\Chrome\\User Data\\segmentation_platform\\ukm_db-wal",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "e1281c8c-74b5-4636-a3c6-97bb3dd97284",
+    "timestamp": "2026-05-20T20:13:56.282011500+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "9cbe1be0-0fc6-4ae4-a8c2-a85205ebf0c7",
+    "timestamp": "2026-05-20T20:14:00.024102800+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\AppData\\Roaming\\Code\\User\\workspaceStorage\\3da2d01b4913f8a61668df6ba192483b\\GitHub.copilot-chat\\codebase-external.sqlite",
+    "result": "malware",
+    "score": 90,
+    "details": "Fitxers escanejats: 1, deteccions totals: 1"
+  },
+  {
+    "id": "9bd50382-186b-4cbb-b7f2-1e95a69c6bfc",
+    "timestamp": "2026-05-20T20:22:30.082190800+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\IndexedDB\\chrome-extension_gighmmpiobklfepjocnamgkkbiglidom_0.indexeddb.leveldb\\LOG",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "26ec335b-769a-4757-b964-ff2650f40112",
+    "timestamp": "2026-05-20T20:22:30.469884+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "90756921-be9b-47e7-8013-03e017f10f77",
+    "timestamp": "2026-05-20T20:22:34.361733900+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\AppData\\Roaming\\Code\\User\\workspaceStorage\\3da2d01b4913f8a61668df6ba192483b\\GitHub.copilot-chat\\codebase-external.sqlite",
+    "result": "malware",
+    "score": 90,
+    "details": "Fitxers escanejats: 1, deteccions totals: 1"
+  },
+  {
+    "id": "8730f68d-b66d-477d-8fdf-129a71124e20",
+    "timestamp": "2026-05-20T20:40:37.647154900+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\AppData\\Local\\Packages\\AD2F1837.OMENCommandCenter_v10z8vjag6ke6\\LocalCache\\Local\\HPOMEN\\HPOMENBG_20260520.log",
+    "result": "malware",
+    "score": 130,
+    "details": "Fitxers escanejats: 1, deteccions totals: 1"
+  },
+  {
+    "id": "d75fcfd6-5f46-4b95-8a36-6752e9e67027",
+    "timestamp": "2026-05-20T20:40:38.069109900+00:00",
+    "action": "scan",
+    "path": "C:/Program Files\\PostgreSQL\\9.5\\data\\pg_stat_tmp\\global.stat",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "f0b0c1e7-976e-4be0-bbed-1ef370ac1d5f",
+    "timestamp": "2026-05-20T20:40:38.410008500+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "483983e6-4487-4b9c-8529-0c0878e19ae4",
+    "timestamp": "2026-05-20T20:46:30.961443+00:00",
+    "action": "scan_progress",
+    "path": "C:/Users/jordi/Asphylax/client",
+    "result": "clean",
+    "score": 30,
+    "details": "Fitxers escanejats: 44, deteccions totals: 7"
+  },
+  {
+    "id": "cc5f26e4-6680-4cef-b577-d839350d24e6",
+    "timestamp": "2026-05-20T20:47:14.658516700+00:00",
+    "action": "scan_progress",
+    "path": "C:/Users/jordi/Asphylax/client",
+    "result": "clean",
+    "score": 30,
+    "details": "Fitxers escanejats: 44, deteccions totals: 7"
+  },
+  {
+    "id": "aa5934d0-cdea-4d9c-9338-c8557c81cc2b",
+    "timestamp": "2026-05-20T21:19:19.558037600+00:00",
+    "action": "scan_progress",
+    "path": "C:/Users/jordi/Asphylax/client",
+    "result": "clean",
+    "score": 30,
+    "details": "Fitxers escanejats: 44, deteccions totals: 7"
+  },
+  {
+    "id": "e8322da4-8f3e-4f81-acf3-a0069ecb7ba9",
+    "timestamp": "2026-05-20T21:35:22.192678400+00:00",
+    "action": "scan_progress",
+    "path": "C:/Users/jordi/Asphylax/client",
+    "result": "clean",
+    "score": 30,
+    "details": "Fitxers escanejats: 44, deteccions totals: 7"
+  },
+  {
+    "id": "db6a55f8-ff7c-4005-8c4f-d1b8630dbafd",
+    "timestamp": "2026-05-20T21:35:48.846764100+00:00",
+    "action": "scan_progress",
+    "path": "C:/Users/jordi/Asphylax/client",
+    "result": "clean",
+    "score": 30,
+    "details": "Fitxers escanejats: 44, deteccions totals: 7"
+  },
+  {
+    "id": "7e716c79-62c2-4636-859c-6aa6d2e727e5",
+    "timestamp": "2026-05-20T21:37:53.675768900+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\proves\\cmd.txt",
+    "result": "suspicious",
+    "score": 50,
+    "details": "Fitxers escanejats: 1, deteccions totals: 1"
+  },
+  {
+    "id": "c7df6939-89a6-4611-aca0-e18803f9f1f4",
+    "timestamp": "2026-05-20T21:37:54.035923300+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "fc414b04-0a2a-4178-b73c-b43271d972a9",
+    "timestamp": "2026-05-20T21:37:54.342713700+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\59\\53c0b6f22468044a6ab52026ad3adf7eb0ea92",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "dee5a8ac-aaa6-41c1-8b40-d34e41d62a70",
+    "timestamp": "2026-05-20T21:37:54.648526800+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\10\\aeb5727054c51580c4a59f0520c631b3f39bd2",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "7b6bc6ec-6113-4d9f-9cf2-299e69775778",
+    "timestamp": "2026-05-20T21:37:54.949186200+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\a3\\2e4ec746dc2b28681e92571d61c76922f9730a",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "b3c8bc9b-ab82-488b-9293-0745ce500d1d",
+    "timestamp": "2026-05-20T21:37:55.257944900+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\7c\\ee1cf80db81b7917830c498353d5250301e688",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "e0969be8-448c-4f7f-bc22-f9086e64de84",
+    "timestamp": "2026-05-20T21:37:55.555809700+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\7c\\6406333d475bea119f4f6b7b0216b3602fad7d",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "f8c3ff57-d7a8-42f5-be53-cdb2dc550161",
+    "timestamp": "2026-05-20T21:37:55.872983700+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\4f\\2c07434df79658926e01d5de6fc97f5b0cbb2c",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "3c9c9101-3593-4787-89df-cfebc342907f",
+    "timestamp": "2026-05-20T21:37:56.219912800+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\a8\\ba6fa4f4f7464a8672afe258234c4d64b78781",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "301753e1-4852-416c-996f-cb9c5a31d50f",
+    "timestamp": "2026-05-20T21:37:56.566581200+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\53\\844bcea05fb6a44e77ffafb88cc9092878f9e3",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "d3cc145d-40f5-4806-8321-0aa4c49d3b16",
+    "timestamp": "2026-05-20T21:37:56.952671400+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\5a\\fe1f94b03aaf5d4c50a49b8bc79e555784d89a",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "8d751eac-6f56-4158-9b74-5dbc78c9b99a",
+    "timestamp": "2026-05-20T21:37:57.330065500+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\83\\ae7c3b672ae17bbdf23aa6d5833e15a409b661",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "a981bf56-c4d6-4887-9827-ffa590198ee6",
+    "timestamp": "2026-05-20T21:37:57.634867+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\d3\\a592410f8c5f6c418144d260db111645a234fb",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "e89a18c3-0507-4a41-8b85-f86acfcadedf",
+    "timestamp": "2026-05-20T21:37:57.973858500+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\2d\\7b24a29b0fd286f68566683422d87f807bf3a8",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "bb7373ab-a5c4-44fe-a38a-e3a5568a4288",
+    "timestamp": "2026-05-20T21:37:58.314950+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\dc\\c30f95472b7c3e036e66a73cd1278c446a3f0f",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "41942e39-ae42-4f93-b585-6ed295c90fd1",
+    "timestamp": "2026-05-20T21:37:58.641560500+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\13\\e9ac902fa006c10a2876cd5a60d96c187ff5b8",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "8ed3e515-976c-4591-84f2-e12732545165",
+    "timestamp": "2026-05-20T21:37:58.959460500+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\b2\\0811260e19c258717a277a0277d11a91be95dd",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "6a7fd86a-9f88-449c-b180-6e38a6ae2e84",
+    "timestamp": "2026-05-20T21:37:59.266831600+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\11\\60954b9953a6f20632a7a4fe5964c6b293a3e0",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "90e57b18-1e17-4ff1-8aa5-25963e6264c0",
+    "timestamp": "2026-05-20T21:37:59.599955200+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\9d\\c9e6209fa809df66c5d5ba442abba287ae9dba",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "e4a7e861-248e-41da-8ea7-5fe11c181dd1",
+    "timestamp": "2026-05-20T21:37:59.946861700+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\86\\f4d0145411abd561f7d4c3ab3e91442d68e80c",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "c9d3f642-2e5e-41ed-bcb2-19f0de5d0b1f",
+    "timestamp": "2026-05-20T21:38:00.280724500+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\82\\bd030caaa1ef6b6958ba20fc46abed8730ee1a",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "cc2e0041-4b0f-4803-94cf-aa31789eec70",
+    "timestamp": "2026-05-20T21:38:00.605914+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\ed\\e44096d6271820ca8a543647066bd8fa97ccc7",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "a198e96d-b5db-47a4-a57a-64e2194aeb46",
+    "timestamp": "2026-05-20T21:38:00.932238+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\b9\\efd59b8b0873450665a7e334d3e1fde4de781b",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "bccabc9e-39d8-4399-a841-9d9285f8f2a7",
+    "timestamp": "2026-05-20T21:38:01.258252800+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\ea\\869508074bdb0dab2f865f160a445ac629c375",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "11c6ed71-15a7-4a9d-9100-758420f80078",
+    "timestamp": "2026-05-20T21:38:01.580520200+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\82\\504425cd926ffc07165e568609a3378d8b087c",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "b0691a73-cb93-4c24-9e9a-38a2d9a9ed9d",
+    "timestamp": "2026-05-20T21:38:01.914954500+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\3d\\9b0b36a0bf43a62b1ac6721dac20946ee25628",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "a84b7257-8807-4788-9f0b-aa26128be2c9",
+    "timestamp": "2026-05-20T21:38:02.249953700+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\16\\4a85a436645811f961fcc78a034935a301f749",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "1a8b2896-0942-4766-a871-991d4fc738eb",
+    "timestamp": "2026-05-20T21:38:02.597973100+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\47\\a7ca1d5262ffe1d2848e1bba881833f3eea64e",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "bf1a227c-0a69-49e8-ba46-9f57c8372bcc",
+    "timestamp": "2026-05-20T21:38:02.927697400+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\10\\6901980d404bcf9c7cdb3eefb3a5538ddabeab",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "241ad325-7cbd-4159-83b5-42c22619145a",
+    "timestamp": "2026-05-20T21:38:03.246601500+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\d0\\fa5c86dd99207cbefe7c52d49d5a1ffe32c6c6",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "d57e8316-31d1-4709-972c-94935c10cc9b",
+    "timestamp": "2026-05-20T21:38:03.559235900+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\75\\d20447e4e9432385097006c9169d5ba2fca3e3",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "9fdbffe5-0a7a-4e6b-97a1-21a2513c6ad7",
+    "timestamp": "2026-05-20T21:38:03.891220800+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\af\\6d4904096648addc3cf5edf781cac320d42807",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "67727cad-7ea6-4511-85dd-5897474e8ba3",
+    "timestamp": "2026-05-20T21:38:04.211655500+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\7f\\6872f5f6f3cbad6a13d91d31ad5d369da86ce3",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "54f169bf-946a-4bdf-aee7-da81b015c10a",
+    "timestamp": "2026-05-20T21:38:04.546207900+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\11\\c9257d7fcee5a2bd9b2e5fd253f00f93b4e4ef",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "b36235e4-06a1-4cb5-be4d-793cea1e11c1",
+    "timestamp": "2026-05-20T21:38:04.936007900+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\2b\\7bd1cf8d68f3ca4c0f755dc4b321b216c6182f",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "3b6da294-5baf-4478-8059-dc09f29dd2eb",
+    "timestamp": "2026-05-20T21:38:05.267429800+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\46\\9c161dbdafaef485fd9d5fd8f37d1facc08677",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "a56dfc5a-cc60-4dbe-b068-1e3e46c37aa0",
+    "timestamp": "2026-05-20T21:38:05.579833300+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\b2\\01b56885e2b8f69981b8dc2a21550da3b65da0",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "ed9b2e72-4f67-41f9-a41f-0a392471c789",
+    "timestamp": "2026-05-20T21:38:05.901220+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\47\\8b4519803aeb92eeb87322e39fb1ffd716a6b9",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "41129106-4735-4f82-ae75-78c46d1e8406",
+    "timestamp": "2026-05-20T21:38:06.223008900+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\4a\\0e30997ef75ae4ecdcadac88572320c3cf664f",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "25dab35a-af3b-4808-bc1a-69eb0edca2c0",
+    "timestamp": "2026-05-20T21:38:06.647527200+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\ea\\ebdaba53f5e751c8c3909fc8f5a490271ebfb3",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "9547cf7f-f9de-43e6-9ec2-187564ae3d28",
+    "timestamp": "2026-05-20T21:38:06.987876200+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\0a\\532cc9b805113417148e828804631a2cef4545",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "f64f61f0-b6f9-4e16-8a34-010b1370e58a",
+    "timestamp": "2026-05-20T21:38:07.308102500+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\44\\9ce6d475f45a05de4bb098eca542a32a617e3c",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "ce1eac18-ddde-4163-82bc-1586478581ab",
+    "timestamp": "2026-05-20T21:38:07.637388700+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\70\\f38a679dbeb01c5b3a58a9564df63f416e27e0",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "b0b300b2-898a-4bb6-93ab-5b1b0209404d",
+    "timestamp": "2026-05-20T21:38:07.961684500+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\5d\\c3f50ca16f27bbe1bd8b084c52c675aca0b1fc",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "2a782ea8-ed1f-4ef1-918f-d34e766b16b7",
+    "timestamp": "2026-05-20T21:38:08.290910900+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\10\\ff5a7cc28e62a76be3038aedf3017dac1eca81",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "aa0bbcb4-df4d-40b0-b3ba-6a7d90ab1da7",
+    "timestamp": "2026-05-20T21:38:08.610081300+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\d2\\c891a9bb1fe17e257f5db0801848d6749885dc",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "ec1d098b-ab81-4110-96a1-effb6dbf6693",
+    "timestamp": "2026-05-20T21:38:08.949382300+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\b8\\6669edb1436e0c82ebbca55cb8f26a4a344c3f",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "e957869b-c2d5-417a-a092-8a782b21a229",
+    "timestamp": "2026-05-20T21:38:09.289243200+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\d4\\94efa8c0c2299fea9f00001a0fe2df92cbe43e",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "718a45e1-97bf-4256-a567-aabf4bbf9801",
+    "timestamp": "2026-05-20T21:38:09.610907700+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\a2\\0abbdcf0bb2c5cd0aceb87a40772d16c7e7c09",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "83c652b4-ddcd-442f-baf9-f22d3f289b17",
+    "timestamp": "2026-05-20T21:38:09.943714600+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\49\\69170c92ea0a4ec130518b08e8532634cae39c",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "da687d82-3b83-4a17-a183-932e8fb6f861",
+    "timestamp": "2026-05-20T21:38:10.390318100+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\51\\af910c43f54f52fd0ae20eb3244f8b7e4a93c9",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "5a22efb3-44df-408b-9862-a546ac8175ff",
+    "timestamp": "2026-05-20T21:38:10.789990+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "f1f948fc-1e5a-4d5f-a0a6-c3a375c49913",
+    "timestamp": "2026-05-20T21:38:11.129083200+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\3f\\b395c143a0c3df268f2e2ded65364a2284453f",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "df69d641-b493-49fe-b406-93c47fa907b6",
+    "timestamp": "2026-05-20T21:38:11.467532+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\fd\\2641826c1eaea4eb6c20dbc8679861e3be25d8",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "06392d6d-2cd1-4b20-9a52-e805277e6d4f",
+    "timestamp": "2026-05-20T21:38:11.807728100+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\90\\98a9b90dd6901dff0195a3f7f0d5bd1c7701f6",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "cc3eca4b-12bf-4001-a2f7-9bc98805edf4",
+    "timestamp": "2026-05-20T21:38:12.140186900+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\80\\5055e16fda5146b2437358af59a83eb8419759",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "cef202f2-c3cd-478d-8364-51fc4f4a2b6d",
+    "timestamp": "2026-05-20T21:38:12.469005+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\5c\\60487b20566a9b4962d540838fb7818e9a9eab",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "7d1ba737-1bd2-4ee4-a137-0e1976551c60",
+    "timestamp": "2026-05-20T21:38:12.793893700+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\48\\aa158c0970d2abef68c57934c2fffdbd43bf70",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "ec89749a-4700-4165-ae69-6101b803aacf",
+    "timestamp": "2026-05-20T21:38:13.140768100+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\5a\\7625b251ed67ca3123823df0a535a85491dcf6",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "8aa6de0f-310a-4552-80bf-dd675fd7d3d8",
+    "timestamp": "2026-05-20T21:38:13.458496300+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\d7\\273a74e3ffdf303023c40eaea91470594fc8a9",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "40d044d3-7a51-40ac-a144-c3b056a38b13",
+    "timestamp": "2026-05-20T21:38:13.800808500+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\b4\\4620240713cf8e4d73bfb3723b4a5429a0414f",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "7b9da870-bf84-493a-b5e8-9e29b9a376ca",
+    "timestamp": "2026-05-20T21:38:14.134472600+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\7d\\3f0ceff2771e7f47ba1dd6a5da4bf55cd14150",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "b409f156-cb9b-4833-868f-77917ec1ba34",
+    "timestamp": "2026-05-20T21:38:14.446218900+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\a2\\ffab71f12db9abdedad78b10bb301378951c1a",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "c502f73f-9c59-466d-a7ad-a1f750d939aa",
+    "timestamp": "2026-05-20T21:38:14.764394400+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\7b\\f9adda0df9c23834bd07a2c4118ba4a710aeff",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "c721f260-b027-40a9-91f1-2b21d2a9d926",
+    "timestamp": "2026-05-20T21:38:15.077968400+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\51\\660739a4cd3efba5356fea75ba80f3ccf95d03",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "d81fefc5-4893-442f-ab5d-382b75b805fb",
+    "timestamp": "2026-05-20T21:38:15.406959300+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\de\\8bd41e75ea65014fdf18775519df26ea81cba4",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "688a154f-faa5-49da-a398-d4b6ebd64b92",
+    "timestamp": "2026-05-20T21:38:15.726310100+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\0e\\b1c72e9616638a989d3ca5e4c761462c0bdfa8",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "7bbe3e7b-29ae-42d1-9f53-eef0274d9eee",
+    "timestamp": "2026-05-20T21:38:16.081372400+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\24\\3ec2d9dd8ccc1b34787accac5bfe711a5c155f",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "ec284e43-878c-4cea-9446-10db8343984d",
+    "timestamp": "2026-05-20T21:38:16.429803200+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\2e\\92e539c3fca9458273cc0c69fa78b639b6b159",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "cdc4d366-1fd9-4196-9493-051920716f38",
+    "timestamp": "2026-05-20T21:38:16.753697+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\0e\\dd485b621f69338b5fe79ed6e43193ad419a2a",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "7f7cf413-d3d1-4f3f-aa69-2cac84b9161c",
+    "timestamp": "2026-05-20T21:38:17.086277300+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\eb\\1359e92fe37289fbdbfdb33ecd2094f6fc7036",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "d0b50c4f-065b-4a68-ab9d-0dd7cd6f2756",
+    "timestamp": "2026-05-20T21:38:17.408212+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\d9\\28dfd229d832c0b830861d957c082826326202",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "866f0218-9177-40a5-9a8e-54fabd8e3836",
+    "timestamp": "2026-05-20T21:38:17.742458100+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\7f\\8f004c79f482c9ef0bb3cd574c397ab2246c9f",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "f753b49a-ce79-4213-b1be-3dacb68b2137",
+    "timestamp": "2026-05-20T21:38:18.076936300+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\ec\\d6b1641752920d0fb790ec4b2b6d583996f2c8",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "f255fe11-e229-4ce6-ab16-1cef8c743228",
+    "timestamp": "2026-05-20T21:38:18.446243700+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "884fa345-3202-4546-9efe-c8fe85c4727e",
+    "timestamp": "2026-05-20T21:39:07.379188800+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\client\\gui\\style_dark.qss",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "b460b774-ca73-485d-a947-74d04fc6d37b",
+    "timestamp": "2026-05-20T21:39:07.689076600+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\data\\config.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "d81acc2e-d216-4bea-8658-fa92bd9e7de5",
+    "timestamp": "2026-05-20T21:39:08.090142600+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "477c7bf1-d0bc-4838-8d90-b5fc9a6ebf66",
+    "timestamp": "2026-05-20T21:39:18.169413800+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\.git\\objects\\92\\b2d527325571e8af59b74ed4b20be50c32edf2",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "d8fe7941-c694-463e-9484-6adbb0630226",
+    "timestamp": "2026-05-20T21:39:18.559174300+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "f56b9eff-9cf2-4b75-802c-82a3c97eff58",
+    "timestamp": "2026-05-20T22:00:20.182960400+00:00",
+    "action": "scan_progress",
+    "path": "C:/Users/jordi/Asphylax/proves",
+    "result": "malware",
+    "score": 200,
+    "details": "Fitxers escanejats: 14, deteccions totals: 10"
+  },
+  {
+    "id": "aa4a2b84-24a4-47c4-99f9-02b9530270f4",
+    "timestamp": "2026-05-20T22:01:00.270497200+00:00",
+    "action": "scan_progress",
+    "path": "C:/Users/jordi/Asphylax/proves",
+    "result": "malware",
+    "score": 200,
+    "details": "Fitxers escanejats: 14, deteccions totals: 10"
+  },
+  {
+    "id": "633e612b-4cab-45da-8d24-b819b19a7993",
+    "timestamp": "2026-05-20T22:03:04.480609+00:00",
+    "action": "scan_progress",
+    "path": "C:/Users/jordi/Asphylax/proves",
+    "result": "malware",
+    "score": 200,
+    "details": "Fitxers escanejats: 14, deteccions totals: 10"
+  },
+  {
+    "id": "6e8f411b-99e9-4025-82b2-0a020d85d55b",
+    "timestamp": "2026-05-20T22:03:27.785658900+00:00",
+    "action": "restore_quarantine",
+    "path": "C:/Users/jordi/Asphylax/proves/test_pattern.txt",
+    "result": "restored",
+    "score": null,
+    "details": "Fitxer restaurat des de quarantena"
+  },
+  {
+    "id": "3ddab083-3a73-4704-9d9b-4f94cf89516a",
+    "timestamp": "2026-05-20T22:22:30.652303300+00:00",
+    "action": "scan_progress",
+    "path": "C:/Users/jordi/Asphylax/proves",
+    "result": "malware",
+    "score": 200,
+    "details": "Fitxers escanejats: 15, deteccions totals: 10"
+  },
+  {
+    "id": "5d8d260e-deab-4e8a-9e43-648f1c74047a",
+    "timestamp": "2026-05-20T22:23:15.280086500+00:00",
+    "action": "scan_progress",
+    "path": "C:/Users/jordi/Asphylax/proves",
+    "result": "suspicious",
+    "score": 50,
+    "details": "Fitxers escanejats: 10, deteccions totals: 4"
+  },
+  {
+    "id": "7fcd2dfe-1627-4708-97bc-dd0aaaccca92",
+    "timestamp": "2026-05-20T22:23:28.248695700+00:00",
+    "action": "restore_quarantine",
+    "path": "C:/Users/jordi/Asphylax/proves\\download.txt",
+    "result": "restored",
+    "score": null,
+    "details": "Fitxer restaurat des de quarantena"
+  },
+  {
+    "id": "5bbbd892-8bae-40e3-a0d3-187e5d492b3c",
+    "timestamp": "2026-05-20T22:23:32.447542700+00:00",
+    "action": "restore_quarantine",
+    "path": "C:/Users/jordi/Asphylax/proves\\putty.exe",
+    "result": "restored",
+    "score": null,
+    "details": "Fitxer restaurat des de quarantena"
+  },
+  {
+    "id": "881380cd-3f3a-496b-b58a-e7142cfb14d2",
+    "timestamp": "2026-05-20T22:23:36.536527800+00:00",
+    "action": "restore_quarantine",
+    "path": "C:/Users/jordi/Asphylax/proves\\regex_test.txt",
+    "result": "restored",
+    "score": null,
+    "details": "Fitxer restaurat des de quarantena"
+  },
+  {
+    "id": "b2070f94-ae54-4a55-874c-86b1c888cabf",
+    "timestamp": "2026-05-20T22:23:40.153789100+00:00",
+    "action": "restore_quarantine",
+    "path": "C:/Users/jordi/Asphylax/proves\\sub1\\combo.txt",
+    "result": "restored",
+    "score": null,
+    "details": "Fitxer restaurat des de quarantena"
+  },
+  {
+    "id": "984ff8d3-ac5d-4792-b524-020732d9dc36",
+    "timestamp": "2026-05-20T22:23:43.253092700+00:00",
+    "action": "restore_quarantine",
+    "path": "C:/Users/jordi/Asphylax/proves\\yara\\powershell_test.txt",
+    "result": "restored",
+    "score": null,
+    "details": "Fitxer restaurat des de quarantena"
+  },
+  {
+    "id": "fa916135-a9d2-4ce2-84f7-bfb1f7083656",
+    "timestamp": "2026-05-20T22:43:01.706794100+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\data\\config.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "5a293d37-ced4-4d03-ba80-0e7b6ae7ec59",
+    "timestamp": "2026-05-20T22:43:02.144289800+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "881211f2-e400-4ac5-84e2-16a3624ba9fe",
+    "timestamp": "2026-05-20T22:43:20.591149400+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\client\\gui\\style_light.qss",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "e3a26a6e-c44d-4182-8336-6519f0e866af",
+    "timestamp": "2026-05-20T22:43:21.003911700+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "f02b9041-a5b2-4b47-96a3-9b6fb72d0c67",
+    "timestamp": "2026-05-20T22:43:54.775880300+00:00",
+    "action": "scan",
+    "path": "C:/ProgramData\\Microsoft\\Windows\\AppRepository\\Packages\\microsoft.windowscommunicationsapps_16005.14326.22342.0_x64__8wekyb3d8bbwe\\S-1-5-21-501021937-1741747442-3050113461-1001.pckgdep",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "9f5c67a6-e855-441f-b479-9e7e78f892e7",
+    "timestamp": "2026-05-20T22:43:55.683832200+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "7856008e-31b4-46ec-a5e2-5ef6dd54f1df",
+    "timestamp": "2026-05-20T22:44:16.011219600+00:00",
+    "action": "scan",
+    "path": "C:/ProgramData\\Microsoft\\Windows\\AppRepository\\Packages\\Microsoft.ScreenSketch_11.2602.47.0_x64__8wekyb3d8bbwe\\S-1-5-21-501021937-1741747442-3050113461-1001.pckgdep",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "123d29ba-1db4-4565-89a7-e206b035f00e",
+    "timestamp": "2026-05-20T22:44:16.589096500+00:00",
+    "action": "scan",
+    "path": "C:/ProgramData\\NVIDIA Corporation\\Drs\\nvAppTimestamps",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "1877f3f4-bd39-4857-abfc-caba2cb38077",
+    "timestamp": "2026-05-20T22:44:16.998517900+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "2fe524e2-7dd0-4278-91fb-4414f2e6c39f",
+    "timestamp": "2026-05-20T22:44:20.770406700+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Imágenes\\Capturas de pantalla\\desktop.ini",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "63cad0c2-f653-4639-b3f1-7f2ff3b16bb4",
+    "timestamp": "2026-05-20T22:44:21.596614900+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Imágenes\\Capturas de pantalla\\Captura de pantalla 2026-05-21 004420.png",
+    "result": "clean",
+    "score": 40,
+    "details": "Fitxers escanejats: 1, deteccions totals: 1"
+  },
+  {
+    "id": "9d2c09e0-6ac9-42d1-b4a6-1d0f09d0e751",
+    "timestamp": "2026-05-20T22:44:22.051082300+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "5835a4a5-da0e-4df0-9440-5541228b0bf2",
+    "timestamp": "2026-05-20T22:44:22.411115800+00:00",
+    "action": "scan",
+    "path": "C:/ProgramData\\Microsoft\\Windows\\AppRepository\\Packages\\Microsoft.Windows.ShellExperienceHost_10.0.26100.8115_neutral_neutral_cw5n1h2txyewy\\machine.pckgdep",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "6f920956-ec5e-46de-8241-ee87c8394a0b",
+    "timestamp": "2026-05-20T22:44:22.862996+00:00",
+    "action": "scan",
+    "path": "C:/Users\\Public\\desktop.ini",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "a00940f6-bff7-425e-9fc0-605beaac37e9",
+    "timestamp": "2026-05-20T22:44:23.244662600+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Escritorio\\WhatsApp Web.lnk",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "fb036c95-7733-4584-bebd-3c72d73a62cb",
+    "timestamp": "2026-05-20T22:44:23.591895100+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Escritorio\\Lively Wallpaper.lnk",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "efbbe646-a5d7-4311-884a-1720db69dc54",
+    "timestamp": "2026-05-20T22:44:23.934555600+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Escritorio\\Discord.lnk",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "526f836b-237c-4bc8-a1ae-2b0ac5debd82",
+    "timestamp": "2026-05-20T22:44:24.271374+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Escritorio\\Spotify.lnk",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "d145b875-96e1-4ce4-94d8-f822272126b4",
+    "timestamp": "2026-05-20T22:44:24.590268800+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Escritorio\\GitHub Desktop.lnk",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "3c3c2a69-3737-40c9-b9b3-533664e5fc83",
+    "timestamp": "2026-05-20T22:44:24.953530800+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Escritorio\\CodeBlocks.lnk",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "e43a1a31-cebc-4ce1-8686-38c1dedfd4ef",
+    "timestamp": "2026-05-20T22:44:25.280596300+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Escritorio\\Blender 4.3.lnk",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "cd7aa262-522c-46b3-8028-4ac3c2d78e0f",
+    "timestamp": "2026-05-20T22:44:25.638039900+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Escritorio\\Postman.lnk",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "423c9262-ae96-4cd8-9aa2-2982acfa3587",
+    "timestamp": "2026-05-20T22:44:25.979463800+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Escritorio\\DixMax (1).lnk",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "a9042de1-b81b-463a-9934-4266e196a241",
+    "timestamp": "2026-05-20T22:44:26.297933+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Escritorio\\Pur Video Downloader.lnk",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "bdcdc5a5-6e08-467c-a543-f325cb87699b",
+    "timestamp": "2026-05-20T22:44:26.636078400+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Escritorio\\DixMax TV.lnk",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "9e7fe98d-31ba-489b-8dc3-bb49f06180f0",
+    "timestamp": "2026-05-20T22:44:26.981962300+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Escritorio\\Dropbox.lnk",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "6254f667-d807-4483-a86b-798d1bde64eb",
+    "timestamp": "2026-05-20T22:44:27.320332900+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Escritorio\\Docker Desktop.lnk",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "7693e917-d51e-4cc3-ad3e-c7f26f3f05e0",
+    "timestamp": "2026-05-20T22:44:27.651826100+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Escritorio\\SportzX.lnk",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "cec47db2-f7b2-4605-ab23-fcd77643cd4b",
+    "timestamp": "2026-05-20T22:44:28.016862900+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Escritorio\\DixMax.lnk",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "dd89a366-de83-48ae-935d-1d4be1cac6fc",
+    "timestamp": "2026-05-20T22:44:28.445993300+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "b08b046c-71cb-45bc-bb48-c49b95e94ad3",
+    "timestamp": "2026-05-20T22:44:31.035033600+00:00",
+    "action": "scan",
+    "path": "C:/ProgramData\\Microsoft\\Windows\\AppRepository\\Packages\\microsoft.windowscommunicationsapps_16005.14326.22342.0_x64__8wekyb3d8bbwe\\ActivationStore.dat",
+    "result": "clean",
+    "score": 40,
+    "details": "Fitxers escanejats: 1, deteccions totals: 1"
+  },
+  {
+    "id": "24dcc15f-dc49-456b-b20a-188256731761",
+    "timestamp": "2026-05-20T22:44:31.462469100+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "10ab8fb4-0949-47a3-8eb2-271327fe7f66",
+    "timestamp": "2026-05-20T22:45:19.134341900+00:00",
+    "action": "scan_progress",
+    "path": "C:/Users/jordi/Asphylax/client",
+    "result": "clean",
+    "score": 30,
+    "details": "Fitxers escanejats: 44, deteccions totals: 7"
+  },
+  {
+    "id": "e1bb16be-9d56-42d7-9922-d6da3447990f",
+    "timestamp": "2026-05-20T22:45:19.464474+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\client\\app\\controllers\\config_controller.py",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "a05c6d93-e04e-4474-9859-ccfd2d3103d5",
+    "timestamp": "2026-05-20T22:45:19.798511300+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\client\\app\\controllers\\scan_worker.py",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "03a98b53-3bd2-4cf0-8285-743c2dbe1673",
+    "timestamp": "2026-05-20T22:45:20.145223900+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\client\\app\\services\\agent_client.py",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "b4331795-de98-4354-a98a-3c9c9ce661e7",
+    "timestamp": "2026-05-20T22:45:20.479457800+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\client\\app\\controllers\\monitor_controller.py",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "6a3b5d88-1744-4c23-9bdb-33a6965c8a04",
+    "timestamp": "2026-05-20T22:45:20.862034700+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\client\\app\\controllers\\history_controller.py",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "d1034119-1c93-4291-9cdc-7916a79bb674",
+    "timestamp": "2026-05-20T22:45:21.215974500+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\client\\gui\\.idea\\Asphylax.iml",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "fd97e27f-7769-42b5-ab0d-007aa122a455",
+    "timestamp": "2026-05-20T22:45:21.588268500+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\client\\gui\\.idea\\modules.xml",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "6e873da5-6fd6-48b0-9807-200eba7f723a",
+    "timestamp": "2026-05-20T22:45:21.951156700+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\client\\gui\\.idea\\inspectionProfiles\\profiles_settings.xml",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "9e13b399-6152-4c0b-a3a6-5340b09537c0",
+    "timestamp": "2026-05-20T22:45:22.285079500+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\client\\app\\controllers\\quarantine_controller.py",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "67eac5c6-2abf-486b-90bd-7360f393b152",
+    "timestamp": "2026-05-20T22:45:22.636613900+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\client\\gui\\.idea\\vcs.xml",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "0abde56c-1e44-4afd-92a7-de1fca21d054",
+    "timestamp": "2026-05-20T22:45:22.973965800+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\client\\gui\\.idea\\misc.xml",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "27b3b2ac-ace7-4a9b-ac02-d56e3e7441f0",
+    "timestamp": "2026-05-20T22:45:23.360980200+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\client\\app\\controllers\\scan_controller.py",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "3ceac8e4-7429-4552-a21b-cdce964f4398",
+    "timestamp": "2026-05-20T22:45:27.815070300+00:00",
+    "action": "scan",
+    "path": "C:/ProgramData\\NVIDIA Corporation\\nvtopps\\nct\\nvlog.nvlgstg",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "1c97f8cb-6580-40d2-ae8f-d02f52813f8e",
+    "timestamp": "2026-05-20T22:45:30.244598600+00:00",
+    "action": "scan",
+    "path": "C:/ProgramData\\NVIDIA Corporation\\nvtopps\\nct\\nvlog.nvlgstg",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "c5bc5b35-df01-4d8e-ae9d-3c837368c9a1",
+    "timestamp": "2026-05-20T22:45:31.132588800+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\client\\app\\monitoring\\file_monitor.py",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "ec0bf2ef-1dfa-43e5-82ba-61f4c4367be0",
+    "timestamp": "2026-05-20T22:45:34.289363600+00:00",
+    "action": "scan",
+    "path": "C:/ProgramData\\NVIDIA Corporation\\nvtopps\\nvtopps.db3",
+    "result": "clean",
+    "score": 40,
+    "details": "Fitxers escanejats: 1, deteccions totals: 1"
+  },
+  {
+    "id": "f61631c9-90d2-49bd-bd66-573dbd0ae74a",
+    "timestamp": "2026-05-20T22:45:35.146704+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\client\\gui\\prova.py",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "2a86be6f-a04b-42c6-b90e-80a344f53619",
+    "timestamp": "2026-05-20T22:45:35.507471600+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\client\\test_monitor.py",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "08ce3635-449d-4fa2-aae6-ce9affc04392",
+    "timestamp": "2026-05-20T22:45:35.962745100+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "5525ceee-2e2a-4831-9640-7256328d9bec",
+    "timestamp": "2026-05-20T22:45:42.380237300+00:00",
+    "action": "scan",
+    "path": "C:/ProgramData\\NVIDIA Corporation\\Drs\\nvAppTimestamps",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "2e452c56-7e16-4b4a-ac05-03e9551a1aaf",
+    "timestamp": "2026-05-20T22:45:43.333470100+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "12f479f2-91f6-40a7-b2dd-69f89a69e009",
+    "timestamp": "2026-05-20T22:45:46.048668300+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Imágenes\\Capturas de pantalla\\Captura de pantalla 2026-05-21 004545.png",
+    "result": "clean",
+    "score": 40,
+    "details": "Fitxers escanejats: 1, deteccions totals: 1"
+  },
+  {
+    "id": "a0c358d0-1821-4f4c-a978-98ed48c3800e",
+    "timestamp": "2026-05-20T22:45:46.562455500+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "348d57c2-7790-4329-8ae7-bd329dea4338",
+    "timestamp": "2026-05-20T22:45:54.328546200+00:00",
+    "action": "scan",
+    "path": "C:/ProgramData\\HP\\SharedServices\\analytics_store.dat",
+    "result": "clean",
+    "score": 40,
+    "details": "Fitxers escanejats: 1, deteccions totals: 1"
+  },
+  {
+    "id": "67ab6469-6384-44ba-afa3-2ff371ddfb3e",
+    "timestamp": "2026-05-20T22:45:54.792292+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "0372c2fb-3ae2-46a1-b564-858eb29721ec",
+    "timestamp": "2026-05-20T22:45:55.787709800+00:00",
+    "action": "scan",
+    "path": "C:/ProgramData\\NVIDIA Corporation\\Drs\\nvAppTimestamps",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "05a0975d-d129-4e71-a6ee-653b4fc7e9f0",
+    "timestamp": "2026-05-20T22:46:00.220770400+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Imágenes\\Capturas de pantalla\\Captura de pantalla 2026-05-21 004559.png",
+    "result": "clean",
+    "score": 40,
+    "details": "Fitxers escanejats: 1, deteccions totals: 1"
+  },
+  {
+    "id": "42a5dbc2-9d3e-4ba8-ad52-c3ad9eb346f9",
+    "timestamp": "2026-05-20T22:46:00.758491+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "ae4c398d-dc52-4509-8576-fe15477ccd27",
+    "timestamp": "2026-05-20T22:46:06.449386400+00:00",
+    "action": "scan",
+    "path": "C:/ProgramData\\Whesvc\\pool_tags_summary\\pool_tags_summary_2026-05-20_22_46_06_127.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "07ed0a68-a04a-48e3-8f24-bf7d1ab45495",
+    "timestamp": "2026-05-20T22:46:06.900610400+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "8c2bbd77-8bf5-49a5-a85a-38691c821f27",
+    "timestamp": "2026-05-20T22:46:13.607705400+00:00",
+    "action": "scan",
+    "path": "C:/ProgramData\\NVIDIA Corporation\\Drs\\nvAppTimestamps",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "571b3faf-a959-4145-9b98-202754782bfa",
+    "timestamp": "2026-05-20T22:46:14.581883300+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "97e5890d-3c3d-4199-9f11-d3329356edec",
+    "timestamp": "2026-05-20T22:46:33.181657200+00:00",
+    "action": "scan",
+    "path": "C:/ProgramData\\NVIDIA Corporation\\Drs\\nvAppTimestamps",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "ac54eb46-2a10-48e1-aecf-ffb047438601",
+    "timestamp": "2026-05-20T22:46:34.166881300+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "8b1d9fa0-bcdb-40ba-8270-98ad2096db27",
+    "timestamp": "2026-05-20T22:46:35.854221500+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Imágenes\\Capturas de pantalla\\Captura de pantalla 2026-05-21 004635.png",
+    "result": "clean",
+    "score": 40,
+    "details": "Fitxers escanejats: 1, deteccions totals: 1"
+  },
+  {
+    "id": "acdf7db8-f618-45a3-922f-15cf3d70bcfa",
+    "timestamp": "2026-05-20T22:46:36.896970600+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "1154c1ef-b901-40a4-bcd9-ee6624f3e19e",
+    "timestamp": "2026-05-20T22:46:45.761551500+00:00",
+    "action": "scan",
+    "path": "C:/ProgramData\\NVIDIA Corporation\\Drs\\nvAppTimestamps",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "df63df6a-92eb-4ae5-ad91-1e458ab69c5f",
+    "timestamp": "2026-05-20T22:46:46.736215100+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "62a1de6a-ffa1-4759-b389-e4143a9332b4",
+    "timestamp": "2026-05-20T22:46:50.824272500+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\OneDrive\\Imágenes\\Capturas de pantalla\\Captura de pantalla 2026-05-21 004650.png",
+    "result": "clean",
+    "score": 40,
+    "details": "Fitxers escanejats: 1, deteccions totals: 1"
+  },
+  {
+    "id": "990406ec-a3c8-4e95-aac5-797d480b46ff",
+    "timestamp": "2026-05-20T22:46:51.359888300+00:00",
+    "action": "scan",
+    "path": "C:/Users\\jordi\\Asphylax\\history\\history.json",
+    "result": "clean",
+    "score": 0,
+    "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  }
+]
