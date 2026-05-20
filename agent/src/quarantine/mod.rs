@@ -81,3 +81,91 @@ fn save_entries(entries: &[QuarantineEntry]) -> Result<(), String> {
     fs::write(QUARANTINE_INDEX, json)
         .map_err(|e| format!("Error guardant quarantine_index.json: {}", e))
 }
+
+
+pub fn list_quarantine() -> Result<Vec<QuarantineEntry>, String> {
+    let mut entries = load_entries();
+
+    entries.sort_by(|a, b| {
+        b.quarantined_at.cmp(&a.quarantined_at)
+    });
+
+    Ok(entries)
+}
+
+
+pub fn restore_quarantine(id: &str) -> Result<QuarantineEntry, String> {
+    let mut entries = load_entries();
+
+    let entry_position = entries
+        .iter()
+        .position(|entry| entry.id == id)
+        .ok_or_else(|| "No s'ha trobat cap entrada amb aquest ID".to_string())?;
+
+    let mut entry = entries[entry_position].clone();
+
+    if entry.status != "quarantined" {
+        return Err("Aquest fitxer no està en estat quarantined".to_string());
+    }
+
+    let quarantine_path = Path::new(&entry.quarantine_path);
+    let original_path = Path::new(&entry.original_path);
+
+    if !quarantine_path.exists() {
+        return Err("El fitxer de quarantena no existeix".to_string());
+    }
+
+    if original_path.exists() {
+        return Err("Ja existeix un fitxer a la ruta original. No es restaurarà per seguretat.".to_string());
+    }
+
+    if let Some(parent) = original_path.parent() {
+        fs::create_dir_all(parent)
+            .map_err(|e| format!("No es pot recrear la carpeta original: {}", e))?;
+    }
+
+    fs::rename(quarantine_path, original_path)
+        .map_err(|e| format!("Error restaurant el fitxer: {}", e))?;
+
+    entry.status = "restored".to_string();
+
+    entries[entry_position] = entry.clone();
+    save_entries(&entries)?;
+
+    Ok(entry)
+}
+
+
+
+pub fn delete_quarantine(id: &str) -> Result<QuarantineEntry, String> {
+    let mut entries = load_entries();
+
+    let entry_position = entries
+        .iter()
+        .position(|entry| entry.id == id)
+        .ok_or_else(|| "No s'ha trobat cap entrada amb aquest ID".to_string())?;
+
+    let mut entry = entries[entry_position].clone();
+
+    if entry.status == "deleted" {
+        return Err("Aquest fitxer ja està eliminat definitivament".to_string());
+    }
+
+    if entry.status == "restored" {
+        return Err("Aquest fitxer ja ha estat restaurat i no es pot eliminar des de quarantena".to_string());
+    }
+
+    let quarantine_path = Path::new(&entry.quarantine_path);
+
+    if quarantine_path.exists() {
+        fs::remove_file(quarantine_path)
+            .map_err(|e| format!("Error eliminant fitxer de quarantena: {}", e))?;
+    }
+
+    entry.status = "deleted".to_string();
+
+    entries[entry_position] = entry.clone();
+    save_entries(&entries)?;
+
+    Ok(entry)
+}

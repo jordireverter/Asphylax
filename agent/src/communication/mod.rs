@@ -182,6 +182,65 @@ fn handle_client(
                 }
             },
 
+            "list_quarantine" => match quarantine::list_quarantine() {
+                Ok(entries) => ResponseMessage {
+                    status: "ok".to_string(),
+                    message: "Llista de quarantena carregada".to_string(),
+                    data: Some(serde_json::to_value(entries).unwrap()),
+                },
+                Err(error) => ResponseMessage {
+                    status: "error".to_string(),
+                    message: error,
+                    data: None,
+                },
+            },
+
+
+            "restore_quarantine" => {
+                match req.path {
+                    Some(id) => match quarantine::restore_quarantine(&id) {
+                        Ok(entry) => ResponseMessage {
+                            status: "ok".to_string(),
+                            message: "Fitxer restaurat correctament".to_string(),
+                            data: Some(serde_json::to_value(entry).unwrap()),
+                        },
+                        Err(error) => ResponseMessage {
+                            status: "error".to_string(),
+                            message: error,
+                            data: None,
+                        },
+                    },
+                    None => ResponseMessage {
+                        status: "error".to_string(),
+                        message: "Falta l'ID de quarantena".to_string(),
+                        data: None,
+                    },
+                }
+            },
+
+
+            "delete_quarantine" => {
+                match req.path {
+                    Some(id) => match quarantine::delete_quarantine(&id) {
+                        Ok(entry) => ResponseMessage {
+                            status: "ok".to_string(),
+                            message: "Fitxer eliminat definitivament".to_string(),
+                            data: Some(serde_json::to_value(entry).unwrap()),
+                        },
+                        Err(error) => ResponseMessage {
+                            status: "error".to_string(),
+                            message: error,
+                            data: None,
+                        },
+                    },
+                    None => ResponseMessage {
+                        status: "error".to_string(),
+                        message: "Falta l'ID de quarantena".to_string(),
+                        data: None,
+                    },
+                }
+            }
+
             _ => ResponseMessage {
                 status: "error".to_string(),
                 message: format!("Acció desconeguda: {}", req.action),

@@ -27,6 +27,7 @@ from PyQt6.QtWidgets import QTextEdit
 from app.controllers.scan_controller import ScanController
 from app.controllers.scan_worker import ScanWorker
 from app.controllers.monitor_controller import MonitorController
+from app.controllers.quarantine_controller import QuarantineController
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 GUI_DIR = BASE_DIR / "gui"
@@ -44,6 +45,8 @@ class AsphylaxUI(QMainWindow):
         self.monitor_rows = {}
         self.monitor_scanned_files = 0
         self.monitor_threats = 0
+        self.quarantine_controller = QuarantineController()
+        self.selected_quarantine_file = None
 
         self.setWindowTitle("Asphylax Antivirus")
         self.setGeometry(200, 200, 1200, 750)
@@ -357,11 +360,54 @@ class AsphylaxUI(QMainWindow):
     def create_quarantine_tab(self):
         widget = QWidget()
         layout = QVBoxLayout()
-        layout.addWidget(QLabel("Fitxers en quarantena"))
-        quarantine_list = QListWidget()
-        layout.addWidget(quarantine_list)
-        layout.addWidget(QPushButton("Restaurar"))
-        layout.addWidget(QPushButton("Eliminar"))
+
+        title = QLabel("Quarantena")
+        title.setFont(QFont("Segoe UI", 20, QFont.Weight.Bold))
+        layout.addWidget(title)
+
+        self.quarantine_selected_label = QLabel("Cap fitxer seleccionat")
+        layout.addWidget(self.quarantine_selected_label)
+
+        buttons_layout = QHBoxLayout()
+
+        select_file_button = QPushButton("Seleccionar fitxer")
+        select_file_button.clicked.connect(self.select_file_for_quarantine)
+        buttons_layout.addWidget(select_file_button)
+
+        quarantine_button = QPushButton("Enviar a quarantena")
+        quarantine_button.clicked.connect(self.quarantine_selected_file)
+        buttons_layout.addWidget(quarantine_button)
+
+        refresh_button = QPushButton("Actualitzar llista")
+        refresh_button.clicked.connect(self.load_quarantine_list)
+        buttons_layout.addWidget(refresh_button)
+
+        restore_button = QPushButton("Restaurar seleccionat")
+        restore_button.clicked.connect(self.restore_selected_quarantine)
+        buttons_layout.addWidget(restore_button)
+
+        delete_button = QPushButton("Eliminar definitivament")
+        delete_button.clicked.connect(self.delete_selected_quarantine)
+        buttons_layout.addWidget(delete_button)
+
+
+        layout.addLayout(buttons_layout)
+
+        self.quarantine_table = QTableWidget()
+        self.quarantine_table.setColumnCount(5)
+        self.quarantine_table.setHorizontalHeaderLabels([
+            "ID",
+            "Nom",
+            "Ruta original",
+            "Data",
+            "Estat",
+        ])
+        self.quarantine_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.quarantine_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+        self.quarantine_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
+        
+        layout.addWidget(self.quarantine_table, stretch=1)
+
         widget.setLayout(layout)
         return widget
 
@@ -515,3 +561,166 @@ class AsphylaxUI(QMainWindow):
                     self.monitor_details.setVisible(False)
 
         return super().eventFilter(source, event)
+    
+
+    def select_file_for_quarantine(self):
+        path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Selecciona un fitxer per enviar a quarantena",
+        )
+
+        if path:
+            self.selected_quarantine_file = path
+            self.quarantine_selected_label.setText(path)
+
+
+    def quarantine_selected_file(self):
+        if not self.selected_quarantine_file:
+            QMessageBox.warning(
+                self,
+                "Cap fitxer seleccionat",
+                "Selecciona primer un fitxer.",
+            )
+            return
+
+        response = self.quarantine_controller.quarantine_file(
+            self.selected_quarantine_file
+        )
+
+        if response.get("status") != "ok":
+            QMessageBox.critical(
+                self,
+                "Error de quarantena",
+                response.get("message", "Error desconegut."),
+            )
+            return
+
+        QMessageBox.information(
+            self,
+            "Quarantena",
+            "El fitxer s'ha enviat correctament a quarantena.",
+        )
+
+        self.selected_quarantine_file = None
+        self.quarantine_selected_label.setText("Cap fitxer seleccionat")
+
+        self.load_quarantine_list()
+
+    def load_quarantine_list(self):
+        response = self.quarantine_controller.list_quarantine()
+
+        if response.get("status") != "ok":
+            QMessageBox.critical(
+                self,
+                "Error",
+                response.get("message", "No s'ha pogut carregar la quarantena."),
+            )
+            return
+
+        entries = response.get("data") or []
+
+        self.quarantine_table.setRowCount(0)
+
+        for entry in entries:
+            row = self.quarantine_table.rowCount()
+            self.quarantine_table.insertRow(row)
+
+            self.quarantine_table.setItem(row, 0, QTableWidgetItem(entry.get("id", "")))
+            self.quarantine_table.setItem(row, 1, QTableWidgetItem(entry.get("filename", "")))
+            self.quarantine_table.setItem(row, 2, QTableWidgetItem(entry.get("original_path", "")))
+            self.quarantine_table.setItem(row, 3, QTableWidgetItem(entry.get("quarantined_at", "")))
+            self.quarantine_table.setItem(row, 4, QTableWidgetItem(entry.get("status", "")))
+
+
+    def restore_selected_quarantine(self):
+        selected_row = self.quarantine_table.currentRow()
+
+        if selected_row < 0:
+            QMessageBox.warning(
+                self,
+                "Cap entrada seleccionada",
+                "Selecciona primer una entrada de la taula.",
+            )
+            return
+
+        id_item = self.quarantine_table.item(selected_row, 0)
+
+        if id_item is None:
+            QMessageBox.warning(
+                self,
+                "ID no trobat",
+                "No s'ha pogut obtenir l'ID de quarantena.",
+            )
+            return
+
+        quarantine_id = id_item.text()
+
+        response = self.quarantine_controller.restore_quarantine(quarantine_id)
+
+        if response.get("status") != "ok":
+            QMessageBox.critical(
+                self,
+                "Error restaurant",
+                response.get("message", "No s'ha pogut restaurar el fitxer."),
+            )
+            return
+
+        QMessageBox.information(
+            self,
+            "Fitxer restaurat",
+            "El fitxer s'ha restaurat correctament.",
+        )
+
+        self.load_quarantine_list()    
+
+    
+    def delete_selected_quarantine(self):
+        selected_row = self.quarantine_table.currentRow()
+
+        if selected_row < 0:
+            QMessageBox.warning(
+                self,
+                "Cap entrada seleccionada",
+                "Selecciona primer una entrada de la taula.",
+            )
+            return
+
+        id_item = self.quarantine_table.item(selected_row, 0)
+
+        if id_item is None:
+            QMessageBox.warning(
+                self,
+                "ID no trobat",
+                "No s'ha pogut obtenir l'ID de quarantena.",
+            )
+            return
+
+        quarantine_id = id_item.text()
+
+        confirm = QMessageBox.question(
+            self,
+            "Confirmar eliminació",
+            "Segur que vols eliminar definitivament aquest fitxer de quarantena?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+        )
+
+        if confirm != QMessageBox.StandardButton.Yes:
+            return
+
+        response = self.quarantine_controller.delete_quarantine(quarantine_id)
+
+        if response.get("status") != "ok":
+            QMessageBox.critical(
+                self,
+                "Error eliminant",
+                response.get("message", "No s'ha pogut eliminar el fitxer."),
+            )
+            return
+
+        QMessageBox.information(
+            self,
+            "Fitxer eliminat",
+            "El fitxer s'ha eliminat definitivament.",
+        )
+
+        self.load_quarantine_list()

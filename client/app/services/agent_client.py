@@ -110,3 +110,29 @@ class AgentClient:
                 "message": f"Error comunicant amb l'agent: {error}",
                 "data": None,
             }
+        
+    
+    def quarantine_file(self, path: str) -> dict:
+        return self.send_request({
+            "action": "quarantine",
+            "path": path,
+        })
+    
+    def list_quarantine(self) -> dict:
+        return self.send_request({
+            "action": "list_quarantine",
+        })
+    
+
+    def restore_quarantine(self, quarantine_id: str) -> dict:
+        return self.send_request({
+            "action": "restore_quarantine",
+            "path": quarantine_id,
+        })
+    
+
+    def delete_quarantine(self, quarantine_id: str) -> dict:
+        return self.send_request({
+            "action": "delete_quarantine",
+            "path": quarantine_id,
+        })
