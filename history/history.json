@@ -1681,5 +1681,14 @@
     "result": "clean",
     "score": 0,
     "details": "Fitxers escanejats: 1, deteccions totals: 0"
+  },
+  {
+    "id": "90474893-3e1b-4469-a306-a8807ae161bd",
+    "timestamp": "2026-05-21T13:41:41.831931200+00:00",
+    "action": "scan_progress",
+    "path": "C:/Users/jordi/Asphylax/proves",
+    "result": "malware",
+    "score": 310,
+    "details": "Fitxers escanejats: 15, deteccions totals: 10"
   }
 ]

@@ -389,6 +389,50 @@ fn handle_client(
                 },
             },
 
+
+            "quick_scan" => {
+                let active_config = match config::load_config() {
+                    Ok(cfg) => cfg,
+                    Err(error) => {
+                        return Ok(send_plain_response(
+                            &mut stream,
+                            ResponseMessage {
+                                status: "error".to_string(),
+                                message: error,
+                                data: None,
+                            },
+                        )?);
+                    }
+                };
+
+                match scanner::quick_scan(signatures_map, yara_engine, &active_config) {
+                    Ok(result) => {
+                        let _ = history::add_history_entry(
+                            "quick_scan",
+                            Some("Quick scan".to_string()),
+                            &result.classification,
+                            Some(result.final_score),
+                            &format!(
+                                "Fitxers escanejats: {}, deteccions totals: {}",
+                                result.scanned_files,
+                                result.total_detections
+                            ),
+                        );
+
+                        ResponseMessage {
+                            status: "ok".to_string(),
+                            message: "Quick scan completat".to_string(),
+                            data: Some(serde_json::to_value(result).unwrap()),
+                        }
+                    }
+                    Err(error) => ResponseMessage {
+                        status: "error".to_string(),
+                        message: error,
+                        data: None,
+                    },
+                }
+            },
+
             _ => ResponseMessage {
                 status: "error".to_string(),
                 message: format!("Acció desconeguda: {}", req.action),

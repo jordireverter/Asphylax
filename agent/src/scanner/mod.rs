@@ -45,7 +45,10 @@ where
     }
 
     let mut files = Vec::new();
-    let options = ScanOptions { quick_scan: false };
+    let options = ScanOptions { 
+        quick_scan: false, 
+        pe_analysis_enabled: true 
+    };
     collect_files(path, &mut files, config, &options)?;
 
     let total_files = files.len();
@@ -66,7 +69,7 @@ where
     let partial_results: Result<Vec<FileScanResult>, String> = files
         .par_iter()
         .map(|file_path| {
-            let file_result = scan_single_file(file_path, signatures_map, yara_engine, config)?;
+            let file_result = scan_single_file(file_path, signatures_map, yara_engine, config, &options)?;
 
             let scanned = scanned_counter.fetch_add(1, Ordering::SeqCst) + 1;
             let percent = (scanned * 100) / total_files;
@@ -133,40 +136,25 @@ where
     })
 }
 
-fn collect_files(path: &Path, files: &mut Vec<PathBuf>, config: &AppConfig, options: &ScanOptions) -> Result<(), String> {
-    if path.is_file() {
-        files.push(path.to_path_buf());
-        return Ok(());
-    }
+fn collect_files(
+    path: &Path,
+    files: &mut Vec<PathBuf>,
+    config: &AppConfig,
+    options: &ScanOptions,
+) -> Result<(), String> {
+
     if is_excluded(path, config) {
         return Ok(());
     }
 
-    if options.quick_scan && path.is_file() {
-        let metadata = match fs::metadata(path) {
-            Ok(m) => m,
-            Err(_) => return Ok(()),
-        };
+    if path.is_file() {
 
-        let max_size = config.quick_scan.max_file_size_mb * 1024 * 1024;
-
-        if metadata.len() > max_size {
+        if options.quick_scan && !is_quick_scan_candidate(path, config) {
             return Ok(());
         }
 
-        let extension = path
-            .extension()
-            .and_then(|e| e.to_str())
-            .map(|e| format!(".{}", e.to_lowercase()));
-
-        match extension {
-            Some(ext) => {
-                if !config.quick_scan.extensions.iter().any(|x| x.to_lowercase() == ext) {
-                    return Ok(());
-                }
-            }
-            None => return Ok(()),
-        }
+        files.push(path.to_path_buf());
+        return Ok(());
     }
 
     if path.is_dir() {
@@ -175,6 +163,7 @@ fn collect_files(path: &Path, files: &mut Vec<PathBuf>, config: &AppConfig, opti
 
         for entry in entries {
             let entry = entry.map_err(|_| "Error llegint entrada del directori".to_string())?;
+
             collect_files(&entry.path(), files, config, options)?;
         }
     }
@@ -187,6 +176,7 @@ fn scan_single_file(
     signatures_map: &SignaturesMap,
     yara_engine: &YaraEngine,
     config: &AppConfig,
+    options: &ScanOptions,
 ) -> Result<FileScanResult, String> {
     let mut detections = Vec::new();
     let path_str = path.to_string_lossy().to_string();
@@ -205,6 +195,13 @@ fn scan_single_file(
 
     let metadata = fs::metadata(path)
         .map_err(|e| format!("No es pot llegir metadata del fitxer: {}", e))?;
+
+
+    let yara_limit_mb = if options.quick_scan {
+        config.quick_scan.max_file_size_mb
+    } else {
+        config.max_yara_file_size_mb
+    };
 
     let max_size_bytes = if config.max_yara_file_size_mb == 0 {
         u64::MAX
@@ -226,10 +223,12 @@ fn scan_single_file(
         detections.push(detection);
     }
 
-    let pe_detections = pe_analysis::analyze_pe(path, config)?;
+    if options.pe_analysis_enabled && config.pe_analysis.enabled {
+        let pe_detections = pe_analysis::analyze_pe(path, config)?;
 
-    for detection in pe_detections {
-        detections.push(detection);
+        for detection in pe_detections {
+            detections.push(detection);
+        }
     }
 
     let detections = deduplicate_detections(detections);
@@ -318,6 +317,7 @@ fn classification_level(value: &str) -> i32 {
 #[derive(Clone)]
 pub struct ScanOptions {
     pub quick_scan: bool,
+    pub pe_analysis_enabled: bool
 }
 
 
@@ -348,6 +348,7 @@ pub fn quick_scan(
 ) -> Result<ScanResult, String> {
     let options = ScanOptions {
         quick_scan: true,
+        pe_analysis_enabled: false,
     };
 
     let quick_paths = quick_scan_paths();
@@ -365,5 +366,139 @@ pub fn quick_scan(
         signatures_map,
         yara_engine,
         config,
+        &options,
+        |_scanned, _total| Ok(()),
     )
 }
+
+
+fn scan_files<F>(
+    files: Vec<PathBuf>,
+    signatures_map: &SignaturesMap,
+    yara_engine: &YaraEngine,
+    config: &AppConfig,
+    options: &ScanOptions,
+    on_progress: F,
+) -> Result<ScanResult, String>
+where
+    F: Fn(usize, usize) -> Result<(), String> + Sync,
+{
+    let total_files = files.len();
+
+    if total_files == 0 {
+        return Ok(ScanResult {
+            scanned_files: 0,
+            total_detections: 0,
+            final_score: 0,
+            classification: "clean".to_string(),
+            files: Vec::new(),
+        });
+    }
+
+    let scanned_counter = AtomicUsize::new(0);
+    let last_percent_sent = AtomicUsize::new(0);
+
+    let partial_results: Result<Vec<FileScanResult>, String> = files
+        .par_iter()
+        .map(|file_path| {
+            let file_result = scan_single_file(file_path, signatures_map, yara_engine, config, &options)?;
+
+            let scanned = scanned_counter.fetch_add(1, Ordering::SeqCst) + 1;
+            let percent = (scanned * 100) / total_files;
+
+            let mut previous = last_percent_sent.load(Ordering::SeqCst);
+
+            while percent > previous {
+                match last_percent_sent.compare_exchange(
+                    previous,
+                    percent,
+                    Ordering::SeqCst,
+                    Ordering::SeqCst,
+                ) {
+                    Ok(_) => {
+                        on_progress(scanned, total_files)?;
+                        break;
+                    }
+                    Err(current) => previous = current,
+                }
+            }
+
+            Ok(file_result)
+        })
+        .collect();
+
+    let mut file_results = partial_results?;
+
+    file_results.retain(|file| !file.detections.is_empty());
+
+    if config.auto_quarantine.enabled {
+        for file in &mut file_results {
+            if should_auto_quarantine(
+                &file.classification,
+                &config.auto_quarantine.minimum_classification,
+            ) {
+                match quarantine::quarantine_file(&file.path) {
+                    Ok(_) => {
+                        file.classification = "quarantined".to_string();
+                    }
+                    Err(error) => {
+                        eprintln!(
+                            "No s'ha pogut posar en quarantena {}: {}",
+                            file.path, error
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    let total_detections = file_results
+        .iter()
+        .map(|file| file.detections.len())
+        .sum::<usize>();
+
+    let final_score = file_results
+        .iter()
+        .map(|file| file.final_score)
+        .max()
+        .unwrap_or(0);
+
+    let classification = classify_global(final_score).to_string();
+
+    Ok(ScanResult {
+        scanned_files: total_files,
+        total_detections,
+        final_score,
+        classification,
+        files: file_results,
+    })
+}
+
+
+fn is_quick_scan_candidate(path: &Path, config: &AppConfig) -> bool {
+    let metadata = match fs::metadata(path) {
+        Ok(metadata) => metadata,
+        Err(_) => return false,
+    };
+
+    let max_size = config.quick_scan.max_file_size_mb * 1024 * 1024;
+
+    if metadata.len() > max_size {
+        return false;
+    }
+
+    let extension = path
+        .extension()
+        .and_then(|ext| ext.to_str())
+        .map(|ext| format!(".{}", ext.to_lowercase()));
+
+    match extension {
+        Some(ext) => config
+            .quick_scan
+            .extensions
+            .iter()
+            .any(|allowed| allowed.to_lowercase() == ext),
+        None => false,
+    }
+}
+

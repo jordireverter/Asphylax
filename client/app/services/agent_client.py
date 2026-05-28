@@ -154,3 +154,15 @@ class AgentClient:
             "action": "save_config",
             "data": config,
         })
+    
+
+    def quick_scan(self) -> dict:
+        return self.send_request({
+            "action": "quick_scan",
+        })
+    
+
+    def quick_scan(self) -> dict:
+        return self.send_request({
+            "action": "quick_scan",
+        })

@@ -25,3 +25,7 @@ class ScanController:
             }
 
         return self.agent_client.scan_path_stream(path, on_progress)
+    
+
+    def quick_scan(self):
+        return self.agent_client.quick_scan()

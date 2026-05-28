@@ -36,6 +36,7 @@ from app.controllers.monitor_controller import MonitorController
 from app.controllers.quarantine_controller import QuarantineController
 from app.controllers.history_controller import HistoryController
 from app.controllers.config_controller import ConfigController
+from app.controllers.quick_scan_worker import QuickScanWorker
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 GUI_DIR = BASE_DIR / "gui"
@@ -158,9 +159,9 @@ class AsphylaxUI(QMainWindow):
         layout.addWidget(self.start_button, alignment=Qt.AlignmentFlag.AlignCenter)
 
         self.scan_type = QComboBox()
-        self.scan_type.addItems(["Escaneig focalitzat"])
+        self.scan_type.addItems(["Escaneig ràpid","Escaneig focalitzat"])
         layout.addWidget(self.scan_type, alignment=Qt.AlignmentFlag.AlignCenter)
-
+  
         self.progress = QProgressBar()
         self.progress.setValue(0)
         self.progress.setVisible(False)
@@ -188,6 +189,10 @@ class AsphylaxUI(QMainWindow):
             self.selected_path_label.setText(path)
 
     def start_scan(self):
+        if self.scan_type.currentText() == "Escaneig ràpid":
+            self.start_quick_scan()
+            return
+
         if not self.selected_scan_path:
             QMessageBox.warning(
                 self,
@@ -202,24 +207,6 @@ class AsphylaxUI(QMainWindow):
 
         self.start_button.setEnabled(False)
         self.start_button.setText("ESCANEJANT")
-
-        effect = QGraphicsOpacityEffect(self.progress)
-        self.progress.setGraphicsEffect(effect)
-
-        fade = QPropertyAnimation(effect, b"opacity")
-        fade.setDuration(500)
-        fade.setStartValue(0)
-        fade.setEndValue(1)
-        fade.start()
-        self.fade_animation = fade
-
-        self.animation = QPropertyAnimation(self.start_button, b"size")
-        self.animation.setDuration(500)
-        self.animation.setStartValue(self.start_button.size())
-        self.animation.setEndValue(QSize(160, 160))
-        self.animation.setEasingCurve(QEasingCurve.Type.InOutQuad)
-        self.animation.setLoopCount(-1)
-        self.animation.start()
 
         self.scan_worker = ScanWorker(self.selected_scan_path)
         self.scan_worker.progress_changed.connect(self.update_scan_progress)
@@ -1082,3 +1069,16 @@ class AsphylaxUI(QMainWindow):
 
             status = item.text()
             self.apply_row_color(table, row, status)
+
+
+    def start_quick_scan(self):
+        self.progress.setVisible(True)
+        self.progress.setValue(0)
+        self.result_list.clear()
+
+        self.start_button.setEnabled(False)
+        self.start_button.setText("ESCANEJANT")
+
+        self.quick_scan_worker = QuickScanWorker()
+        self.quick_scan_worker.scan_finished.connect(self.finish_scan)
+        self.quick_scan_worker.start()
