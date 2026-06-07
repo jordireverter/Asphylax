@@ -20,6 +20,11 @@ TEMP_CSV_FILE = DATA_DIR / "malwarebazaar.csv"
 
 UPDATE_INTERVAL_HOURS = 24
 DEFAULT_NAME = "Imported.Signature"
+CA_BUNDLE_ENV_VARS = ("REQUESTS_CA_BUNDLE", "SSL_CERT_FILE")
+
+
+class MissingCaBundleError(RuntimeError):
+    pass
 
 
 def now_utc() -> datetime:
@@ -32,6 +37,27 @@ def now_iso() -> str:
 
 def ensure_data_dir() -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def resolve_ca_bundle() -> Optional[Path]:
+    for env_var in CA_BUNDLE_ENV_VARS:
+        configured = os.getenv(env_var)
+        if configured:
+            path = Path(configured)
+            if path.is_file():
+                return path
+            os.environ.pop(env_var, None)
+
+    try:
+        import certifi
+
+        path = Path(certifi.where())
+        if path.is_file():
+            return path
+    except Exception:
+        pass
+
+    return None
 
 
 def load_json_file(path: Path, default: Any) -> Any:
@@ -197,7 +223,14 @@ def download_malwarebazaar_csv(auth_key: str, output_csv: Path) -> None:
         "User-Agent": "Asphylax/0.1",
     }
 
-    response = requests.get(url, headers=headers, timeout=60)
+    ca_bundle = resolve_ca_bundle()
+    if ca_bundle is None:
+        raise MissingCaBundleError(
+            "No s'ha trobat cap bundle de certificats TLS valid. "
+            "Instal.la o repara certifi a la .venv per activar l'actualitzacio automatica."
+        )
+
+    response = requests.get(url, headers=headers, timeout=60, verify=str(ca_bundle))
     response.raise_for_status()
     output_csv.write_bytes(response.content)
 
@@ -345,6 +378,12 @@ def update_signatures() -> bool:
         print(f"Actualització completada. Entrades noves o actualitzades: {changed}")
         return True
 
+    except MissingCaBundleError as exc:
+        state["status"] = "skipped"
+        save_state(state)
+        print(f"Actualitzacio automatica omesa: {exc}", flush=True)
+        return False
+
     except Exception as exc:
         state["status"] = "error"
         save_state(state)
@@ -352,8 +391,12 @@ def update_signatures() -> bool:
 
 
 if __name__ == "__main__":
-    updated = update_signatures()
-    if updated:
-        print("Base de signatures actualitzada.")
-    else:
-        print("Base de signatures ja estava al dia.")
+    try:
+        updated = update_signatures()
+        if updated:
+            print("Base de signatures actualitzada.")
+        else:
+            print("Base de signatures ja estava al dia.")
+    except Exception as exc:
+        print(f"Error actualitzant signatures: {exc}", file=os.sys.stderr)
+        raise SystemExit(1)

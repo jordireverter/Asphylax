@@ -1,35 +1,40 @@
 use std::collections::HashMap;
-use std::fs;
-
+use std::fs::{self, File};
+use std::io::{Read, BufReader};
+use std::path::Path;
 use sha2::{Digest, Sha256};
+use bloomfilter::Bloom;
 
 use crate::models::{MalwareSignature, SignaturesDatabase};
-
-const SIGNATURES_FILE: &str = "../data/signatures.json";
-const TEST_SIGNATURES_FILE: &str = "../data/test_signatures.json";
+use crate::paths;
 
 pub type SignaturesMap = HashMap<String, MalwareSignature>;
 
+pub struct SignatureDatabase {
+    pub bloom_filter: Bloom<String>,
+    pub signatures_map: SignaturesMap,
+}
 
 fn load_signatures_file(
-    path: &str,
+    path: &Path,
     map: &mut SignaturesMap,
+    hash_list: &mut Vec<String>,
 ) -> Result<usize, String> {
-
-    println!("Carregant signatures des de: {}", path);
+    println!("Carregant signatures des de: {}", path.display());
 
     let content = fs::read_to_string(path)
-        .map_err(|e| format!("Error llegint {}: {}", path, e))?;
+        .map_err(|e| format!("Error llegint {}: {}", path.display(), e))?;
 
-    let db: SignaturesDatabase =
-        serde_json::from_str(&content)
-            .map_err(|e| format!("Error parsejant JSON {}: {}", path, e))?;
+    let db: SignaturesDatabase = serde_json::from_str(&content)
+        .map_err(|e| format!("Error parsejant JSON {}: {}", path.display(), e))?;
 
     let mut loaded = 0;
 
     for signature in db.entries {
         if signature.enabled {
-            map.insert(signature.hash_value.clone(), signature);
+            let hash_lower = signature.hash_value.clone().to_lowercase();
+            map.insert(hash_lower.clone(), signature);
+            hash_list.push(hash_lower);
             loaded += 1;
         }
     }
@@ -37,55 +42,70 @@ fn load_signatures_file(
     Ok(loaded)
 }
 
-
-pub fn load_signatures() -> Result<SignaturesMap, String> {
-
+pub fn load_signatures() -> Result<SignatureDatabase, String> {
     let mut map = HashMap::new();
+    let mut hash_list = Vec::new();
 
-    let real_loaded =
-        load_signatures_file(SIGNATURES_FILE, &mut map)?;
+    // 1. Càrrega JSON a RAM
+    let _real_loaded = load_signatures_file(&paths::data_file("signatures.json"), &mut map, &mut hash_list)?;
+    let _test_loaded = load_signatures_file(&paths::data_file("test_signatures.json"), &mut map, &mut hash_list)?;
 
-    println!("Signatures reals carregades: {}", real_loaded);
+    // 2. Construïm el filtre Bloom al vol (instantani)
+    let bloom_filter = build_new_bloom(&hash_list);
 
-    let test_loaded =
-        load_signatures_file(TEST_SIGNATURES_FILE, &mut map)?;
-
-    println!("Signatures test carregades: {}", test_loaded);
-
-    println!("Total signatures al HashMap: {}", map.len());
-
-    Ok(map)
+    Ok(SignatureDatabase {
+        bloom_filter,
+        signatures_map: map,
+    })
 }
-
 
 pub fn check_hash(
     hash: &str,
-    signatures: &SignaturesMap,
+    signature_db: &SignatureDatabase,
 ) -> Option<MalwareSignature> {
-    signatures.get(hash).cloned()
+    let hash_lower = hash.to_lowercase();
+    
+    if !signature_db.bloom_filter.check(&hash_lower) {
+        return None;
+    }
+    
+    signature_db.signatures_map.get(&hash_lower).cloned()
 }
 
-
 pub fn calculate_sha256(path: &str) -> Result<String, String> {
-    let bytes = fs::read(path)
-        .map_err(|e| format!("Error llegint fitxer: {}", e))?;
-
+    let file = File::open(path).map_err(|e| format!("Error obrint fitxer pel hash: {}", e))?;
+    let mut reader = BufReader::new(file);
     let mut hasher = Sha256::new();
-    hasher.update(bytes);
+    let mut buffer = [0; 8192];
+
+    loop {
+        let count = reader.read(&mut buffer).map_err(|e| format!("Error llegint bloc: {}", e))?;
+        if count == 0 {
+            break;
+        }
+        hasher.update(&buffer[..count]);
+    }
 
     Ok(format!("{:x}", hasher.finalize()))
 }
 
-
-
 pub fn check_file_signature(
     path: &str,
-    signatures: &SignaturesMap,
+    signature_db: &SignatureDatabase,
 ) -> Result<Option<MalwareSignature>, String> {
     let hash = calculate_sha256(path)?;
+    Ok(check_hash(&hash, signature_db))
+}
 
-    match check_hash(&hash, signatures) {
-        Some(signature) => Ok(Some(signature)),
-        None => Ok(None),
+fn build_new_bloom(hash_list: &[String]) -> Bloom<String> {
+    println!("Construint un nou filtre Bloom...");
+    let items_count = if hash_list.is_empty() { 1000 } else { hash_list.len() };
+    
+    let capacity = (items_count as f64 * 1.5) as usize; 
+    let mut bloom = Bloom::new_for_fp_rate(capacity, 0.01);
+    
+    for hash in hash_list {
+        bloom.set(hash);
     }
+    bloom
 }

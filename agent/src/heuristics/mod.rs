@@ -1,11 +1,12 @@
-use std::fs;
+use std::fs::File;
+use std::io::{Read, BufReader};
 use std::path::Path;
 
 use crate::models::Detection;
 use crate::models::AppConfig;
 
 const BASE64_MIN_LENGTH: usize = 40;
-const ENTROPY_THRESHOLD: f64 = 7.5;
+const CHUNK_SIZE: usize = 4096; // Llegim en blocs de 4KB per eficiència de memòria I/O
 
 pub fn analyze_file(path: &Path, config: &AppConfig) -> Result<Vec<Detection>, String> {
     if !config.heuristics.enabled {
@@ -19,6 +20,7 @@ pub fn analyze_file(path: &Path, config: &AppConfig) -> Result<Vec<Detection>, S
     let mut has_base64 = false;
     let mut has_url = false;
 
+    // 1. Verificació d'extensió doble (Ràpida de metadades)
     if let Some(file_name) = path.file_name().and_then(|f| f.to_str()) {
         if has_double_extension(file_name) {
             has_double_ext = true;
@@ -32,26 +34,54 @@ pub fn analyze_file(path: &Path, config: &AppConfig) -> Result<Vec<Detection>, S
         }
     }
 
-    let content = match fs::read(path) {
-        Ok(bytes) => bytes,
-        Err(_) => return Ok(detections),
-    };
+    // 2. MODIFICACIÓ DE SEGURETAT CRÍTICA: Obrim el fitxer amb buffer de flux (Streaming)
+    let file = File::open(path).map_err(|e| format!("Error obrint fitxer per heurística: {}", e))?;
+    let mut reader = BufReader::new(file);
+    let mut buffer = [0u8; CHUNK_SIZE];
 
-    let entropy = calculate_entropy(&content);
-    if entropy > config.heuristics.entropy_threshold {
+    // Variables per mantenir l'anàlisi textual i d'entropia fragmentada
+    let mut accumulated_text = String::new();
+    let mut max_chunk_entropy = 0.0;
+    let entropy_threshold = config.heuristics.entropy_threshold;
+
+    loop {
+        let bytes_read = reader.read(&mut buffer).map_err(|e| format!("Error llegint bloc: {}", e))?;
+        if bytes_read == 0 {
+            break; // Final de fitxer
+        }
+
+        let current_chunk = &buffer[..bytes_read];
+
+        // A) Calculem l'entropia del fragment actual (Anàlisi de seccions / blocs)
+        let chunk_entropy = calculate_entropy(current_chunk);
+        if chunk_entropy > max_chunk_entropy {
+            max_chunk_entropy = chunk_entropy;
+        }
+
+        // B) Convertim el fragment de manera segura a text per buscar indicadors de text pla sense col·lapsar la RAM
+        let chunk_text = String::from_utf8_lossy(current_chunk);
+        
+        // Per evitar que la String creixi indefinidament en fitxers massius,
+        // limitem l'acumulació de cadenes analitzables a un límit de seguretat raonable (ex: 2MB de text de capçalera/codi)
+        if accumulated_text.len() < 2 * 1024 * 1024 {
+            accumulated_text.push_str(&chunk_text);
+        }
+    }
+
+    // Evaluem el pic d'entropia trobat en alguna de les seccions del fitxer
+    if max_chunk_entropy > entropy_threshold {
         has_entropy = true;
         detections.push(build_detection(
             &path_str,
-            "High entropy",
+            &format!("High entropy section detected ({:.2})", max_chunk_entropy),
             "obfuscation",
             40,
             "medium",
         ));
     }
 
-    let text = String::from_utf8_lossy(&content).to_string();
-
-    if has_long_base64(&text, config.heuristics.base64_min_length) {
+    // 3. Anàlisi heurística dels patrons textuals acumulats
+    if has_long_base64(&accumulated_text, config.heuristics.base64_min_length) {
         has_base64 = true;
         detections.push(build_detection(
             &path_str,
@@ -62,7 +92,7 @@ pub fn analyze_file(path: &Path, config: &AppConfig) -> Result<Vec<Detection>, S
         ));
     }
 
-    if has_suspicious_url(&text) {
+    if has_suspicious_url(&accumulated_text) {
         has_url = true;
         detections.push(build_detection(
             &path_str,
@@ -73,8 +103,8 @@ pub fn analyze_file(path: &Path, config: &AppConfig) -> Result<Vec<Detection>, S
         ));
     }
 
-    // 🔹 PowerShell encoded
-    if has_powershell_encoded(&text) {
+    // PowerShell encoded
+    if has_powershell_encoded(&accumulated_text) {
         detections.push(build_detection(
             &path_str,
             "PowerShell EncodedCommand",
@@ -84,8 +114,8 @@ pub fn analyze_file(path: &Path, config: &AppConfig) -> Result<Vec<Detection>, S
         ));
     }
 
-    // 🔹 Suspicious commands
-    if has_suspicious_commands(&text) {
+    // Suspicious commands
+    if has_suspicious_commands(&accumulated_text) {
         detections.push(build_detection(
             &path_str,
             "Suspicious command execution",
@@ -95,8 +125,8 @@ pub fn analyze_file(path: &Path, config: &AppConfig) -> Result<Vec<Detection>, S
         ));
     }
 
-    // 🔹 Download + execute
-    if has_download_execute_pattern(&text) {
+    // Download + execute
+    if has_download_execute_pattern(&accumulated_text) {
         detections.push(build_detection(
             &path_str,
             "Download and execute pattern",
@@ -106,6 +136,7 @@ pub fn analyze_file(path: &Path, config: &AppConfig) -> Result<Vec<Detection>, S
         ));
     }
 
+    // 4. Correlació de vectors d'atac i combinacions d'alt risc
     if has_base64 && has_url {
         detections.push(build_detection(
             &path_str,
@@ -132,6 +163,142 @@ pub fn analyze_file(path: &Path, config: &AppConfig) -> Result<Vec<Detection>, S
             "Obfuscated payload with network activity",
             "high_risk_combination",
             70,
+            "high",
+        ));
+    }
+
+    Ok(group_heuristic_detections(&path_str, detections))
+}
+
+pub fn analyze_bytes(path: &Path, bytes: &[u8], config: &AppConfig) -> Result<Vec<Detection>, String> {
+    if !config.heuristics.enabled {
+        return Ok(Vec::new());
+    }
+
+    let path_str = path.to_string_lossy().to_string();
+    let mut detections = Vec::new();
+    let mut has_double_ext = false;
+    let mut has_entropy = false;
+    let mut has_base64 = false;
+    let mut has_url = false;
+
+    if let Some(file_name) = path.file_name().and_then(|f| f.to_str()) {
+        if has_double_extension(file_name) {
+            has_double_ext = true;
+            detections.push(build_detection(
+                &path_str,
+                "Double extension",
+                "suspicious_filename",
+                config.heuristics.confidence.double_extension,
+                "medium",
+            ));
+        }
+    }
+
+    let mut accumulated_text = String::new();
+    let mut max_chunk_entropy = 0.0;
+    let entropy_threshold = config.heuristics.entropy_threshold;
+
+    for current_chunk in bytes.chunks(CHUNK_SIZE) {
+        let chunk_entropy = calculate_entropy(current_chunk);
+        if chunk_entropy > max_chunk_entropy {
+            max_chunk_entropy = chunk_entropy;
+        }
+
+        if accumulated_text.len() < 2 * 1024 * 1024 {
+            accumulated_text.push_str(&String::from_utf8_lossy(current_chunk));
+        }
+    }
+
+    if max_chunk_entropy > entropy_threshold {
+        has_entropy = true;
+        detections.push(build_detection(
+            &path_str,
+            &format!("High entropy section detected ({:.2})", max_chunk_entropy),
+            "obfuscation",
+            config.heuristics.confidence.base64,
+            "medium",
+        ));
+    }
+
+    if has_long_base64(&accumulated_text, config.heuristics.base64_min_length) {
+        has_base64 = true;
+        detections.push(build_detection(
+            &path_str,
+            "Long Base64 string",
+            "encoded_payload",
+            config.heuristics.confidence.base64,
+            "medium",
+        ));
+    }
+
+    if has_suspicious_url(&accumulated_text) {
+        has_url = true;
+        detections.push(build_detection(
+            &path_str,
+            "Suspicious URL",
+            "network_indicator",
+            config.heuristics.confidence.url,
+            "low",
+        ));
+    }
+
+    if has_powershell_encoded(&accumulated_text) {
+        detections.push(build_detection(
+            &path_str,
+            "PowerShell EncodedCommand",
+            "powershell_execution",
+            config.heuristics.confidence.powershell_encoded,
+            "high",
+        ));
+    }
+
+    if has_suspicious_commands(&accumulated_text) {
+        detections.push(build_detection(
+            &path_str,
+            "Suspicious command execution",
+            "command_execution",
+            config.heuristics.confidence.suspicious_command,
+            "medium",
+        ));
+    }
+
+    if has_download_execute_pattern(&accumulated_text) {
+        detections.push(build_detection(
+            &path_str,
+            "Download and execute pattern",
+            "remote_execution",
+            config.heuristics.confidence.download_execute,
+            "high",
+        ));
+    }
+
+    if has_base64 && has_url {
+        detections.push(build_detection(
+            &path_str,
+            "Encoded content with network indicator",
+            "medium_risk_combination",
+            config.heuristics.confidence.combination,
+            "high",
+        ));
+    }
+
+    if has_double_ext && has_url {
+        detections.push(build_detection(
+            &path_str,
+            "Disguised executable with network indicator",
+            "high_risk_combination",
+            config.heuristics.confidence.high_combination,
+            "high",
+        ));
+    }
+
+    if has_entropy && has_base64 && has_url {
+        detections.push(build_detection(
+            &path_str,
+            "Obfuscated payload with network activity",
+            "high_risk_combination",
+            config.heuristics.confidence.high_combination,
             "high",
         ));
     }
@@ -180,7 +347,7 @@ fn has_long_base64(text: &str, min_len: usize) -> bool {
         if c.is_ascii_alphanumeric() || c == '+' || c == '/' || c == '=' {
             current += 1;
 
-            if current >= BASE64_MIN_LENGTH {
+            if current >= min_len { // CORRECCIÓ: Utilitzem el min_len dinàmic passat per paràmetre
                 return true;
             }
         } else {
@@ -207,6 +374,7 @@ fn has_suspicious_url(text: &str) -> bool {
     indicators.iter().any(|indicator| text_lower.contains(indicator))
 }
 
+/// Mètode de Shannon per calcular l'entropia d'un bloc de dades
 fn calculate_entropy(data: &[u8]) -> f64 {
     if data.is_empty() {
         return 0.0;
@@ -232,7 +400,6 @@ fn calculate_entropy(data: &[u8]) -> f64 {
 
     entropy
 }
-
 
 fn group_heuristic_detections(
     path: &str,
@@ -283,7 +450,6 @@ fn group_heuristic_detections(
         source: "heuristic_engine".to_string(),
     }]
 }
-
 
 fn has_powershell_encoded(text: &str) -> bool {
     let lower = text.to_lowercase();

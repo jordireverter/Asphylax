@@ -1,0 +1,340 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[catalan]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=3cm}
+\usepackage{setspace}
+\setstretch{1.15} % Segons la guia, s'aconsella un espaiat còmode com 1.15
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{todonotes} % Per marcar fàcilment les seccions pendents d'omplir
+\usepackage{listings}
+\usepackage{amsmath}
+
+\title{Projecte Asphylax: Desenvolupament i Anàlisi d'un Sistema de Detecció de Malware}
+\author{Jordi}
+\date{\today}
+
+\begin{document}
+
+% --- CARÀTULA (Nota de la guia: cal usar la caràtula oficial de l'EPS) ---
+\maketitle
+
+\tableofcontents
+\listoftables
+\listoffigures
+
+\chapter{Introducció, motivacions, propòsit i objectius del projecte}
+\label{ch:introduccio}
+
+\section{Introducció i Context}
+En l'àmbit de la ciberseguretat, el terme malware es fa servir per designar qualsevol programa, component lògic o codi que s'insereix de manera encoberta en un sistema informàtic amb la intenció de comprometre'n la integritat, disponibilitat o confidencialitat. Aquest concepte és central en qualsevol treball relacionat amb la detecció d'amenaces, perquè estableix la base semàntica que permet classificar i analitzar comportaments maliciosos.
+
+Les definicions oficials més acceptades provenen de NIST, que descriu malware com software o firmware que executa processos no autoritzats amb impacte advers sobre un sistema i com un programa inserit de manera encoberta per destruir dades o executar accions intrusives. Aquestes definicions subratllen dos elements essencials: la intencionalitat maliciosa i la ocultació, que diferencien el malware del simple software defectuós. A més, el NIST alerta que el malware és l'amenaça externa més comuna per a la majoria d'organitzacions, generant interrupcions i costos de recuperació elevats. Això situa el fenomen en un context en què no només és un problema tècnic, sinó també un repte econòmic i operatiu. A partir d'aquesta base conceptual, és possible examinar les diferents classes i comportaments que presenta el malware modern.
+
+\section{Motivacions}
+\todo[inline]{Opcional: Si l'estudiant té una motivació especial o personal que l'hagi portat a realitzar aquest PFG, caldrà explicar-la en aquest apartat.}
+
+\section{Propòsit}
+L'objectiu principal d'aquest projecte és explorar i combinar diferents estratègies defensives contra el programari maliciós dins d'una arquitectura coherent, extensible i modular, permetent comprendre de forma pràctica i profunda els mecanismes de seguretat en entorns locals.
+
+\section{Objectius del Projecte}
+L'objectiu general i els específics es detallen a continuació, diferenciant clarament el procés acadèmic i de desenvolupament dels requisits del producte final:
+
+\subsection{Objectiu General}
+L'objectiu principal del projecte és desenvolupar un sistema de detecció de malware funcional, tot seguint el procés complet de disseny, implementació i anàlisi, amb la finalitat de comprendre en profunditat tant el funcionament del malware com les tècniques utilitzades per detectar-lo. Aquest objectiu no es limita a la implementació del sistema sinó que inclou l'estudi de metodologies de detecció existents, la selecció i justificació de les tècniques aplicades i l'anàlisi crítica del comportament i les limitacions del sistema desenvolupat. El resultat final ha de permetre al lector comprendre tant el procés de desenvolupament com els principis teòrics i pràctics de la detecció de malware.
+
+\subsection{Objectius Específics}
+Per assolir l'objectiu general, es defineixen els següents objectius específics:
+\begin{itemize}
+    \item \textbf{Analitzar el funcionament del malware:} Estudiar les principals tipologies de malware, el seu cicle de vida i tècniques d'evasió, així com comprendre les dificultats associades a la seva detecció.
+    \item \textbf{Estudiar les tècniques de detecció existents:} Analitzar sistemes basats en signatures, heurístiques i comportament, entenent els avantatges i limitacions de cada enfocament en entorns reals.
+    \item \textbf{Dissenyar una arquitectura de detecció:} Definir una arquitectura modular del sistema, establir la separació entre components i justificar les decisions tecnològiques adoptades.
+    \item \textbf{Desenvolupar un prototip funcional:} Implementar un sistema capaç de detectar malware en un entorn controlat, integrant diferents tècniques defensives i proporcionant una interfície d'interacció.
+    \item \textbf{Analitzar el comportament i les limitacions del sistema:} Avaluar l'eficàcia, mesurar l'eficiència, identificar limitacions tecnològiques i reflexionar sobre possibles millores i línies futures.
+\end{itemize}
+
+\section{Aportació del PFG respecte al punt de partida}
+El projecte Asphylax contribueix en dos àmbits principals:
+\begin{itemize}
+    \item \textbf{Acadèmic:} Proporcionant una anàlisi detallada de les tècniques de detecció i del procés de desenvolupament d'un sistema de seguretat.
+    \item \textbf{Tècnic:} Desenvolupant un prototip modular que pot servir com a base per a futures ampliacions.
+\end{itemize}
+Aquesta doble vessant respon a l'objectiu de combinar teoria i pràctica, oferint una visió completa del problema de la detecció de malware.
+
+
+\chapter{Estudi de viabilitat}
+\label{ch:viabilitat}
+\todo[inline]{Pendent d'omplir per l'estudiant. Cal justificar els paràmetres que fan possible el projecte: pressupostos inicials, viabilitat tecnològica, ètica i legal valorant els riscos de ciberseguretat i l'ús d'eines d'IA generativa.}
+
+
+\chapter{Metodologia}
+\label{ch:metodologia}
+\todo[inline]{Pendent d'omplir per l'estudiant. Cal descriure la metodologia de treball escollida (p.ex. Desenvolupament basat en el backlog d'Epics integrat amb Scrum). Es requereix declarar de manera clara i detallada l'ús d'eines d'IA generativa (ChatGPT, Gemini, Copilot) utilitzades en l'elaboració del text o el codi.}
+
+
+\chapter{Planificació}
+\label{ch:planificacio}
+\todo[inline]{Pendent d'omplir per l'estudiant. Descripció breu del pla de treball i les tasques planificades estructurades per Epics, acompanyades d'un cronograma o diagrama de Gantt en concordança amb el lliurament.}
+
+
+\chapter{Marc de treball i conceptes previs}
+\label{ch:marctreball}
+
+\section{Fonaments de Malware}
+Abans d'analitzar cada categoria, és important entendre que les classificacions no són estancades: el malware actual sovint combina característiques de diverses famílies, generant formes híbrides que dificulten la detecció. Tot i així, la categorització clàssica continua sent útil per explicar comportaments fonamentals.
+
+\subsection{Tipologies de Malware (Classes principals)}
+\begin{itemize}
+    \item \textbf{Virus:} Constitueixen una de les primeres fores documentades de malware. Es caracteritzen per la capacitat de replicar-se mitjançant la infecció d'altres fitxers o sectors del sistema, sovint requerint la intervenció de l'usuari perquè la propagació es consolidi. Són programes que s'insereixen en fitxers hoste i activen la seva càrrega maliciosa quan aquests són executats o manipulats.
+    \item \textbf{Worms (Cucs):} Se situen i es distingeixen per la seva autonomia en la propagació, aprofitant vulnerabilitats de xarxa per disseminar-se entre sistemes connectats. No depenen de l'acció de l'usuari i són capaços d'infectar de manera massiva infraestructures senceres quan existeixen vectors d'explotació remota exploitables.
+    \item \textbf{Troians:} Adopten l'aparença de programari legítim per facilitar la seva instal·lació. La seva funció maliciosa roman oculta fins al moment d'execució. A diferència de virus i cucs, no es repliquen per si mateixos, sinó que depenen d'estratègies d'enginyeria social o distribució manipulada. El seu objectiu pot incloure l'obertura de backdoors, la instal·lació de components addicionals o la manipulació del sistema.
+    \item \textbf{Ransomware:} És una de les formes de malware més disruptives. La seva acció principal consisteix a xifrar informació de la víctima i exigir un rescat per recuperar-ne l'accés. L'evolució recent apunta cap a models d'extorsió múltiple, on l'atacant complementa el xifratge amb l'exfiltració prèvia de dades.
+    \item \textbf{Rootkits:} Constitueixen un conjunt de tècniques i components orientats a amagar la presència i activitat del codi maliciós dins del sistema, garantint la invisibilitat de processos, fitxers o entrades de registre manipulades.
+    \item \textbf{Spyware / Keyloggers:} Engloba eines dissenyades per capturar informació privada sense consentiment (credencials, dades personals) mitjançant keyloggers, monitors de pantalla o telemetria no autoritzada.
+    \item \textbf{Adware:} Programari orientat a publicitat intrusiva. Tot i que es percep com menys greu, pot comportar riscos significatius de privacitat i servir com a porta d'entrada per a altres formes de malware.
+\end{itemize}
+
+\subsection{Cicle de Vida del Malware}
+Moltes amenaces comparteixen una seqüència funcional similar que s'estructura en les següents fases:
+\begin{enumerate}
+    \item \textbf{Distribució (Delivery):} El codi maliciós accedeix al seu objectiu utilitzant enginyeria social o aprofitant vulnerabilitats de xarxa.
+    \item \textbf{Execució inicial:} El malware s'executa mitjançant un binari, script o injecció de DLL. En entorns Windows, mecanismes com User Account Control (UAC) intenten mitigar-ho, tot i que existeixen múltiples tècniques de bypass UAC documentades (com rutes de registre o abús d'objectes COM elevables).
+    \item \textbf{Persistència:} Mecanismes que permeten al component romandre actiu malgrat reinicis del sistema (Run Keys del registre, tasques programades, serveis).
+    \item \textbf{Propagació / Moviment lateral:} Expansió dins d'una xarxa mitjançant l'explotació de serveis o reutilització de credencials.
+    \item \textbf{Accions malicioses:} Fase operativa final (robatori, sabotatge, xifratge de dades).
+    \item \textbf{Evasió i ocultació:} Transversal a tot el cicle, utilitzant ofuscació, encriptació de cadenes o càrrega dinàmica de llibreries per evitar detectors.
+\end{enumerate}
+
+\subsection{Tècniques d'Ofuscació}
+L'ofuscació busca fer que el codi sigui difícil d'analitzar i inhabilita les signatures tradicionals:
+\begin{itemize}
+    \item \textbf{Polimorfisme:} Generació de variants sintàctiques canviant l'aspecte extern (xifrat, permutacions) amb engines de mutació que asseguren un hash SHA256 diferent per a cada mostra, mantenint la lògica idèntica.
+    \item \textbf{Metamorfisme:} Reescriptura estructural del codi canviant instruccions i reorganitzant fluxos de forma heterogènia.
+    \item \textbf{Ofuscació d'Strings i Imports:} Ocultació de cadenes de text i imports de llibreries amb càrrega dinàmica de DLLs per complicar l'anàlisi forense.
+    \item \textbf{Packers:} Encapsulació del codi en una capa comprimida o xifrada que només es desplega en memòria en temps d'execució.
+\end{itemize}
+
+\subsection{Diferència entre User-Space i Kernel-Space}
+\begin{itemize}
+    \item \textbf{User-Space (Mode Usuari):} Entorn aïllat on operen la majoria d'aplicacions. L'aïllament de memòria incrementa l'estabilitat però impedeix interceptar crides de baix nivell o veure processos ocults.
+    \item \textbf{Kernel-Space (Mode Nucli):} Proporciona accés complet al maquinari i als components interns del sistema operatiu (drivers). Els rootkits a nivell de kernel poden alterar la informació reportada i ser completament invisibles per a les eines de user-space.
+\end{itemize}
+
+\section{Sistemes de Detecció Existents}
+L'evolució de la literatura especialitzada mostra una transició des de patrons predefinits fins a models analítics avançats:
+\begin{enumerate}
+    \item \textbf{Detecció basada en signatures:} Identificació d'un patró recognoscible (seqüència de bytes o hash representatiu). És un model ràpid i eficient amb un baix rang de falsos positius, però incapaç de detectar amenaces zero-day o variants ofuscades.
+    \item \textbf{Detecció heurística:} Anàlisi de comportaments sospitosos o característiques estructurals de forma estàtica o dinàmica (simulacions), permetent detectar codi modificat a canvi d'un major risc de falsos positius.
+    \item \textbf{Detecció basada en comportament:} Observació directa de les accions d'un programa en execució real (connexions, accessos crítics). Utilitza dades de telemetria i es pot combinar amb models com BERT per extreure característiques semàntiques.
+    \item \textbf{Detecció mitjançant sandboxing:} Execució de fitxers sospitosos en entorns virtualitzats aïllats per generar perfils de comportament de manera segura davant d'amenaces zero-day.
+    \item \textbf{Aprenentatge automàtic i Intel·ligència Artificial:} Entrenament de models (ML/DL) amb conjunts de dades massius per detectar malware polimòrfic. Presenta reptes en entorns reals com el concept drift, label noise i atacs adversaris.
+    \item \textbf{Endpoint Detection and Response (EDR):} Integració industrial de monitorització contínua, correlació d'esdeveniments, anàlisi avançada i capacitats de resposta automatitzada en temps real.
+\end{enumerate}
+
+
+\chapter{Requisits del sistema}
+\label{ch:requisits}
+
+\section{Abast del Projecte}
+L'abast d'Asphylax consisteix en el desenvolupament d'un prototip funcional de sistema de detecció de malware, amb capacitat per aplicar diverses tècniques en un entorn controlat. El sistema inclou les següents funcionalitats principals:
+\begin{itemize}
+    \item Escaneig de fitxers en directoris específics del sistema.
+    \item Detecció basada en signatures exactes i signatures parcials.
+    \item Anàlisi heurística basada en regles.
+    \item Monitorització bàsica del sistema en temps real.
+    \item Mecanismes de quarantena de fitxers sospitosos.
+    \item Generació de registres de sistema i informes d'auditoria.
+    \item Interfície gràfica d'usuari per a la interacció.
+\end{itemize}
+
+\section{Requisits Funcionals i No Funcionals}
+\todo[inline]{Pendent d'omplir per l'estudiant. Cal llistar de forma sintetitzada els requisits concrets del sistema (p.ex. REQ-1: Gestió d'escaneig, REQ-2: Monitorització de carpetes amb llindar de mida, etc.) acompanyats de la seva prioritat.}
+
+
+\chapter{Estudis i decisions}
+\label{ch:estudisdecisions}
+
+\section{Decisions Tecnològiques i de Disseny}
+El sistema Asphylax adopta una arquitectura híbrida basada en la separació entre un client i un agent local enfocat a entorns Linux. Es detallen les justificacions de les eleccions de partida:
+\begin{itemize}
+    \item \textbf{Llenguatges de programació (Python + Rust):} Es combina l'ús de Python per a la capa superior (interfície gràfica, configuració i coordinació del sistema per la seva facilitat de desenvolupament) amb Rust per al nucli de l'agent local (permet funcionalitats properes al sistema operatiu, millors garanties de rendiment, seguretat de memòria i velocitat de cicle d'escaneig).
+    \item \textbf{Format de dades (JSON):} S'opta per un model basat en JSON com a format principal per a la representació, configuració i intercanvi de dades, evitant l'ús de bases de dades relacionals pesades i facilitant el desacoblament i extensibilitat.
+    \item \textbf{Motor de signatures parcials (YARA-X):} Tot i que inicialment es va plantejar un sistema propi basat en expressions regulars simples, finalment es va decidir integrar YARA-X, una implementació moderna de YARA escrita en Rust, que proporciona un sistema de regles molt més flexible, optimitzat i extensible.
+\end{itemize}
+
+
+\chapter{Anàlisi i disseny del sistema}
+\label{ch:analisidisseny}
+
+\section{Arquitectura General}
+L'arquitectura d'Asphylax s'ha concebut com un sistema modular de tipus client-agent orientat a entorns Linux. El sistema es divideix en dos grans components unificats per un canal de comunicació local:
+
+\subsection{Components del Client (Python)}
+El client constitueix la capa d'interacció amb l'usuari, actuant com a control i visualització en user-space:
+\begin{itemize}
+    \item \textbf{Interfície gràfica (GUI):} Part visible que permet iniciar escaneigs, activar/desactivar la monitorització i consultar alertes.
+    \item \textbf{Controlador d'accions:} Gestiona els esdeveniments de la GUI i els tradueix en comandes estructurades.
+    \item \textbf{Capa de comunicació:} Estableix la connexió a través d'un socket, s'encarrega de la serialització de missatges JSON i rep les respostes de l'agent.
+    \item \textbf{Gestor de resultats:} Parseja i interpreta les dades rebudes per transmetre-les a la vista.
+    \item \textbf{Gestor de configuració:} Carrega i desa els paràmetres de rutes o funcionament entre execucions.
+\end{itemize}
+
+\subsection{Components de l'Agent (Rust)}
+L'agent concentra el nucli funcional i el pipeline d'anàlisi de dades en mòduls especialitzats:
+\begin{itemize}
+    \item \textbf{Gestor de peticions (Request Handler):} Punt d'entrada de l'agent que rep i distribueix les ordres del client.
+    \item \textbf{Motor d'escaneig (Scanner):} Recorre de manera recursiva directoris i prepara els fitxers per a l'anàlisi.
+    \item \textbf{Motor de signatures exactes:} Realitza cerques instantànies de hashes.
+    \item \textbf{Motor de signatures parcials:} Executa l'anàlisi de patrons binaris i textuals mitjançant regles.
+    \item \textbf{Motor heurístic:} Assigna puntuacions de risc segons regles configurades.
+    \item \textbf{Motor de decisió:} Combina les evidències dels motors previs per determinar la classificació final (net, sospitós o maliciós).
+    \item \textbf{Mòdul de monitorització en temps real:} Observa canvis en directoris i activa el procés d'anàlisi.
+    \item \textbf{Gestor de quarantena:} S'encarrega d'aïllar els fitxers perillosos.
+    \item \textbf{Sistema de registre (Logging):} Emmagatzema l'historial d'accions i deteccions.
+    \item \textbf{Gestor de signatures:} Administra el format, càrrega i actualització de la base de coneixement.
+\end{itemize}
+
+\section{Model de Dades i Comunicació}
+La comunicació interna entre el client i l'agent local s'implementa utilitzant un \textbf{Unix Domain Socket}. El flux de dades es formalitza mitjançant peticions i respostes estructurades en missatges JSON request/response, garantint el total desacoblament entre la interfície d'usuari de Python i el servei funcional de Rust.
+
+
+\chapter{Implementació i proves}
+\label{ch:implementacioproves}
+
+\section{Implementació de l'EPIC 2: Motor de Signatures Exactes}
+Aquesta capa constitueix el primer mecanisme de detecció del sistema. Durant el procés d'escaneig, cada fitxer és llegit íntegrament a través d'un recorregut recursiu del sistema de fitxers i es calcula el seu hash SHA256 utilitzant la llibreria \texttt{sha2} de Rust. 
+
+La base de signatures es manté en un fitxer JSON local a la ruta \texttt{data/signatures.json}. Cada entrada conté informació del hash, la família de malware, severitat, confiança, etiquetes i font d'origen. Per optimitzar el rendiment, les signatures es carreguen durant l'arrencada de l'agent dins d'un \texttt{HashMap} de Rust, el que redueix la complexitat temporal de cerca a un ordre proper a $O(1)$. L'actualització de la base es recolza en un script de Python que descarrega i normalitza dades procedents de MalwareBazaar, executat de forma periòdica pel propi agent de Rust.
+
+\section{Implementació de l'EPIC 3: Motor de Signatures Parcials i Optimització}
+El motor de signatures parcials utilitza la integració de \texttt{YARA-X} en Rust. Les regles es troben organitzades de forma recursiva al directori \texttt{data/yara\_rules\_validated} sota categories com ransomware, PowerShell sospitós, webshells, eines ofensives, malware Linux, Mimikatz i macros malicioses. Es compta amb variables externes contextuals (\texttt{filepath}, \texttt{filename}, \texttt{extension}) i un sistema de validació prèvia i blacklist de regles conflictives per filtrar incompatibilitats abans de carregar-les al motor principal.
+
+\subsection{Paral·lelisme i Fil de Detecció}
+Durant les proves inicials amb directoris grans es va detectar que el recorregut i l'anàlisi seqüencial provocaven temps d'execució molt elevats a causa del cost computacional d'executar múltiples regles YARA i expressions regulars sobre cada fitxer. Per mitigar l'impacte en rendiment, es va introduir paral·lelisme mitjançant la llibreria \texttt{Rayon} de Rust. El procés es divideix en dues fases:
+\begin{enumerate}
+    \item Recopilació de la llista completa de fitxers de forma ràpida.
+    \item Processament en paral·lel utilitzant els múltiples nuclis de la CPU, on cada fitxer calcula de forma independent el SHA256 i les regles YARA, combinant els resultats estructurats deduplicats al final del pipeline.
+\end{enumerate}
+
+Addicionalment, s'ha introduït un límit configurable de mida de fitxer a \texttt{data/config.json} per evitar aplicar YARA en fitxers excessivament grans. A la part superior, el client gràfic executa el procés en un fil separat mitjançant \texttt{QThread}, el que evita el bloqueig de la interfície i permet actualitzar una barra de progrés de forma asíncrona a partir dels missatges JSON enviats pel servidor.
+
+\section{Implementació de l'Anàlisi Heurística, Monitorització i Quarantena}
+\todo[inline]{Espai reservat per a la implementació de l'Epic 4 (Heurística/Scoring), Epic 5 (Monitorització en temps real via Watchdog/psutil) i Epic 6 (Gestió de Quarantena). Cal detallar el codi i estructures un cop desenvolupats.}
+
+\section{Descripció de Proves i Testeig}
+\todo[inline]{Espai reservat per a l'Epic 8. Cal documentar el disseny experimental, les mètriques utilitzades (Falsos Positius, Falsos Negatius, Temps d'escaneig) i l'enllaç de 3 minuts que exigeix la guia per evidenciar els aspectes més rellevants del codi desenvolupat.}
+
+
+\chapter{Implantació i resultats}
+\label{ch:implantacio}
+
+\section{Resultats i Grau d'Assoliment de l'Escaneig}
+El motor de signatures exactes ha permès gestionar correctament bases de dades de més d'un milió de signatures de MalwareBazaar. Tot i que la cerca al \texttt{HashMap} manté l'eficiència, s'ha detectat que la càrrega inicial implica un consum considerable de memòria i temps d'inicialització de l'agent, un compromís de rendiment acceptable en l'arquitectura actual.
+
+Respecte a les signatures parcials, s'ha constatat el trade-off existent entre sensibilitat i especificitat: l'ús de regles YARA més generals facilita la detecció de variants, però incrementa notablement el risc de falsos positius, especialment en entorns de desenvolupament o scripts legítims de PowerShell. Per aquest motiu, el motor de decisió pondera les alertes YARA amb menor confiança que una coincidència exacta de hash.
+
+\section{Estat dels Requisits de Resposta i Limitacions Tecnològiques}
+Com a prototip acadèmic, el sistema opera completament en user-space, el que condiciona directament el seu abast funcional:
+\begin{itemize}
+    \item \textbf{Dependència de coneixement previ:} No detecta amenaces zero-day ni variants polimòrfiques complexes fora de l'entorn de signatures parcials.
+    \item \textbf{Absència de control preventiu real:} El sistema pot llançar alertes o simular un aïllament, però no pot aturar de forma preventiva l'execució d'un procés crític a nivell de nucli, per la qual cosa no pot actuar com un sistema EDR comercial.
+    \item \textbf{Visibilitat de sistema parcial:} No es poden interceptar crides al sistema del kernel, monitoritzar operacions directes de memòria ni enumerar processos o fitxers que hagin estat ocultats activament per un rootkit real.
+    \item \textbf{Implicacions de l'entorn experimental:} El desenvolupament es valida dins d'una màquina virtual controlada, un entorn segur però simplificat que pot veure's evitat per codi maliciós que contingui tècniques de detecció d'entorns virtuals.
+\end{itemize}
+
+\section{Demostració de Compliment de Normatives i Vídeo}
+\todo[inline]{Espai reservat per incloure l'enllaç al vídeo de màxim 5 minuts que demostri l'execució de la solució i el compliment de la legislació vigent (Protecció de dades digitals / LSSICE).}
+
+
+\chapter{Conclusions}
+\label{ch:conclusions}
+\todo[inline]{Espai reservat per al resum de conclusions. Cal diferenciar l'assoliment dels objectius acadèmics del PFG del rendiment final de l'aplicació, comentant les desviacions temporals que hagin pogut sorgir.}
+
+
+\chapter{Treball futur}
+\label{ch:treballfutur}
+A partir de les limitacions analitzades en el prototip, es plantegen les següents línies d'ampliació per a treballs futurs:
+\begin{itemize}
+    \item Escalabilitat del disseny modular cap a l'ús de canals remots de comunicació.
+    \item Integració de models d'intel·ligència artificial i Machine Learning per a la generació de representacions generatives o discriminatives robustes davant de variants.
+    \item Evolució del monitor cap a l'entorn de Kernel-Space mitjançant el desenvolupament de drivers o mòduls de nucli específics per detectar processos ocults.
+    \item Connexió directa i en temps real amb feeds actius de ciberseguretat.
+\end{itemize}
+
+
+\chapter{Bibliografia}
+\label{ch:bibliografia}
+
+% Nota de la guia: Cal citar segons els estàndards de la biblioteca de la UdG. 
+% S'inclouen les referències que aportaves al teu backlog:
+\begin{thebibliography}{99}
+
+\bibitem{nist-guide} 
+National Institute of Standards and Technology (NIST). 
+\textit{Guide to Malware Incident Prevention and Handling for Desktops and Laptops}. 
+NIST Special Publication 800-83.
+
+\bibitem{microsoft-wanna} 
+Microsoft Security Blog (2017). 
+\textit{WannaCrypt ransomware worm targets out-of-date systems}.
+
+\bibitem{cisa-ransom} 
+Cybersecurity and Infrastructure Security Agency (CISA). 
+\textit{\#StopRansomware Guide}.
+
+\bibitem{microsoft-rootkits} 
+Microsoft Learn. 
+\textit{Rootkits - Microsoft Defender for Endpoint}.
+
+\bibitem{csrc-glossary} 
+Computer Security Resource Center (CSRC) - NIST. 
+\textit{Malware - Glossary}.
+
+\bibitem{signature-detection} 
+Network Threat Detection. 
+\textit{Signature-based detection explained}.
+
+\bibitem{fortinet-heuristic} 
+Fortinet. 
+\textit{What Is Heuristic Analysis? Detection and Removal Methods}.
+
+\bibitem{springer-heuristic} 
+Springer Nature Link. 
+\textit{Application of Heuristic Scanning in Malware Detection}.
+
+\bibitem{plos-behavior} 
+\textit{Demystifying Behavior-Based Malware Detection at Endpoints}. 
+PLOS ONE, 2026.
+
+\bibitem{imperva-sandbox} 
+Imperva. 
+\textit{What Is Malware Sandboxing | Analysis \& Key Features}.
+
+\bibitem{springer-ml} 
+\textit{Malware Detection with AI: A Comprehensive Review of Trends and Challenges with Future Directions}. 
+Peer-to-Peer Networking and Applications, Springer Nature, 2025.
+
+\bibitem{fortinet-edr} 
+Fortinet. 
+\textit{What Is Endpoint Detection and Response (EDR)? How Does It Work?}.
+
+\bibitem{crowdstrike-edr} 
+CrowdStrike. 
+\textit{What is EDR? Endpoint Detection \& Response Defined}.
+
+\end{thebibliography}
+
+
+\appendix
+\chapter{Annexos}
+\label{ch:annexos}
+
+\section{Manual d'Usuari}
+\todo[inline]{Pendent d'omplir per l'estudiant. S'inclourà com a annex un manual explicatiu de les pantalles del client en Python i la visualització de resultats.}
+
+\section{Manual d'Instal·lació i Configuració}
+\todo[inline]{Pendent d'omplir per l'estudiant. Passos detallats per compilar l'agent en Rust, configurar els camins del fitxer JSON i aixecar el Unix Domain Socket a l'entorn Linux de proves.}
+
+\end{document}

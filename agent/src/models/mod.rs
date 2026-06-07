@@ -7,7 +7,7 @@ pub struct RequestMessage {
     pub data: Option<serde_json::Value>,
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Detection {
     pub path: String,
     pub engine: String,
@@ -18,7 +18,7 @@ pub struct Detection {
     pub source: String,
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct FileScanResult {
     pub path: String,
     pub detections: Vec<Detection>,
@@ -137,6 +137,8 @@ pub struct PeConfidenceConfig {
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct MonitoringConfig {
     pub enabled: bool,
+    #[serde(default)]
+    pub path_to_watch: Option<String>,
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
@@ -165,4 +167,18 @@ pub struct AutoQuarantineConfig {
 pub struct QuickScanConfig {
     pub max_file_size_mb: u64,
     pub extensions: Vec<String>,
+    #[serde(default = "default_quick_scan_max_depth")]
+    pub max_depth: usize,
+    #[serde(default = "default_quick_scan_yara_timeout_secs")]
+    pub yara_timeout_secs: u64,
+    #[serde(default)]
+    pub excluded_dirs: Vec<String>,
+}
+
+fn default_quick_scan_max_depth() -> usize {
+    2
+}
+
+fn default_quick_scan_yara_timeout_secs() -> u64 {
+    5
 }

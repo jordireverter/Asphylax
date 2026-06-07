@@ -1,12 +1,16 @@
-use std::fs;
-use std::path::{Path, PathBuf};
+use std::fs::{self, File};
+use std::io::{Read, Write, BufReader, BufWriter};
+use std::path::Path;
 
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-const QUARANTINE_DIR: &str = "../quarantine";
-const QUARANTINE_INDEX: &str = "../quarantine/quarantine_index.json";
+use crate::paths;
+
+// Màscara de xifratge/ofuscació simètrica (estàndard industrial per immobilitzar malware)
+const XOR_KEY: u8 = 0x5A; 
+const BUFFER_SIZE: usize = 8192; // 8KB per a transferència eficient sense col·lapsar la RAM
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct QuarantineEntry {
@@ -16,6 +20,40 @@ pub struct QuarantineEntry {
     pub filename: String,
     pub quarantined_at: String,
     pub status: String,
+}
+
+/// NOVA FUNCIÓ AUXILIAR: Copia un fitxer a un altre destí mentre n'ofusca o en desofusca els bytes mitjançant XOR.
+/// Això immobilitza completament el programari maliciós i evita que es pugui executar accidentalment.
+fn copy_with_xor(source: &Path, destination: &Path) -> Result<(), String> {
+    let src_file = File::open(source)
+        .map_err(|e| format!("Error obrint fitxer d'origen per XOR: {}", e))?;
+    let mut reader = BufReader::new(src_file);
+
+    let dest_file = File::create(destination)
+        .map_err(|e| format!("Error creant fitxer de destí per XOR: {}", e))?;
+    let mut writer = BufWriter::new(dest_file);
+
+    let mut buffer = [0u8; BUFFER_SIZE];
+
+    loop {
+        let bytes_read = reader.read(&mut buffer)
+            .map_err(|e| format!("Error llegint bloc per XOR: {}", e))?;
+        
+        if bytes_read == 0 {
+            break;
+        }
+
+        // Apliquem l'operació XOR bit a bit a cadascun dels bytes del bloc actual
+        for byte in &mut buffer[..bytes_read] {
+            *byte ^= XOR_KEY;
+        }
+
+        writer.write_all(&buffer[..bytes_read])
+            .map_err(|e| format!("Error escrivint bloc transformat amb XOR: {}", e))?;
+    }
+
+    writer.flush().map_err(|e| format!("Error forçant escriptura al disc: {}", e))?;
+    Ok(())
 }
 
 pub fn quarantine_file(path_str: &str) -> Result<QuarantineEntry, String> {
@@ -29,7 +67,8 @@ pub fn quarantine_file(path_str: &str) -> Result<QuarantineEntry, String> {
         return Err("Només es poden posar fitxers en quarantena".to_string());
     }
 
-    fs::create_dir_all(QUARANTINE_DIR)
+    let quarantine_dir = paths::quarantine_dir();
+    fs::create_dir_all(&quarantine_dir)
         .map_err(|e| format!("No es pot crear la carpeta quarantine: {}", e))?;
 
     let filename = original_path
@@ -41,10 +80,14 @@ pub fn quarantine_file(path_str: &str) -> Result<QuarantineEntry, String> {
     let id = Uuid::new_v4().to_string();
 
     let quarantine_filename = format!("{}_{}", id, filename);
-    let quarantine_path = PathBuf::from(QUARANTINE_DIR).join(quarantine_filename);
+    let quarantine_path = quarantine_dir.join(quarantine_filename);
 
-    fs::rename(original_path, &quarantine_path)
-        .map_err(|e| format!("Error movent fitxer a quarantena: {}", e))?;
+    // MODIFICACIÓ CRÍTICA: En lloc de fer un rename pur, processem els bytes mitjançant XOR cap al directori segur
+    copy_with_xor(original_path, &quarantine_path)?;
+
+    // Una vegada escrit el fitxer d'ofuscació inert de forma segura, eliminem el fitxer perillós original
+    fs::remove_file(original_path)
+        .map_err(|e| format!("Error eliminant el fitxer original perillós del sistema: {}", e))?;
 
     let entry = QuarantineEntry {
         id,
@@ -63,7 +106,7 @@ pub fn quarantine_file(path_str: &str) -> Result<QuarantineEntry, String> {
 }
 
 fn load_entries() -> Vec<QuarantineEntry> {
-    let content = match fs::read_to_string(QUARANTINE_INDEX) {
+    let content = match fs::read_to_string(paths::quarantine_index_file()) {
         Ok(content) => content,
         Err(_) => return Vec::new(),
     };
@@ -72,16 +115,15 @@ fn load_entries() -> Vec<QuarantineEntry> {
 }
 
 fn save_entries(entries: &[QuarantineEntry]) -> Result<(), String> {
-    fs::create_dir_all(QUARANTINE_DIR)
+    fs::create_dir_all(paths::quarantine_dir())
         .map_err(|e| format!("No es pot crear quarantine: {}", e))?;
 
     let json = serde_json::to_string_pretty(entries)
         .map_err(|e| format!("Error serialitzant quarantena: {}", e))?;
 
-    fs::write(QUARANTINE_INDEX, json)
+    fs::write(paths::quarantine_index_file(), json)
         .map_err(|e| format!("Error guardant quarantine_index.json: {}", e))
 }
-
 
 pub fn list_quarantine() -> Result<Vec<QuarantineEntry>, String> {
     let mut entries = load_entries();
@@ -92,7 +134,6 @@ pub fn list_quarantine() -> Result<Vec<QuarantineEntry>, String> {
 
     Ok(entries)
 }
-
 
 pub fn restore_quarantine(id: &str) -> Result<QuarantineEntry, String> {
     let mut entries = load_entries();
@@ -124,8 +165,12 @@ pub fn restore_quarantine(id: &str) -> Result<QuarantineEntry, String> {
             .map_err(|e| format!("No es pot recrear la carpeta original: {}", e))?;
     }
 
-    fs::rename(quarantine_path, original_path)
-        .map_err(|e| format!("Error restaurant el fitxer: {}", e))?;
+    // MODIFICACIÓ CRÍTICA: Fem l'operació inversa del XOR per tornar a reconstruir l'estructura original del fitxer
+    copy_with_xor(quarantine_path, original_path)?;
+
+    // Una vegada restaurat el binari original per desig de l'usuari, esborrem l'arxiu d'evidència de la quarantena
+    fs::remove_file(quarantine_path)
+        .map_err(|e| format!("Error netejant la quarantena en restaurar: {}", e))?;
 
     entry.status = "restored".to_string();
 
@@ -134,8 +179,6 @@ pub fn restore_quarantine(id: &str) -> Result<QuarantineEntry, String> {
 
     Ok(entry)
 }
-
-
 
 pub fn delete_quarantine(id: &str) -> Result<QuarantineEntry, String> {
     let mut entries = load_entries();

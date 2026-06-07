@@ -3,7 +3,7 @@
   "heuristics": {
     "enabled": true,
     "base64_min_length": 40,
-    "entropy_threshold": 6.0,
+    "entropy_threshold": 7.1,
     "confidence": {
       "double_extension": 40,
       "base64": 40,
@@ -25,13 +25,17 @@
     }
   },
   "monitoring": {
-    "enabled": true
+    "enabled": false,
+    "path_to_watch": null
   },
   "exclusions": {
     "paths": [
       "C:/Windows",
       "C:/Program Files",
       "C:/Program Files (x86)",
+      "C:/$Recycle.Bin",
+      "C:/System Volume Information",
+      "C:/Recovery",
       "C:/Users/jordi/AppData"
     ],
     "extensions": [
@@ -47,27 +51,36 @@
     "theme": "system"
   },
   "auto_quarantine": {
-    "enabled": true,
+    "enabled": false,
     "minimum_classification": "malware"
   },
-
   "quick_scan": {
-  "max_file_size_mb": 20,
-
-  "extensions": [
-    ".exe",
-    ".dll",
-    ".scr",
-    ".bat",
-    ".cmd",
-    ".ps1",
-    ".js",
-    ".vbs",
-    ".jar",
-    ".msi",
-    ".hta",
-    ".docm",
-    ".xlsm"
-  ]
-}
+    "max_file_size_mb": 13,
+    "extensions": [
+      ".exe",
+      ".scr",
+      ".bat",
+      ".cmd",
+      ".ps1",
+      ".js",
+      ".vbs",
+      ".jar",
+      ".msi",
+      ".hta",
+      ".docm",
+      ".xlsm"
+    ],
+    "max_depth": 0,
+    "yara_timeout_secs": 5,
+    "excluded_dirs": [
+      ".git",
+      ".venv",
+      "__pycache__",
+      "node_modules",
+      "target",
+      "dist",
+      "build",
+      ".cache"
+    ]
+  }
 }

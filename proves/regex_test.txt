@@ -1,0 +1,2 @@
+powershell.exe    -EncodedCommand AAAA
+SGVsbG8gSGVsbG8gSGVsbG8gSGVsbG8gSGVsbG8gSGVsbG8gSGVsbG8gSGVsbG8

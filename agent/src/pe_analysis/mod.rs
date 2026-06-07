@@ -1,4 +1,5 @@
 use std::path::Path;
+use sha2::{Sha256, Digest};
 
 use pelite::FileMap;
 use pelite::pe32::{Pe as Pe32, PeFile as PeFile32};
@@ -11,6 +12,47 @@ struct PeIndicators {
     process_injection: Vec<String>,
     process_execution: Vec<String>,
     networking: Vec<String>,
+    dynamic_api_resolution: Vec<String>,
+    import_count: usize,
+}
+
+const SUSPICIOUS_PE_THRESHOLD: i32 = 50;
+const MALWARE_PE_THRESHOLD: i32 = 80;
+const PROCESS_INJECTION_WEIGHT: i32 = 35;
+const PROCESS_EXECUTION_WEIGHT: i32 = 15;
+const NETWORKING_WEIGHT: i32 = 10;
+const DYNAMIC_API_RESOLUTION_WEIGHT: i32 = 55;
+const LOW_IMPORT_DYNAMIC_API_BONUS: i32 = 25;
+
+/// NOVA FUNCIÓ PROFESSIONAL: Calcula el hash SHA-256 independent de cadascuna de les seccions del PE.
+/// Permet detectar codi maliciós encara que l'atacant hagi aplicat 'Padding' o tècniques d'evasió global.
+pub fn calculate_pe_section_hashes(path: &Path) -> Result<Vec<(String, String)>, String> {
+    let file_map = FileMap::open(path).map_err(|e| format!("Error obrint FileMap: {}", e))?;
+    let mut section_hashes = Vec::new();
+
+    if let Ok(pe_file) = PeFile64::from_bytes(&file_map) {
+        let section_headers = pe_file.section_headers();
+        for section in section_headers {
+            let name = section.name().unwrap_or("unknown").to_string();
+            if let Ok(section_data) = pe_file.get_section_bytes(section) {
+                let mut hasher = Sha256::new();
+                hasher.update(section_data);
+                section_hashes.push((name, format!("{:x}", hasher.finalize())));
+            }
+        }
+    } else if let Ok(pe_file) = PeFile32::from_bytes(&file_map) {
+        let section_headers = pe_file.section_headers();
+        for section in section_headers {
+            let name = section.name().unwrap_or("unknown").to_string();
+            if let Ok(section_data) = pe_file.get_section_bytes(section) {
+                let mut hasher = Sha256::new();
+                hasher.update(section_data);
+                section_hashes.push((name, format!("{:x}", hasher.finalize())));
+            }
+        }
+    }
+
+    Ok(section_hashes)
 }
 
 pub fn analyze_pe(
@@ -46,46 +88,11 @@ pub fn analyze_pe(
 
     analyze_pe_strings(file_map.as_ref(), &mut indicators);
 
-    if !indicators.process_injection.is_empty() {
-        detections.push(build_detection(
-            &path_str,
-            &format!(
-                "PE process injection indicators: {}",
-                indicators.process_injection.join(", ")
-            ),
-            "process_injection",
-            "high",
-            config.pe_analysis.confidence.process_injection,
-        ));
+    if let Some(detection) = build_weighted_pe_detection(&path_str, &indicators, config) {
+        detections.push(detection);
     }
 
-    if !indicators.process_execution.is_empty() {
-        detections.push(build_detection(
-            &path_str,
-            &format!(
-                "PE process execution indicators: {}",
-                indicators.process_execution.join(", ")
-            ),
-            "process_execution",
-            "medium",
-            config.pe_analysis.confidence.suspicious_import,
-        ));
-    }
-
-    if !indicators.networking.is_empty() {
-        detections.push(build_detection(
-            &path_str,
-            &format!(
-                "PE networking indicators: {}",
-                indicators.networking.join(", ")
-            ),
-            "networking",
-            "low",
-            config.pe_analysis.confidence.networking,
-        ));
-    }
-
-    Ok(group_pe_detections(&path_str, detections))
+    Ok(detections)
 }
 
 fn is_pe_candidate(path: &Path) -> bool {
@@ -121,6 +128,7 @@ fn analyze_imports_64(
                 Err(_) => continue,
             };
 
+            indicators.import_count += 1;
             classify_indicator(&import_name, indicators);
         }
     }
@@ -149,6 +157,7 @@ fn analyze_imports_32(
                 Err(_) => continue,
             };
 
+            indicators.import_count += 1;
             classify_indicator(&import_name, indicators);
         }
     }
@@ -198,6 +207,16 @@ fn classify_indicator(text: &str, indicators: &mut PeIndicators) {
         "socket",
     ];
 
+    let dynamic_api_indicators = [
+        "LoadLibraryA",
+        "LoadLibraryW",
+        "LoadLibraryExA",
+        "LoadLibraryExW",
+        "GetProcAddress",
+        "LdrLoadDll",
+        "LdrGetProcedureAddress",
+    ];
+
     for indicator in process_injection_indicators {
         if text.contains(indicator) {
             push_unique(&mut indicators.process_injection, indicator);
@@ -221,6 +240,12 @@ fn classify_indicator(text: &str, indicators: &mut PeIndicators) {
             push_unique(&mut indicators.networking, indicator);
         }
     }
+
+    for indicator in dynamic_api_indicators {
+        if text.contains(indicator) {
+            push_unique(&mut indicators.dynamic_api_resolution, indicator);
+        }
+    }
 }
 
 fn push_unique(list: &mut Vec<String>, value: &str) {
@@ -229,58 +254,74 @@ fn push_unique(list: &mut Vec<String>, value: &str) {
     }
 }
 
-fn build_detection(
+fn build_weighted_pe_detection(
     path: &str,
-    name: &str,
-    category: &str,
-    severity: &str,
-    confidence: i32,
-) -> Detection {
-    Detection {
-        path: path.to_string(),
-        engine: "pe_analysis".to_string(),
-        name: name.to_string(),
-        category: category.to_string(),
-        severity: severity.to_string(),
-        confidence,
-        source: "pe_static_analysis".to_string(),
-    }
-}
+    indicators: &PeIndicators,
+    config: &AppConfig,
+) -> Option<Detection> {
+    let mut score = 0;
+    let mut names = Vec::new();
+    let mut categories = Vec::new();
 
-fn group_pe_detections(path: &str, detections: Vec<Detection>) -> Vec<Detection> {
-    if detections.len() < 2 {
-        return detections;
+    if !indicators.process_injection.is_empty() {
+        score += PROCESS_INJECTION_WEIGHT;
+        names.push(format!("process injection: {}", indicators.process_injection.join(", ")));
+        categories.push("process_injection");
     }
 
-    let names = detections
-        .iter()
-        .map(|d| d.name.clone())
-        .collect::<Vec<String>>()
-        .join(" + ");
+    if !indicators.process_execution.is_empty() {
+        score += PROCESS_EXECUTION_WEIGHT;
+        names.push(format!("process execution: {}", indicators.process_execution.join(", ")));
+        categories.push("process_execution");
+    }
 
-    let total_confidence = detections.iter().map(|d| d.confidence).sum::<i32>();
+    if !indicators.networking.is_empty() {
+        score += NETWORKING_WEIGHT;
+        names.push(format!("networking: {}", indicators.networking.join(", ")));
+        categories.push("networking");
+    }
 
-    let severity = if detections.iter().any(|d| d.severity == "high") {
-        "high"
-    } else if detections.iter().any(|d| d.severity == "medium") {
-        "medium"
+    let has_loader = indicators.dynamic_api_resolution.iter().any(|name| {
+        matches!(
+            name.as_str(),
+            "LoadLibraryA" | "LoadLibraryW" | "LoadLibraryExA" | "LoadLibraryExW" | "LdrLoadDll"
+        )
+    });
+    let has_resolver = indicators.dynamic_api_resolution.iter().any(|name| {
+        matches!(name.as_str(), "GetProcAddress" | "LdrGetProcedureAddress")
+    });
+
+    if has_loader && has_resolver {
+        score += DYNAMIC_API_RESOLUTION_WEIGHT;
+        if indicators.import_count <= 3 {
+            score += LOW_IMPORT_DYNAMIC_API_BONUS;
+        }
+        names.push(format!(
+            "dynamic API resolution: {}",
+            indicators.dynamic_api_resolution.join(", ")
+        ));
+        categories.push("dynamic_api_resolution");
+    }
+
+    if score < SUSPICIOUS_PE_THRESHOLD {
+        return None;
+    }
+
+    let confidence = score.min(100);
+    let severity = if score >= MALWARE_PE_THRESHOLD { "high" } else { "medium" };
+    let configured_floor = if score >= MALWARE_PE_THRESHOLD {
+        config.pe_analysis.confidence.process_injection
     } else {
-        "low"
+        config.pe_analysis.confidence.suspicious_import
     };
 
-    let category = detections
-        .iter()
-        .map(|d| d.category.clone())
-        .collect::<Vec<String>>()
-        .join("+");
-
-    vec![Detection {
+    Some(Detection {
         path: path.to_string(),
         engine: "pe_analysis".to_string(),
-        name: format!("PE indicators: {}", names),
-        category,
+        name: format!("PE weighted score {}: {}", score, names.join(" + ")),
+        category: categories.join("+"),
         severity: severity.to_string(),
-        confidence: total_confidence,
+        confidence: confidence.max(configured_floor),
         source: "pe_static_analysis".to_string(),
-    }]
+    })
 }

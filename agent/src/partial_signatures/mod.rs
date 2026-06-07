@@ -3,8 +3,7 @@ use std::fs;
 use regex::{Regex, RegexBuilder};
 
 use crate::models::{PartialSignature, PartialSignaturesDatabase};
-
-const PATTERNS_FILE: &str = "../data/patterns.json";
+use crate::paths;
 
 pub enum PartialMatcher {
     Literal {
@@ -27,7 +26,7 @@ pub struct LoadedPartialSignature {
 pub fn load_partial_signatures() -> Result<Vec<LoadedPartialSignature>, String> {
     println!("Carregant signatures parcials...");
 
-    let content = fs::read_to_string(PATTERNS_FILE)
+    let content = fs::read_to_string(paths::data_file("patterns.json"))
         .map_err(|e| format!("Error llegint patrons: {}", e))?;
 
     let db: PartialSignaturesDatabase = serde_json::from_str(&content)

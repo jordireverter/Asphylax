@@ -1,12 +1,10 @@
 use std::fs;
-use std::path::Path;
 
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-const HISTORY_DIR: &str = "../history";
-const HISTORY_FILE: &str = "../history/history.json";
+use crate::paths;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct HistoryEntry {
@@ -26,7 +24,7 @@ pub fn add_history_entry(
     score: Option<i32>,
     details: &str,
 ) -> Result<HistoryEntry, String> {
-    fs::create_dir_all(HISTORY_DIR)
+    fs::create_dir_all(paths::history_dir())
         .map_err(|e| format!("No es pot crear la carpeta history: {}", e))?;
 
     let entry = HistoryEntry {
@@ -56,7 +54,7 @@ pub fn list_history() -> Result<Vec<HistoryEntry>, String> {
 }
 
 fn load_history() -> Vec<HistoryEntry> {
-    let path = Path::new(HISTORY_FILE);
+    let path = paths::history_file();
 
     if !path.exists() {
         return Vec::new();
@@ -71,12 +69,12 @@ fn load_history() -> Vec<HistoryEntry> {
 }
 
 fn save_history(entries: &[HistoryEntry]) -> Result<(), String> {
-    fs::create_dir_all(HISTORY_DIR)
+    fs::create_dir_all(paths::history_dir())
         .map_err(|e| format!("No es pot crear history: {}", e))?;
 
     let json = serde_json::to_string_pretty(entries)
         .map_err(|e| format!("Error serialitzant historial: {}", e))?;
 
-    fs::write(HISTORY_FILE, json)
+    fs::write(paths::history_file(), json)
         .map_err(|e| format!("Error guardant history.json: {}", e))
 }

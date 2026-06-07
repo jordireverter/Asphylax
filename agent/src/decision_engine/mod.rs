@@ -10,7 +10,7 @@ pub fn classify(detections: &[Detection]) -> DecisionResult {
 
     for detection in detections {
         match detection.engine.as_str() {
-            "hash" => {
+            "hash" | "hash_section" => {
                 // Malware segur
                 return DecisionResult {
                     score: 100,
@@ -23,6 +23,10 @@ pub fn classify(detections: &[Detection]) -> DecisionResult {
             }
 
             "heuristic" => {
+                score += detection.confidence;
+            }
+
+            "pe_analysis" => {
                 score += detection.confidence;
             }
 

@@ -1,0 +1,1323 @@
+{
+  "entries": {
+    "c:/users/jordi/downloads/ghdl-installer-0.29.1.exe": {
+      "size": 1179384,
+      "modified_secs": 1664477568,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\ghdl-installer-0.29.1.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\ghdl-installer-0.29.1.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Double extension + High entropy section detected (7.96) + Suspicious URL + Disguised executable with network indicator",
+            "category": "suspicious_filename+obfuscation+network_indicator+high_risk_combination",
+            "severity": "high",
+            "confidence": 180,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 180,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/webnode.js": {
+      "size": 1161,
+      "modified_secs": 1760471181,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\webNode.js",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\webNode.js",
+            "engine": "heuristic",
+            "name": "Suspicious URL",
+            "category": "network_indicator",
+            "severity": "low",
+            "confidence": 30,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 30,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/windlx/windlx.exe": {
+      "size": 222621,
+      "modified_secs": 1728749184,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\windlx\\WINDLX.EXE",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\windlx\\WINDLX.EXE",
+            "engine": "heuristic",
+            "name": "Heuristic combination: High entropy section detected (6.97) + Long Base64 string",
+            "category": "obfuscation+encoded_payload",
+            "severity": "medium",
+            "confidence": 80,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 80,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/filezilla_3.66.5_win64-setup.exe": {
+      "size": 12376720,
+      "modified_secs": 1710957818,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\FileZilla_3.66.5_win64-setup.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\FileZilla_3.66.5_win64-setup.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Double extension + High entropy section detected (7.97) + Long Base64 string",
+            "category": "suspicious_filename+obfuscation+encoded_payload",
+            "severity": "medium",
+            "confidence": 120,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 120,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/hashcat-7.1.2/hashcat-7.1.2/hashcat.exe": {
+      "size": 1537536,
+      "modified_secs": 1755939093,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\hashcat-7.1.2\\hashcat-7.1.2\\hashcat.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\hashcat-7.1.2\\hashcat-7.1.2\\hashcat.exe",
+            "engine": "heuristic",
+            "name": "High entropy section detected (7.95)",
+            "category": "obfuscation",
+            "severity": "medium",
+            "confidence": 40,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 40,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/nicepage-5.2.4.exe": {
+      "size": 657352,
+      "modified_secs": 1672172081,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\Nicepage-5.2.4.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\Nicepage-5.2.4.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Double extension + High entropy section detected (7.96) + Long Base64 string + Suspicious URL + Encoded content with network indicator + Disguised executable with network indicator + Obfuscated payload with network activity",
+            "category": "suspicious_filename+obfuscation+encoded_payload+network_indicator+medium_risk_combination+high_risk_combination+high_risk_combination",
+            "severity": "high",
+            "confidence": 350,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 350,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/filezilla_3.67.1_win64-setup.exe": {
+      "size": 12407464,
+      "modified_secs": 1728253957,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\FileZilla_3.67.1_win64-setup.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\FileZilla_3.67.1_win64-setup.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Double extension + High entropy section detected (7.97) + Long Base64 string",
+            "category": "suspicious_filename+obfuscation+encoded_payload",
+            "severity": "medium",
+            "confidence": 120,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 120,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/heidisql_12.10.0.7000_setup.exe": {
+      "size": 17715768,
+      "modified_secs": 1742512863,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\HeidiSQL_12.10.0.7000_Setup.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\HeidiSQL_12.10.0.7000_Setup.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Double extension + High entropy section detected (7.97) + Long Base64 string + Suspicious URL + Download and execute pattern + Encoded content with network indicator + Disguised executable with network indicator + Obfuscated payload with network activity",
+            "category": "suspicious_filename+obfuscation+encoded_payload+network_indicator+remote_execution+medium_risk_combination+high_risk_combination+high_risk_combination",
+            "severity": "high",
+            "confidence": 420,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 420,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/material/hashcat/example500.cmd": {
+      "size": 56,
+      "modified_secs": 1755939093,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\material\\hashcat\\example500.cmd",
+        "detections": [],
+        "final_score": 0,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/filezilla_3.62.2_win64-setup.exe": {
+      "size": 11905648,
+      "modified_secs": 1677827643,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\FileZilla_3.62.2_win64-setup.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\FileZilla_3.62.2_win64-setup.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Double extension + High entropy section detected (7.97) + Long Base64 string",
+            "category": "suspicious_filename+obfuscation+encoded_payload",
+            "severity": "medium",
+            "confidence": 120,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 120,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/material/hashcat/hashcat.exe": {
+      "size": 1537536,
+      "modified_secs": 1755939093,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\material\\hashcat\\hashcat.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\material\\hashcat\\hashcat.exe",
+            "engine": "heuristic",
+            "name": "High entropy section detected (7.95)",
+            "category": "obfuscation",
+            "severity": "medium",
+            "confidence": 40,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 40,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/npp.8.4.1.installer.x64.exe": {
+      "size": 4503888,
+      "modified_secs": 1653938423,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\npp.8.4.1.Installer.x64.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\npp.8.4.1.Installer.x64.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Double extension + High entropy section detected (7.97) + Suspicious URL + Disguised executable with network indicator",
+            "category": "suspicious_filename+obfuscation+network_indicator+high_risk_combination",
+            "severity": "high",
+            "confidence": 180,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 180,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/codex installer.exe": {
+      "size": 1294880,
+      "modified_secs": 1778947829,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\Codex Installer.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\Codex Installer.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: High entropy section detected (7.96) + Long Base64 string + Suspicious URL + Download and execute pattern + Encoded content with network indicator + Obfuscated payload with network activity",
+            "category": "obfuscation+encoded_payload+network_indicator+remote_execution+medium_risk_combination+high_risk_combination",
+            "severity": "high",
+            "confidence": 310,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 310,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/auxiliary files for session 6 react-20241021/react components/card_fullexample.js": {
+      "size": 763,
+      "modified_secs": 1729518371,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\Auxiliary files for session 6 React-20241021\\React components\\Card_fullexample.js",
+        "detections": [],
+        "final_score": 0,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/filezilla_3.64.0_win64-setup.exe": {
+      "size": 12140960,
+      "modified_secs": 1697059572,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\FileZilla_3.64.0_win64-setup.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\FileZilla_3.64.0_win64-setup.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Double extension + High entropy section detected (7.97) + Long Base64 string",
+            "category": "suspicious_filename+obfuscation+encoded_payload",
+            "severity": "medium",
+            "confidence": 120,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 120,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/provborrar/provborrar/gradlew.bat": {
+      "size": 2966,
+      "modified_secs": 1741704531,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\provBorrar\\provBorrar\\gradlew.bat",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\provBorrar\\provBorrar\\gradlew.bat",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Suspicious URL + Suspicious command execution",
+            "category": "network_indicator+command_execution",
+            "severity": "medium",
+            "confidence": 80,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 80,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/srs2019_7_2/srs2019_7_2/installcs8_6.exe": {
+      "size": 10536934,
+      "modified_secs": 1742828045,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\SRS2019_7_2\\SRS2019_7_2\\InstallCS8_6.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\SRS2019_7_2\\SRS2019_7_2\\InstallCS8_6.exe",
+            "engine": "heuristic",
+            "name": "High entropy section detected (8.00)",
+            "category": "obfuscation",
+            "severity": "medium",
+            "confidence": 40,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 40,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/srs2019_7_2/srs2019_7_2/setup.exe": {
+      "size": 163283,
+      "modified_secs": 1742828059,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\SRS2019_7_2\\SRS2019_7_2\\setup.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\SRS2019_7_2\\SRS2019_7_2\\setup.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: High entropy section detected (7.95) + Suspicious URL",
+            "category": "obfuscation+network_indicator",
+            "severity": "medium",
+            "confidence": 70,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 70,
+        "classification": "suspicious"
+      }
+    },
+    "c:/users/jordi/downloads/shoppinglist.js": {
+      "size": 2546,
+      "modified_secs": 1730048065,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\ShoppingList.js",
+        "detections": [],
+        "final_score": 0,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/filezilla_3.68.1_win64-setup.exe": {
+      "size": 12450904,
+      "modified_secs": 1731778631,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\FileZilla_3.68.1_win64-setup.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\FileZilla_3.68.1_win64-setup.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Double extension + High entropy section detected (7.97) + Long Base64 string",
+            "category": "suspicious_filename+obfuscation+encoded_payload",
+            "severity": "medium",
+            "confidence": 120,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 120,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/setup-gprolog-1.5.0-msvc-x64.exe": {
+      "size": 6633093,
+      "modified_secs": 1743617156,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\setup-gprolog-1.5.0-msvc-x64.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\setup-gprolog-1.5.0-msvc-x64.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Double extension + High entropy section detected (7.97) + Long Base64 string + Suspicious URL + Encoded content with network indicator + Disguised executable with network indicator + Obfuscated payload with network activity",
+            "category": "suspicious_filename+obfuscation+encoded_payload+network_indicator+medium_risk_combination+high_risk_combination+high_risk_combination",
+            "severity": "high",
+            "confidence": 350,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 350,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/demo4/gradlew.bat": {
+      "size": 2966,
+      "modified_secs": 1741729574,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\demo4\\gradlew.bat",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\demo4\\gradlew.bat",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Suspicious URL + Suspicious command execution",
+            "category": "network_indicator+command_execution",
+            "severity": "medium",
+            "confidence": 80,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 80,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/demo/demo/gradlew.bat": {
+      "size": 2966,
+      "modified_secs": 1741177021,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\demo\\demo\\gradlew.bat",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\demo\\demo\\gradlew.bat",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Suspicious URL + Suspicious command execution",
+            "category": "network_indicator+command_execution",
+            "severity": "medium",
+            "confidence": 80,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 80,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/minecraftinstaller (1).msi": {
+      "size": 2629632,
+      "modified_secs": 1662061459,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\MinecraftInstaller (1).msi",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\MinecraftInstaller (1).msi",
+            "engine": "heuristic",
+            "name": "High entropy section detected (7.96)",
+            "category": "obfuscation",
+            "severity": "medium",
+            "confidence": 40,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 40,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/rustup-init.exe": {
+      "size": 12814336,
+      "modified_secs": 1775761302,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\rustup-init.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\rustup-init.exe",
+            "engine": "heuristic",
+            "name": "High entropy section detected (7.98)",
+            "category": "obfuscation",
+            "severity": "medium",
+            "confidence": 40,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 40,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/demo/novademo/gradlew.bat": {
+      "size": 2966,
+      "modified_secs": 1741703887,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\demo\\novaDemo\\gradlew.bat",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\demo\\novaDemo\\gradlew.bat",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Suspicious URL + Suspicious command execution",
+            "category": "network_indicator+command_execution",
+            "severity": "medium",
+            "confidence": 80,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 80,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/installfigmaagent.exe": {
+      "size": 3009152,
+      "modified_secs": 1727511321,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\InstallFigmaAgent.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\InstallFigmaAgent.exe",
+            "engine": "heuristic",
+            "name": "High entropy section detected (7.97)",
+            "category": "obfuscation",
+            "severity": "medium",
+            "confidence": 40,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 40,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/demo-20250313t195051z-001/demo/gradlew.bat": {
+      "size": 2966,
+      "modified_secs": 1741895499,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\demo-20250313T195051Z-001\\demo\\gradlew.bat",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\demo-20250313T195051Z-001\\demo\\gradlew.bat",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Suspicious URL + Suspicious command execution",
+            "category": "network_indicator+command_execution",
+            "severity": "medium",
+            "confidence": 80,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 80,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/cpu-z_2.09-en.exe": {
+      "size": 2238528,
+      "modified_secs": 1708960452,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\cpu-z_2.09-en.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\cpu-z_2.09-en.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Double extension + High entropy section detected (7.97) + Suspicious URL + Download and execute pattern + Disguised executable with network indicator",
+            "category": "suspicious_filename+obfuscation+network_indicator+remote_execution+high_risk_combination",
+            "severity": "high",
+            "confidence": 250,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 250,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/videopadeditordevideo_es.exe": {
+      "size": 3405368,
+      "modified_secs": 1607703376,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\VideoPadEditordeVideo_ES.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\VideoPadEditordeVideo_ES.exe",
+            "engine": "heuristic",
+            "name": "High entropy section detected (7.96)",
+            "category": "obfuscation",
+            "severity": "medium",
+            "confidence": 40,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 40,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/filezilla_3.61.0_win64_sponsored2-setup.exe": {
+      "size": 12307472,
+      "modified_secs": 1664471070,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\FileZilla_3.61.0_win64_sponsored2-setup.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\FileZilla_3.61.0_win64_sponsored2-setup.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Double extension + High entropy section detected (7.97) + Long Base64 string",
+            "category": "suspicious_filename+obfuscation+encoded_payload",
+            "severity": "medium",
+            "confidence": 120,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 120,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/avast_free_antivirus_setup_online (1).exe": {
+      "size": 220784,
+      "modified_secs": 1607702739,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\avast_free_antivirus_setup_online (1).exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\avast_free_antivirus_setup_online (1).exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: High entropy section detected (7.23) + Long Base64 string + Suspicious URL + Encoded content with network indicator + Obfuscated payload with network activity",
+            "category": "obfuscation+encoded_payload+network_indicator+medium_risk_combination+high_risk_combination",
+            "severity": "high",
+            "confidence": 240,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 240,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/filezilla_3.66.1_win64-setup.exe": {
+      "size": 12383864,
+      "modified_secs": 1700942728,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\FileZilla_3.66.1_win64-setup.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\FileZilla_3.66.1_win64-setup.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Double extension + High entropy section detected (7.97) + Long Base64 string",
+            "category": "suspicious_filename+obfuscation+encoded_payload",
+            "severity": "medium",
+            "confidence": 120,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 120,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/codi-20250114t193953z-001/demo/gradlew.bat": {
+      "size": 2966,
+      "modified_secs": 1741699536,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\Codi-20250114T193953Z-001\\demo\\gradlew.bat",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\Codi-20250114T193953Z-001\\demo\\gradlew.bat",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Suspicious URL + Suspicious command execution",
+            "category": "network_indicator+command_execution",
+            "severity": "medium",
+            "confidence": 80,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 80,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/steamsetup.exe": {
+      "size": 1770744,
+      "modified_secs": 1618472981,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\SteamSetup.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\SteamSetup.exe",
+            "engine": "heuristic",
+            "name": "High entropy section detected (7.97)",
+            "category": "obfuscation",
+            "severity": "medium",
+            "confidence": 40,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 40,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/hashcat-7.1.2/hashcat-7.1.2/example400.cmd": {
+      "size": 63,
+      "modified_secs": 1755939093,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\hashcat-7.1.2\\hashcat-7.1.2\\example400.cmd",
+        "detections": [],
+        "final_score": 0,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/nucli3/dosboxportable/dosboxportable.exe": {
+      "size": 145656,
+      "modified_secs": 1738059966,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\nucli3\\DOSBoxPortable\\DOSBoxPortable.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\nucli3\\DOSBoxPortable\\DOSBoxPortable.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: High entropy section detected (7.96) + Suspicious URL",
+            "category": "obfuscation+network_indicator",
+            "severity": "medium",
+            "confidence": 70,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 70,
+        "classification": "suspicious"
+      }
+    },
+    "c:/users/jordi/downloads/webexpress.js": {
+      "size": 318,
+      "modified_secs": 1760471174,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\webExpress.js",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\webExpress.js",
+            "engine": "heuristic",
+            "name": "Suspicious URL",
+            "category": "network_indicator",
+            "severity": "low",
+            "confidence": 30,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 30,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/spotifysetup.exe": {
+      "size": 892232,
+      "modified_secs": 1594653001,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\SpotifySetup.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\SpotifySetup.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: High entropy section detected (7.92) + Long Base64 string + Suspicious URL + Download and execute pattern + Encoded content with network indicator + Obfuscated payload with network activity",
+            "category": "obfuscation+encoded_payload+network_indicator+remote_execution+medium_risk_combination+high_risk_combination",
+            "severity": "high",
+            "confidence": 310,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 310,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/hashcat-7.1.2/hashcat-7.1.2/example500.cmd": {
+      "size": 56,
+      "modified_secs": 1755939093,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\hashcat-7.1.2\\hashcat-7.1.2\\example500.cmd",
+        "detections": [],
+        "final_score": 0,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/demo (1)/demo/gradlew.bat": {
+      "size": 2966,
+      "modified_secs": 1741698552,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\demo (1)\\demo\\gradlew.bat",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\demo (1)\\demo\\gradlew.bat",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Suspicious URL + Suspicious command execution",
+            "category": "network_indicator+command_execution",
+            "severity": "medium",
+            "confidence": 80,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 80,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/nucli3/aplicacions/dosboxportable_0.74.paf.exe": {
+      "size": 1935432,
+      "modified_secs": 1738059963,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\nucli3\\aplicacions\\DOSBoxPortable_0.74.paf.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\nucli3\\aplicacions\\DOSBoxPortable_0.74.paf.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Double extension + High entropy section detected (7.97)",
+            "category": "suspicious_filename+obfuscation",
+            "severity": "medium",
+            "confidence": 80,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 80,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/signalingandwebserver.js": {
+      "size": 3613,
+      "modified_secs": 1762118796,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\signalingandwebserver.js",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\signalingandwebserver.js",
+            "engine": "heuristic",
+            "name": "Suspicious URL",
+            "category": "network_indicator",
+            "severity": "low",
+            "confidence": 30,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 30,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/codi-20250114t193953z-001/spring-pds25_5b/mvnw.cmd": {
+      "size": 5151,
+      "modified_secs": 1742497909,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\Codi-20250114T193953Z-001\\spring-pds25_5b\\mvnw.cmd",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\Codi-20250114T193953Z-001\\spring-pds25_5b\\mvnw.cmd",
+            "engine": "heuristic",
+            "name": "Suspicious URL",
+            "category": "network_indicator",
+            "severity": "low",
+            "confidence": 30,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 30,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/codi-20250114t193953z-001/demo1/gradlew.bat": {
+      "size": 2966,
+      "modified_secs": 1741703354,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\Codi-20250114T193953Z-001\\demo1\\gradlew.bat",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\Codi-20250114T193953Z-001\\demo1\\gradlew.bat",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Suspicious URL + Suspicious command execution",
+            "category": "network_indicator+command_execution",
+            "severity": "medium",
+            "confidence": 80,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 80,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/putty-64bit-0.77-installer.msi": {
+      "size": 3344896,
+      "modified_secs": 1664470677,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\putty-64bit-0.77-installer.msi",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\putty-64bit-0.77-installer.msi",
+            "engine": "heuristic",
+            "name": "High entropy section detected (7.96)",
+            "category": "obfuscation",
+            "severity": "medium",
+            "confidence": 40,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 40,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/material/hashcat/example0.cmd": {
+      "size": 72,
+      "modified_secs": 1755939093,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\material\\hashcat\\example0.cmd",
+        "detections": [],
+        "final_score": 0,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/hashcat-7.1.2/hashcat-7.1.2/example0.cmd": {
+      "size": 72,
+      "modified_secs": 1755939093,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\hashcat-7.1.2\\hashcat-7.1.2\\example0.cmd",
+        "detections": [],
+        "final_score": 0,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/bluestacksinstaller_5.22.140.1032_native_50d4f5615badeaf68728fb5548b74a37_mzsxnswwozusmtsxnsw0oze1ldu7mtu=.exe": {
+      "size": 949760,
+      "modified_secs": 1763831121,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\BlueStacksInstaller_5.22.140.1032_native_50d4f5615badeaf68728fb5548b74a37_MzsxNSwwOzUsMTsxNSw0OzE1LDU7MTU=.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\BlueStacksInstaller_5.22.140.1032_native_50d4f5615badeaf68728fb5548b74a37_MzsxNSwwOzUsMTsxNSw0OzE1LDU7MTU=.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Double extension + High entropy section detected (7.97) + Long Base64 string + Suspicious URL + Encoded content with network indicator + Disguised executable with network indicator + Obfuscated payload with network activity",
+            "category": "suspicious_filename+obfuscation+encoded_payload+network_indicator+medium_risk_combination+high_risk_combination+high_risk_combination",
+            "severity": "high",
+            "confidence": 350,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 350,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/mingw-get-setup.exe": {
+      "size": 86528,
+      "modified_secs": 1729596165,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\mingw-get-setup.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\mingw-get-setup.exe",
+            "engine": "hash",
+            "name": "mingw-get-setup.exe",
+            "category": "known_malware",
+            "severity": "high",
+            "confidence": 80,
+            "source": "malwarebazaar"
+          },
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\mingw-get-setup.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: High entropy section detected (7.96) + Long Base64 string",
+            "category": "obfuscation+encoded_payload",
+            "severity": "medium",
+            "confidence": 80,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 100,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/material/hashcat/example400.cmd": {
+      "size": 63,
+      "modified_secs": 1755939093,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\material\\hashcat\\example400.cmd",
+        "detections": [],
+        "final_score": 0,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/auxiliary files for session 6 react-20241021/react components/clock.js": {
+      "size": 567,
+      "modified_secs": 1729518371,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\Auxiliary files for session 6 React-20241021\\React components\\Clock.js",
+        "detections": [],
+        "final_score": 0,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/auxiliary files for session 6 react-20241021/react components/shoppinglist.js": {
+      "size": 2546,
+      "modified_secs": 1729523942,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\Auxiliary files for session 6 React-20241021\\React components\\ShoppingList.js",
+        "detections": [],
+        "final_score": 0,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/minecraftinstaller.msi": {
+      "size": 2625536,
+      "modified_secs": 1594666357,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\MinecraftInstaller.msi",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\MinecraftInstaller.msi",
+            "engine": "heuristic",
+            "name": "High entropy section detected (7.96)",
+            "category": "obfuscation",
+            "severity": "medium",
+            "confidence": 40,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 40,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/tablescript.js": {
+      "size": 42,
+      "modified_secs": 1728916912,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\TableScript.js",
+        "detections": [],
+        "final_score": 0,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/winrar-x64-591ca.exe": {
+      "size": 3347016,
+      "modified_secs": 1600115742,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\winrar-x64-591ca.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\winrar-x64-591ca.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: High entropy section detected (7.96) + Long Base64 string + Suspicious URL + Encoded content with network indicator + Obfuscated payload with network activity",
+            "category": "obfuscation+encoded_payload+network_indicator+medium_risk_combination+high_risk_combination",
+            "severity": "high",
+            "confidence": 240,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 240,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/wavepadeditoraudio_es.exe": {
+      "size": 3160760,
+      "modified_secs": 1732544452,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\WavePadEditorAudio_ES.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\WavePadEditorAudio_ES.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: High entropy section detected (7.96) + Long Base64 string",
+            "category": "obfuscation+encoded_payload",
+            "severity": "medium",
+            "confidence": 80,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 80,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/avast_free_antivirus_setup_online (2).exe": {
+      "size": 220784,
+      "modified_secs": 1607738490,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\avast_free_antivirus_setup_online (2).exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\avast_free_antivirus_setup_online (2).exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: High entropy section detected (7.23) + Long Base64 string + Suspicious URL + Encoded content with network indicator + Obfuscated payload with network activity",
+            "category": "obfuscation+encoded_payload+network_indicator+medium_risk_combination+high_risk_combination",
+            "severity": "high",
+            "confidence": 240,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 240,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/auxiliary files for session 6 react-20241021/react components/card_initial.js": {
+      "size": 268,
+      "modified_secs": 1729518371,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\Auxiliary files for session 6 React-20241021\\React components\\Card_initial.js",
+        "detections": [],
+        "final_score": 0,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/_temp_matlab_r2019b_win64/setup.exe": {
+      "size": 487256,
+      "modified_secs": 1563482112,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\_temp_matlab_R2019b_win64\\setup.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\_temp_matlab_R2019b_win64\\setup.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: High entropy section detected (7.94) + Suspicious URL",
+            "category": "obfuscation+network_indicator",
+            "severity": "medium",
+            "confidence": 70,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 70,
+        "classification": "suspicious"
+      }
+    },
+    "c:/users/jordi/downloads/srs2019_7_2/srs2019_7_2/installcs8_5.exe": {
+      "size": 6421271,
+      "modified_secs": 1742828045,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\SRS2019_7_2\\SRS2019_7_2\\InstallCS8_5.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\SRS2019_7_2\\SRS2019_7_2\\InstallCS8_5.exe",
+            "engine": "heuristic",
+            "name": "High entropy section detected (7.96)",
+            "category": "obfuscation",
+            "severity": "medium",
+            "confidence": 40,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 40,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/filezilla_3.67.0_win64-setup.exe": {
+      "size": 12388016,
+      "modified_secs": 1713389348,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\FileZilla_3.67.0_win64-setup.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\FileZilla_3.67.0_win64-setup.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Double extension + High entropy section detected (7.97) + Long Base64 string",
+            "category": "suspicious_filename+obfuscation+encoded_payload",
+            "severity": "medium",
+            "confidence": 120,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 120,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/sample.js": {
+      "size": 65,
+      "modified_secs": 1728314847,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\sample.js",
+        "detections": [],
+        "final_score": 0,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/mysql-installer-web-community-8.0.31.0.msi": {
+      "size": 5767168,
+      "modified_secs": 1669477599,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\mysql-installer-web-community-8.0.31.0.msi",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\mysql-installer-web-community-8.0.31.0.msi",
+            "engine": "heuristic",
+            "name": "High entropy section detected (7.96)",
+            "category": "obfuscation",
+            "severity": "medium",
+            "confidence": 40,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 40,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/codi-20250114t193953z-001/spring-pds25_5b/gradlew.bat": {
+      "size": 2269,
+      "modified_secs": 1742497909,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\Codi-20250114T193953Z-001\\spring-pds25_5b\\gradlew.bat",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\Codi-20250114T193953Z-001\\spring-pds25_5b\\gradlew.bat",
+            "engine": "heuristic",
+            "name": "Suspicious command execution",
+            "category": "command_execution",
+            "severity": "medium",
+            "confidence": 50,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 50,
+        "classification": "suspicious"
+      }
+    },
+    "c:/users/jordi/downloads/_temp_matlab_r2019a_win64/setup.exe": {
+      "size": 463696,
+      "modified_secs": 1550728854,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\_temp_matlab_R2019a_win64\\setup.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\_temp_matlab_R2019a_win64\\setup.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: High entropy section detected (7.94) + Suspicious URL",
+            "category": "obfuscation+network_indicator",
+            "severity": "medium",
+            "confidence": 70,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 70,
+        "classification": "suspicious"
+      }
+    },
+    "c:/users/jordi/downloads/demo (2)/demo/gradlew.bat": {
+      "size": 2966,
+      "modified_secs": 1741700464,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\demo (2)\\demo\\gradlew.bat",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\demo (2)\\demo\\gradlew.bat",
+            "engine": "heuristic",
+            "name": "Heuristic combination: Suspicious URL + Suspicious command execution",
+            "category": "network_indicator+command_execution",
+            "severity": "medium",
+            "confidence": 80,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 80,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/s4_example2.js": {
+      "size": 260,
+      "modified_secs": 1728313607,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\S4_example2.js",
+        "detections": [],
+        "final_score": 0,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/visualstudiosetup.exe": {
+      "size": 4453552,
+      "modified_secs": 1740938132,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\VisualStudioSetup.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\VisualStudioSetup.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: High entropy section detected (7.97) + Long Base64 string",
+            "category": "obfuscation+encoded_payload",
+            "severity": "medium",
+            "confidence": 80,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 80,
+        "classification": "malware"
+      }
+    },
+    "c:/users/jordi/downloads/auxiliary files for session 6 react-20241021/react components/card_withfunction.js": {
+      "size": 594,
+      "modified_secs": 1729518371,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\Auxiliary files for session 6 React-20241021\\React components\\Card_withFunction.js",
+        "detections": [],
+        "final_score": 0,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/mysql-installer-web-community-8.0.31.0 (1).msi": {
+      "size": 5767168,
+      "modified_secs": 1669477698,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\mysql-installer-web-community-8.0.31.0 (1).msi",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\mysql-installer-web-community-8.0.31.0 (1).msi",
+            "engine": "heuristic",
+            "name": "High entropy section detected (7.96)",
+            "category": "obfuscation",
+            "severity": "medium",
+            "confidence": 40,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 40,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/joccartes.js": {
+      "size": 10026,
+      "modified_secs": 1732551927,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\jocCartes.js",
+        "detections": [],
+        "final_score": 0,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/auxiliary files for session 6 react-20241021/react components/app.js": {
+      "size": 183,
+      "modified_secs": 1729523918,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\Auxiliary files for session 6 React-20241021\\React components\\App.js",
+        "detections": [],
+        "final_score": 0,
+        "classification": "clean"
+      }
+    },
+    "c:/users/jordi/downloads/avast_free_antivirus_setup_online.exe": {
+      "size": 232168,
+      "modified_secs": 1601502595,
+      "result": {
+        "path": "C:\\Users\\jordi\\Downloads\\avast_free_antivirus_setup_online.exe",
+        "detections": [
+          {
+            "path": "C:\\Users\\jordi\\Downloads\\avast_free_antivirus_setup_online.exe",
+            "engine": "heuristic",
+            "name": "Heuristic combination: High entropy section detected (7.67) + Long Base64 string + Suspicious URL + Encoded content with network indicator + Obfuscated payload with network activity",
+            "category": "obfuscation+encoded_payload+network_indicator+medium_risk_combination+high_risk_combination",
+            "severity": "high",
+            "confidence": 240,
+            "source": "heuristic_engine"
+          }
+        ],
+        "final_score": 240,
+        "classification": "malware"
+      }
+    }
+  }
+}
