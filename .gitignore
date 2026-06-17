@@ -12,6 +12,9 @@ data/quick_scan_cache.json
 data/update_state.json
 history/history.json
 
+# Quarantine (malware samples - never commit)
+quarantine/
+
 # Generated outputs
 repomix-output.xml
 agent/repomix-output.xml
