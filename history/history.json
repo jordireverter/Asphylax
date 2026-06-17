@@ -4687,5 +4687,32 @@
     "result": "malware",
     "score": 240,
     "details": "Fitxers escanejats: 1009, deteccions: 307"
+  },
+  {
+    "id": "d8487ee4-5467-44fe-bd70-65d4274b7963",
+    "timestamp": "2026-06-09T19:00:14.157213900+00:00",
+    "action": "quick_scan",
+    "path": "Quick scan",
+    "result": "malware",
+    "score": 350,
+    "details": "Fitxers escanejats: 40, deteccions: 36"
+  },
+  {
+    "id": "481d06c3-7888-4e96-b422-5c344c729b39",
+    "timestamp": "2026-06-09T19:00:19.453335600+00:00",
+    "action": "quick_scan",
+    "path": "Quick scan",
+    "result": "malware",
+    "score": 350,
+    "details": "Fitxers escanejats: 40, deteccions: 36"
+  },
+  {
+    "id": "009a0559-913c-41b3-b3e4-2072e96f2cf8",
+    "timestamp": "2026-06-11T14:20:08.151281600+00:00",
+    "action": "quick_scan",
+    "path": "Quick scan",
+    "result": "malware",
+    "score": 350,
+    "details": "Fitxers escanejats: 41, deteccions: 37"
   }
 ]
