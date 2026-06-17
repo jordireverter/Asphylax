@@ -20,6 +20,11 @@ fn load_signatures_file(
     map: &mut SignaturesMap,
     hash_list: &mut Vec<String>,
 ) -> Result<usize, String> {
+    if !path.exists() {
+        println!("[!] Fitxer de signatures no trobat: {} (s'arrencarà amb base buida)", path.display());
+        return Ok(0);
+    }
+
     println!("Carregant signatures des de: {}", path.display());
 
     let content = fs::read_to_string(path)
