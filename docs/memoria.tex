@@ -1,0 +1,930 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[catalan]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=3cm}
+\usepackage{setspace}
+\setstretch{1.15}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{todonotes}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,arrows.meta,positioning,fit,backgrounds}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{codeblue}{rgb}{0.0, 0.3, 0.6}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codegreen}{rgb}{0.0,0.5,0.0}
+\definecolor{backcolour}{rgb}{0.97,0.97,0.97}
+
+\lstdefinestyle{codestyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    tabsize=4,
+    frame=single,
+    rulecolor=\color{black!20},
+}
+\lstset{style=codestyle}
+
+\title{Projecte Asphylax: Desenvolupament i Anàlisi d'un Sistema de Detecció de Malware}
+\author{Jordi Reverter Palmada}
+\date{\today}
+
+\begin{document}
+
+% --- CARÀTULA (Nota de la guia: cal usar la caràtula oficial de l'EPS) ---
+\maketitle
+
+\tableofcontents
+\listoftables
+\listoffigures
+
+% ═══════════════════════════════════════════════════════════════════════
+\chapter{Introducció, motivacions, propòsit i objectius del projecte}
+\label{ch:introduccio}
+% ═══════════════════════════════════════════════════════════════════════
+
+\section{Introducció i Context}
+En l'àmbit de la ciberseguretat, el terme malware es fa servir per designar qualsevol programa, component lògic o codi que s'insereix de manera encoberta en un sistema informàtic amb la intenció de comprometre'n la integritat, disponibilitat o confidencialitat. Aquest concepte és central en qualsevol treball relacionat amb la detecció d'amenaces, perquè estableix la base semàntica que permet classificar i analitzar comportaments maliciosos.
+
+Les definicions oficials més acceptades provenen de NIST, que descriu malware com software o firmware que executa processos no autoritzats amb impacte advers sobre un sistema i com un programa inserit de manera encoberta per destruir dades o executar accions intrusives. Aquestes definicions subratllen dos elements essencials: la intencionalitat maliciosa i la ocultació, que diferencien el malware del simple software defectuós. A més, el NIST alerta que el malware és l'amenaça externa més comuna per a la majoria d'organitzacions, generant interrupcions i costos de recuperació elevats. Això situa el fenomen en un context en què no només és un problema tècnic, sinó també un repte econòmic i operatiu. A partir d'aquesta base conceptual, és possible examinar les diferents classes i comportaments que presenta el malware modern.
+
+\section{Motivacions}
+Les motivacions que han impulsat el desenvolupament d'aquest projecte provenen de dues dimensions complementàries: l'acadèmica i la pràctica.
+
+D'una banda, la motivació principal ha estat aprendre en profunditat en què consisteixen els sistemes de detecció de malware: com s'encarreguen d'identificar el codi maliciós, quines tècniques utilitzen i quin és el grau d'eficàcia real de cadascuna. La ciberseguretat és un àmbit en constant evolució on les amenaces i les contramedides coexisteixen en una pugna permanent; comprendre-la des de la construcció d'un sistema propi permet assolir un coneixement molt més profund que el purament teòric. Dissenyar i implementar cadascuna de les capes de detecció ha obligat a entendre no solament com funcionen, sinó per quins motius funcionen d'una determinada manera i quines limitacions inherents presenten en entorns reals.
+
+D'altra banda, un factor determinant d'ordre pràctic va ser la possessió d'una llicència d'un sistema de detecció comercial. Disposant ja d'un antivirus comercial en ús, es va plantejar la possibilitat de construir una solució pròpia que fos capaç de substituir-lo funcionalment, eliminant la dependència de la llicència i el seu cost recurrent. Aquest plantejament va actuar com a fil conductor del projecte establint un objectiu tangible i mesurable: assolir un nivell de funcionalitat i cobertura que permetés prescindir del producte comercial.
+
+Ambdues motivacions es reforcen mútuament: la recerca del coneixement profund va dirigir les decisions de disseny cap a la comprensió dels mecanismes interns de cada capa, mentre que l'objectiu pràctic va imposar un criteri de qualitat i funcionalitat concret que va mantenir el projecte orientat cap a un resultat real i usable.
+
+\section{Propòsit}
+L'objectiu principal d'aquest projecte és explorar i combinar diferents estratègies defensives contra el programari maliciós dins d'una arquitectura coherent, extensible i modular, permetent comprendre de forma pràctica i profunda els mecanismes de seguretat en entorns locals.
+
+\section{Objectius del Projecte}
+L'objectiu general i els específics es detallen a continuació, diferenciant clarament el procés acadèmic i de desenvolupament dels requisits del producte final:
+
+\subsection{Objectiu General}
+L'objectiu principal del projecte és desenvolupar un sistema de detecció de malware funcional, tot seguint el procés complet de disseny, implementació i anàlisi, amb la finalitat de comprendre en profunditat tant el funcionament del malware com les tècniques utilitzades per detectar-lo. Aquest objectiu no es limita a la implementació del sistema sinó que inclou l'estudi de metodologies de detecció existents, la selecció i justificació de les tècniques aplicades i l'anàlisi crítica del comportament i les limitacions del sistema desenvolupat. El resultat final ha de permetre al lector comprendre tant el procés de desenvolupament com els principis teòrics i pràctics de la detecció de malware.
+
+\subsection{Objectius Específics}
+Per assolir l'objectiu general, es defineixen els següents objectius específics:
+\begin{itemize}
+    \item \textbf{Analitzar el funcionament del malware:} Estudiar les principals tipologies de malware, el seu cicle de vida i tècniques d'evasió, així com comprendre les dificultats associades a la seva detecció.
+    \item \textbf{Estudiar les tècniques de detecció existents:} Analitzar sistemes basats en signatures, heurístiques i comportament, entenent els avantatges i limitacions de cada enfocament en entorns reals.
+    \item \textbf{Dissenyar una arquitectura de detecció:} Definir una arquitectura modular del sistema, establir la separació entre components i justificar les decisions tecnològiques adoptades.
+    \item \textbf{Desenvolupar un prototip funcional:} Implementar un sistema capaç de detectar malware en un entorn controlat, integrant diferents tècniques defensives i proporcionant una interfície d'interacció.
+    \item \textbf{Analitzar el comportament i les limitacions del sistema:} Avaluar l'eficàcia, mesurar l'eficiència, identificar limitacions tecnològiques i reflexionar sobre possibles millores i línies futures.
+\end{itemize}
+
+\section{Aportació del PFG respecte al punt de partida}
+El projecte Asphylax contribueix en dos àmbits principals:
+\begin{itemize}
+    \item \textbf{Acadèmic:} Proporcionant una anàlisi detallada de les tècniques de detecció i del procés de desenvolupament d'un sistema de seguretat.
+    \item \textbf{Tècnic:} Desenvolupant un prototip modular que pot servir com a base per a futures ampliacions.
+\end{itemize}
+Aquesta doble vessant respon a l'objectiu de combinar teoria i pràctica, oferint una visió completa del problema de la detecció de malware.
+
+
+% ═══════════════════════════════════════════════════════════════════════
+\chapter{Estudi de viabilitat}
+\label{ch:viabilitat}
+% ═══════════════════════════════════════════════════════════════════════
+
+\section{Viabilitat Econòmica i Pressupost}
+El projecte no ha requerit cap pressupost inicial. Totes les eines, biblioteques i entorns de desenvolupament emprats han estat completament lliures i de codi obert: Rust i el seu ecosistema (\texttt{cargo}, \texttt{crates.io}), Python, PyQt6, la biblioteca YARA-X, les regles de \textit{signature-base} de Florian Roth i les signatures públiques de MalwareBazaar estan disponibles sense cost ni restriccions per a ús acadèmic i no comercial.
+
+L'únic cost real del projecte és el temps dedicat al desenvolupament. Com a estimació orientativa, considerant aproximadament 300 hores de treball distribuïdes al llarg del semestre i un cost horari de referència d'un estudiant en pràctiques (15~\euro/h), l'estimació del cost d'oportunitat és d'uns 4.500~\euro. En tractar-se d'un projecte acadèmic personal, aquest import no representa una despesa real.
+
+\section{Viabilitat Tecnològica}
+La viabilitat tecnològica es va avaluar a partir de tres eixos principals:
+
+\begin{itemize}
+    \item \textbf{Quantitat de feina:} Es va fer una estimació de les funcionalitats a desenvolupar i la seva complexitat tècnica. Partint d'un escaneig bàsic per hash fins a la monitorització en temps real i la quarantena, es va considerar que la feina era abastaule dins del termini acadèmic disponible, sempre que es prioritzés correctament i s'acceptés el prototipat incremental com a estratègia.
+    \item \textbf{Funcionalitats a incloure:} Es va delimitar un conjunt de funcionalitats clau prioritàries ---signatures exactes, YARA, heurística, anàlisi PE, monitorització i quarantena--- deixant fora d'abast les que suposaven una complexitat desproporcionada: anàlisi dinàmica en sandbox, drivers de kernel o integració amb infraestructura de xarxa corporativa.
+    \item \textbf{Tipus d'anàlisi a realitzar:} Es va concretar que l'anàlisi seria estàtica i semi-dinàmica (monitorització de canvis al sistema de fitxers), sense necessitat d'infraestructura de virtualització complexa. Això reduïa significativament la dependència d'entorns externs i simplificava les proves.
+\end{itemize}
+
+Un factor determinant en la viabilitat va ser la bona definició de l'abast des del principi. Tenir clar quines funcionalitats formen part del projecte i quines queden fora va permetre evitar la dispersió i mantenir un ritme de desenvolupament consistent.
+
+\section{Viabilitat Ètica i Legal}
+L'aspecte ètic i legal ha tingut una consideració especial, atès que el treball implica l'ús de mostres reals de codi maliciós:
+
+\begin{itemize}
+    \item \textbf{Ús de malware real:} Totes les mostres emprades en les proves s'han obtingut de fonts reconegudes i legalment accessibles (MalwareBazaar d'\textit{abuse.ch}). L'ús s'ha mantingut en un entorn estrictament privat i controlat, sense distribució ni exposició a tercers.
+    \item \textbf{Mesures de seguretat:} Les mostres es conserven ofuscades mitjançant la capa de quarantena XOR del propi sistema. Les proves s'han realitzat prenent precaucions actives per evitar execucions accidentals, mantenint el màxim de seguretat en tot moment.
+    \item \textbf{Privacitat i dades personals:} El sistema no processa ni emmagatzema dades personals d'usuaris. Totes les dades analitzades corresponen a fitxers del propi sistema local on s'executa i mai es transmeten a servidors externs.
+    \item \textbf{Compliment normatiu:} El tractament és conforme al Reglament General de Protecció de Dades (RGPD) i a la Llei de Serveis de la Societat de la Informació (LSSICE), atès que no es fa cap tractament de dades personals identificables.
+\end{itemize}
+
+\section{Ús d'Eines d'Intel·ligència Artificial Generativa}
+En el marc d'aquest projecte s'han emprat eines d'IA generativa amb finalitats específiques i ben delimitades:
+
+\begin{itemize}
+    \item \textbf{Recol·lecció d'informació teòrica:} Gemini i Claude han donat suport en la cerca i síntesi d'informació per al marc teòric, ajudant a identificar conceptes, referències i explicacions tècniques.
+    \item \textbf{Correcció i depuració de codi:} Ambdues eines s'han emprat com a ajuda en la resolució de problemes tècnics puntuals, la depuració d'errors de compilació i la generació de variants de codi per a proves.
+    \item \textbf{Generació d'imatges:} S'han utilitzat eines de generació d'imatges per IA per crear figures il·lustratives que acompanyen la memòria.
+\end{itemize}
+
+
+% ═══════════════════════════════════════════════════════════════════════
+\chapter{Metodologia}
+\label{ch:metodologia}
+% ═══════════════════════════════════════════════════════════════════════
+
+\section{Metodologia de Treball}
+El projecte s'ha estructurat seguint una metodologia de desenvolupament incremental basada en un \textbf{backlog d'Epics}. Cada Epic representa un conjunt cohesionat de tasques que, una vegada completades i validades, permetien avançar al següent bloc funcional.
+
+La dinàmica de treball per cada Epic seguia un patró consistent:
+\begin{enumerate}
+    \item \textbf{Marc teòric:} Estudi dels conceptes i tècniques associades a la capa que s'implementaria (p.ex. funcionament del filtre de Bloom, estructura del format PE, protocol YARA).
+    \item \textbf{Arquitectura i disseny:} Definició de la interfície del mòdul, les estructures de dades necessàries i la seva integració amb els components existents.
+    \item \textbf{Implementació:} Codificació de la capa corresponent a l'agent Rust i, si escaig, als components de la UI del client Python.
+    \item \textbf{Validació i anàlisi:} Proves funcionals de la capa implementada, identificació de problemes de rendiment o cobertura i ajustos fins a donar l'Epic per tancat.
+\end{enumerate}
+
+Aquesta seqüència es va repetir per a cada Epic del projecte, garantint que cada capa fos estable i validada abans d'afegir-ne una de nova. L'ordre dels Epics va seguir la progressió natural del sistema: des de l'escaneig bàsic per hash fins a les capes més complexes de monitorització i la quarantena, i finalment la millora de la interfície gràfica i l'historial.
+
+\section{Declaració d'Ús d'Eines d'IA Generativa}
+Durant el desenvolupament d'aquest projecte s'han utilitzat eines d'intel·ligència artificial generativa de forma auxiliar i supervisada. Les principals eines emprades han estat \textbf{Google Gemini} i \textbf{Anthropic Claude}, amb els usos següents:
+
+\begin{itemize}
+    \item \textbf{Recol·lecció i síntesi d'informació teòrica:} Suport en la cerca de conceptes tècnics, explicació de termes específics de seguretat i identificació de fonts rellevants per al marc teòric.
+    \item \textbf{Correcció i depuració d'errors de codi:} Ajuda en la interpretació de missatges d'error del compilador de Rust, proposta de solucions a problemes d'implementació concrets i generació de fragments de codi de prova.
+    \item \textbf{Generació d'imatges:} Creació de figures generades per IA per il·lustrar conceptes en la present memòria.
+\end{itemize}
+
+En tots els casos, les sortides de les eines han estat revisades, validades i adaptades per l'autor. Cap secció d'aquesta memòria ni cap component funcional crític del codi ha estat generat íntegrament per IA sense supervisió i criteri propi.
+
+
+% ═══════════════════════════════════════════════════════════════════════
+\chapter{Planificació}
+\label{ch:planificacio}
+% ═══════════════════════════════════════════════════════════════════════
+
+\section{Pla de Treball per Epics}
+El pla de treball s'ha estructurat en Epics seqüencials, on cada un representava un conjunt de tasques amb un objectiu funcional clar. La progressió d'un Epic al següent requeria la validació de les funcionalitats implementades i la superació de les proves associades. La Taula~\ref{tab:epics} recull els Epics principals i el seu contingut.
+
+\begin{table}[H]
+\centering
+\caption{Epics del projecte Asphylax}
+\label{tab:epics}
+\begin{tabular}{@{}clp{8cm}@{}}
+\toprule
+\textbf{Epic} & \textbf{Nom} & \textbf{Contingut principal} \\
+\midrule
+1 & Fonaments i arquitectura & Disseny de l'arquitectura client-agent, protocol IPC, estructura de mòduls \\
+2 & Motor de signatures exactes & Hash SHA-256, filtre de Bloom, integració MalwareBazaar, actualitzador \\
+3 & Signatures parcials i optimització & Integració YARA-X, validació de regles, memòria cau, paral·lelisme Rayon \\
+4 & Heurística i motor de decisió & Analitzador heurístic, anàlisi PE, agregació de puntuacions \\
+5 & Monitorització en temps real & Monitor de sistema de fitxers, streaming d'events, quarantena automàtica \\
+6 & Quarantena & Ofuscació XOR, índex de quarantena, restauració segura \\
+7 & Client i millores UI & Interfície PyQt6 completa, historial, configuració, escaneig ràpid \\
+8 & Anàlisi i validació & Proves de rendiment, anàlisi de falsos positius/negatius, comparativa \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Cronograma}
+El cronograma inicial preveia finalitzar el desenvolupament i la memòria a principis de juny de 2026. Tanmateix, degut a la quantitat de treball i la decisió de completar amb més profunditat les capes d'anàlisi i la documentació, es va optar per ajornar el lliurament i ampliar el termini fins a mitjans de juliol de 2026. Aquesta reestructuració va permetre dedicar el temps necessari a la validació correcta del sistema i a l'elaboració d'una memòria més completa.
+
+\begin{table}[H]
+\centering
+\caption{Cronograma aproximat del projecte}
+\label{tab:cronograma}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Període} & \textbf{Activitat} \\
+\midrule
+Febrer -- Març 2026   & Epics 1--2: Arquitectura, signatures exactes \\
+Març -- Abril 2026    & Epics 3--4: YARA, heurística, PE, motor de decisió \\
+Abril -- Maig 2026    & Epics 5--6: Monitorització i quarantena \\
+Maig -- Juny 2026     & Epic 7: Client, UI, historial, configuració \\
+Juny -- Juliol 2026   & Epic 8: Anàlisi, proves, redacció final de la memòria \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+% ═══════════════════════════════════════════════════════════════════════
+\chapter{Marc de treball i conceptes previs}
+\label{ch:marctreball}
+% ═══════════════════════════════════════════════════════════════════════
+
+\section{Fonaments de Malware}
+Abans d'analitzar cada categoria, és important entendre que les classificacions no són estancades: el malware actual sovint combina característiques de diverses famílies, generant formes híbrides que dificulten la detecció. Tot i així, la categorització clàssica continua sent útil per explicar comportaments fonamentals.
+
+\subsection{Tipologies de Malware (Classes principals)}
+\begin{itemize}
+    \item \textbf{Virus:} Constitueixen una de les primeres formes documentades de malware. Es caracteritzen per la capacitat de replicar-se mitjançant la infecció d'altres fitxers o sectors del sistema, sovint requerint la intervenció de l'usuari perquè la propagació es consolidi. Són programes que s'insereixen en fitxers hoste i activen la seva càrrega maliciosa quan aquests són executats o manipulats.
+    \item \textbf{Worms (Cucs):} Se situen i es distingeixen per la seva autonomia en la propagació, aprofitant vulnerabilitats de xarxa per disseminar-se entre sistemes connectats. No depenen de l'acció de l'usuari i són capaços d'infectar de manera massiva infraestructures senceres quan existeixen vectors d'explotació remota exploitables.
+    \item \textbf{Troians:} Adopten l'aparença de programari legítim per facilitar la seva instal·lació. La seva funció maliciosa roman oculta fins al moment d'execució. A diferència de virus i cucs, no es repliquen per si mateixos, sinó que depenen d'estratègies d'enginyeria social o distribució manipulada. El seu objectiu pot incloure l'obertura de backdoors, la instal·lació de components addicionals o la manipulació del sistema.
+    \item \textbf{Ransomware:} És una de les formes de malware més disruptives. La seva acció principal consisteix a xifrar informació de la víctima i exigir un rescat per recuperar-ne l'accés. L'evolució recent apunta cap a models d'extorsió múltiple, on l'atacant complementa el xifratge amb l'exfiltració prèvia de dades.
+    \item \textbf{Rootkits:} Constitueixen un conjunt de tècniques i components orientats a amagar la presència i activitat del codi maliciós dins del sistema, garantint la invisibilitat de processos, fitxers o entrades de registre manipulades.
+    \item \textbf{Spyware / Keyloggers:} Engloba eines dissenyades per capturar informació privada sense consentiment (credencials, dades personals) mitjançant keyloggers, monitors de pantalla o telemetria no autoritzada.
+    \item \textbf{Adware:} Programari orientat a publicitat intrusiva. Tot i que es percep com menys greu, pot comportar riscos significatius de privacitat i servir com a porta d'entrada per a altres formes de malware.
+\end{itemize}
+
+\subsection{Cicle de Vida del Malware}
+Moltes amenaces comparteixen una seqüència funcional similar que s'estructura en les següents fases:
+\begin{enumerate}
+    \item \textbf{Distribució (Delivery):} El codi maliciós accedeix al seu objectiu utilitzant enginyeria social o aprofitant vulnerabilitats de xarxa.
+    \item \textbf{Execució inicial:} El malware s'executa mitjançant un binari, script o injecció de DLL. En entorns Windows, mecanismes com User Account Control (UAC) intenten mitigar-ho, tot i que existeixen múltiples tècniques de bypass UAC documentades (com rutes de registre o abús d'objectes COM elevables).
+    \item \textbf{Persistència:} Mecanismes que permeten al component romandre actiu malgrat reinicis del sistema (Run Keys del registre, tasques programades, serveis).
+    \item \textbf{Propagació / Moviment lateral:} Expansió dins d'una xarxa mitjançant l'explotació de serveis o reutilització de credencials.
+    \item \textbf{Accions malicioses:} Fase operativa final (robatori, sabotatge, xifratge de dades).
+    \item \textbf{Evasió i ocultació:} Transversal a tot el cicle, utilitzant ofuscació, encriptació de cadenes o càrrega dinàmica de llibreries per evitar detectors.
+\end{enumerate}
+
+\subsection{Tècniques d'Ofuscació}
+L'ofuscació busca fer que el codi sigui difícil d'analitzar i inhabilita les signatures tradicionals:
+\begin{itemize}
+    \item \textbf{Polimorfisme:} Generació de variants sintàctiques canviant l'aspecte extern (xifrat, permutacions) amb engines de mutació que asseguren un hash SHA256 diferent per a cada mostra, mantenint la lògica idèntica.
+    \item \textbf{Metamorfisme:} Reescriptura estructural del codi canviant instruccions i reorganitzant fluxos de forma heterogènia.
+    \item \textbf{Ofuscació d'Strings i Imports:} Ocultació de cadenes de text i imports de llibreries amb càrrega dinàmica de DLLs per complicar l'anàlisi forense.
+    \item \textbf{Packers:} Encapsulació del codi en una capa comprimida o xifrada que només es desplega en memòria en temps d'execució.
+\end{itemize}
+
+\subsection{Diferència entre User-Space i Kernel-Space}
+\begin{itemize}
+    \item \textbf{User-Space (Mode Usuari):} Entorn aïllat on operen la majoria d'aplicacions. L'aïllament de memòria incrementa l'estabilitat però impedeix interceptar crides de baix nivell o veure processos ocults.
+    \item \textbf{Kernel-Space (Mode Nucli):} Proporciona accés complet al maquinari i als components interns del sistema operatiu (drivers). Els rootkits a nivell de kernel poden alterar la informació reportada i ser completament invisibles per a les eines de user-space.
+\end{itemize}
+
+\section{Sistemes de Detecció Existents}
+L'evolució de la literatura especialitzada mostra una transició des de patrons predefinits fins a models analítics avançats:
+\begin{enumerate}
+    \item \textbf{Detecció basada en signatures:} Identificació d'un patró recognoscible (seqüència de bytes o hash representatiu). És un model ràpid i eficient amb un baix rang de falsos positius, però incapaç de detectar amenaces zero-day o variants ofuscades.
+    \item \textbf{Detecció heurística:} Anàlisi de comportaments sospitosos o característiques estructurals de forma estàtica o dinàmica (simulacions), permetent detectar codi modificat a canvi d'un major risc de falsos positius.
+    \item \textbf{Detecció basada en comportament:} Observació directa de les accions d'un programa en execució real (connexions, accessos crítics). Utilitza dades de telemetria i es pot combinar amb models com BERT per extreure característiques semàntiques.
+    \item \textbf{Detecció mitjançant sandboxing:} Execució de fitxers sospitosos en entorns virtualitzats aïllats per generar perfils de comportament de manera segura davant d'amenaces zero-day.
+    \item \textbf{Aprenentatge automàtic i Intel·ligència Artificial:} Entrenament de models (ML/DL) amb conjunts de dades massius per detectar malware polimòrfic. Presenta reptes en entorns reals com el concept drift, label noise i atacs adversaris.
+    \item \textbf{Endpoint Detection and Response (EDR):} Integració industrial de monitorització contínua, correlació d'esdeveniments, anàlisi avançada i capacitats de resposta automatitzada en temps real.
+\end{enumerate}
+
+\section{Fonaments Tecnològics de les Capes de Detecció}
+Aquesta secció introdueix els conceptes tècnics sobre els quals es construeix cada capa d'anàlisi del sistema.
+
+\subsection{Hash SHA-256 i Detecció per Empremta Digital}
+Una funció de hash criptogràfica transforma qualsevol entrada de longitud arbitrària en una sortida de mida fixa (l'empremta o \textit{digest}). L'algorisme SHA-256 produeix una sortida de 256 bits (64 caràcters hexadecimals). Les propietats fonamentals que el fan útil per a la detecció de malware són la \textbf{resistència a col·lisions} (dos fitxers diferents no produeixen el mateix hash amb probabilitat pràcticament nul·la) i el \textbf{efecte allau} (un canvi mínim al fitxer altera completament el hash).
+
+Gràcies a aquestes propietats, les bases de dades de malware com MalwareBazaar cataloguen mostres pel seu hash SHA-256. La detecció per hash és la forma de detecció més precisa i ràpida: si el hash del fitxer analitzat coincideix amb el d'una mostra coneguda, la detecció és determinista i sense falsos positius. La contrapartida és que qualsevol modificació del fitxer ---fins i tot afegir un byte--- genera un hash completament diferent i eludeix la detecció.
+\textit{Saber més:} \url{https://csrc.nist.gov/publications/detail/fips/180/4/final}
+
+\subsection{El Filtre de Bloom}
+El filtre de Bloom és una estructura de dades probabilística que permet comprovar de manera molt eficient si un element pertany a un conjunt. Utilitza un vector de bits i múltiples funcions de hash: en inserir un element, s'activen les posicions del vector corresponents als seus hashes; en consultar un element, si alguna posició és zero, l'element \textbf{certament no} pertany al conjunt (no hi ha falsos negatius). Si totes les posicions consultades estan actives, l'element \textbf{probablement} pertany al conjunt (hi pot haver falsos positius a una taxa configurable).
+
+Aplicat a la detecció de malware, un filtre de Bloom carregat amb el milió de hashes de la base de signatures permet descartar fitxers nets en temps $O(1)$ i amb molt poc consum de memòria cau. Només quan el filtre retorna positiu cal accedir al \texttt{HashMap} per a la confirmació definitiva.
+\textit{Saber més:} \url{https://en.wikipedia.org/wiki/Bloom_filter}
+
+\subsection{YARA: El Llenguatge de Regles per a la Detecció de Malware}
+YARA és un motor de coincidència de patrons dissenyat específicament per a la identificació de malware. Les regles YARA combinen cadenes de text, patrons hexadecimals i expressions lògiques per descriure característiques d'una família de malware. Una regla conté una secció \texttt{meta} amb metadades, una secció \texttt{strings} amb els patrons a cercar i una secció \texttt{condition} amb la lògica de detecció.
+
+\textbf{YARA-X} és una reimplementació moderna de YARA escrita en Rust, amb millors garanties de seguretat, rendiment superior en anàlisis paral·lels i una API més ergonòmica per a integració en altres programes Rust. Permet definir variables externes que s'injecten en temps d'execució (per exemple, la ruta o l'extensió del fitxer analitzat), enriquint la lògica de les regles amb context.
+\textit{Saber més:} \url{https://virustotal.github.io/yara-x/}
+
+\subsection{El Format PE (Portable Executable)}
+El format PE és l'estàndard de Microsoft per als fitxers executables i DLLs de Windows (\texttt{.exe}, \texttt{.dll}, \texttt{.sys}, \texttt{.scr}). Un binari PE conté una capçalera DOS, capçaleres NT (amb informació de l'arquitectura i punt d'entrada), una taula de seccions i les seccions pròpiament dites (\texttt{.text} per al codi, \texttt{.data} per a les dades, \texttt{.rdata} per a constants, etc.).
+
+Un dels elements més valuosos per a l'anàlisi estàtica és la \textbf{taula d'imports (IAT)}: conté les funcions de l'API de Windows que el binari utilitza, agrupades per DLL. L'anàlisi d'aquesta taula permet inferir el comportament probable d'un executable sense executar-lo: la presència de funcions com \texttt{VirtualAlloc} o \texttt{CreateRemoteThread} suggereix injecció de processos; la presència de \texttt{LoadLibraryA} amb pocs imports totals suggereix resolució dinàmica d'API, tècnica habitual per ocultar les funcions que realment s'utilitzen.
+\textit{Saber més:} \url{https://learn.microsoft.com/en-us/windows/win32/debug/pe-format}
+
+\subsection{Entropia de Shannon i Detecció d'Ofuscació}
+L'entropia de Shannon mesura la incertesa o aleatorietat d'una font d'informació. Per a un fitxer binari, es calcula com $H = -\sum_{i=0}^{255} p_i \log_2 p_i$, on $p_i$ és la probabilitat de cada byte. El valor màxim és 8 bits per byte, assolit quan tots els bytes apareixen amb la mateixa freqüència.
+
+El codi executable legítim típicament presenta una entropia entre 5 i 7 bits. Valors superiors a 7 bits indiquen un alt grau d'aleatorietat, consistent amb dades xifrades, comprimides o empaquetades (\textit{packed}). Molts tipus de malware empaqueten o xifren el seu contingut per eludir les signatures, cosa que es manifesta en una entropia anormalment alta en les seccions del fitxer analitzat.
+
+\subsection{Monitorització del Sistema de Fitxers}
+Els sistemes operatius moderns ofereixen APIs natives per observar canvis al sistema de fitxers en temps real sense recórrer a \textit{polling}. A Windows, l'API \texttt{ReadDirectoryChangesW} notifica canvis (creació, modificació, eliminació, reanomenament) en un directori i els seus subdirectoris. A Linux s'utilitza \texttt{inotify}.
+
+La biblioteca \texttt{notify} de l'ecosistema Rust ofereix una abstracció multiplataforma sobre aquestes APIs, permetent rebre un flux d'esdeveniments del sistema de fitxers. El repte principal en sistemes de detecció és el filtratge: cal descartar esdeveniments repetits (el sistema genera múltiples events per a una sola operació d'escriptura), evitar bucles infinits en escanejar fitxers de quarantena i gestionar la concurrència entre el fil del watcher i el fil de comunicació IPC.
+\textit{Saber més:} \url{https://docs.rs/notify/}
+
+\subsection{Quarantena i Ofuscació XOR}
+La quarantena és el mecanisme d'aïllament de fitxers sospitosos: els extreu de la seva ubicació original i els emmagatzema en un directori controlat, impedint la seva execució accidental. Per evitar que el propi sistema antivirus ---o qualsevol altra eina--- detecti les mostres en quarantena com a malware actiu, els fitxers s'ofusquen.
+
+L'operació XOR byte a byte ($b' = b \oplus k$) és la forma d'ofuscació més senzilla i suficient per a aquest propòsit. Amb una clau fixa, l'operació és simètrica: aplicar-la dues vegades retorna el fitxer original, la qual cosa permet usar la mateixa funció per a la quarantena i la restauració. L'objectiu no és la seguretat criptogràfica sinó la \textbf{immobilització funcional}: el fitxer XOR no és reconegut com a executable ni pot ser analitzat per eines que no coneguin la clau.
+
+\subsection{Comunicació entre Processos (IPC)}
+La comunicació entre processos (\textit{Inter-Process Communication}, IPC) designa els mecanismes que permeten a processos independents intercanviar dades. Les alternatives principals inclouen Unix Domain Sockets (només Unix), Named Pipes (Windows), memòria compartida o sockets TCP/IP.
+
+Asphylax utilitza un \textbf{socket TCP local} (\texttt{127.0.0.1:7878}) per la seva compatibilitat immediata entre Windows i Linux. El protocol d'aplicació és \textit{Newline-Delimited JSON} (NDJSON): cada missatge és un objecte JSON en una sola línia terminada amb \texttt{\textbackslash n}. Aquest format és fàcil de parsear de forma incremental en un flux TCP, cosa que permet implementar tant el mode petició/resposta com el mode \textit{streaming} (l'agent envia múltiples línies fins que finalitza l'operació) sobre el mateix mecanisme de transport.
+
+
+% ═══════════════════════════════════════════════════════════════════════
+\chapter{Requisits del sistema}
+\label{ch:requisits}
+% ═══════════════════════════════════════════════════════════════════════
+
+\section{Abast del Projecte}
+L'abast d'Asphylax consisteix en el desenvolupament d'un prototip funcional de sistema de detecció de malware, amb capacitat per aplicar diverses tècniques en un entorn controlat. El sistema inclou les següents funcionalitats principals:
+\begin{itemize}
+    \item Escaneig de fitxers en directoris específics del sistema.
+    \item Detecció basada en signatures exactes i signatures parcials.
+    \item Anàlisi heurística basada en regles.
+    \item Monitorització bàsica del sistema en temps real.
+    \item Mecanismes de quarantena de fitxers sospitosos.
+    \item Generació de registres de sistema i informes d'auditoria.
+    \item Interfície gràfica d'usuari per a la interacció.
+\end{itemize}
+
+\section{Requisits Funcionals i No Funcionals}
+Els requisits s'han definit progressivament al llarg del desenvolupament, seguint l'ordre d'implementació dels Epics. Es classifiquen en funcionals (RF) i no funcionals (RNF).
+
+\subsection{Requisits Funcionals}
+
+\begin{table}[H]
+\centering
+\caption{Requisits funcionals del sistema Asphylax}
+\label{tab:rf}
+\begin{tabular}{@{}llp{7.5cm}l@{}}
+\toprule
+\textbf{ID} & \textbf{Nom} & \textbf{Descripció} & \textbf{Prioritat} \\
+\midrule
+RF-01 & Escaneig de directoris     & L'agent ha de recórrer recursivament un directori donat i analitzar cada fitxer. & Alta \\
+RF-02 & Detecció per hash SHA-256  & El sistema ha d'identificar fitxers la signatura SHA-256 dels quals coincideixi amb la base de malware. & Alta \\
+RF-03 & Detecció per seccions PE   & Per a binaris Windows, calcular hashes de seccions individuals per detectar variants amb padding. & Mitjana \\
+RF-04 & Detecció per regles YARA   & Executar regles YARA-X sobre el contingut de cada fitxer. & Alta \\
+RF-05 & Anàlisi heurística         & Detectar indicadors d'ofuscació (entropia, Base64, URLs, comandes sospitoses) i calcular una puntuació de risc. & Alta \\
+RF-06 & Anàlisi de fitxers PE      & Analitzar la taula d'imports d'executables Windows per identificar funcions d'alt risc. & Mitjana \\
+RF-07 & Motor de decisió           & Agregar les evidències dels motors de detecció i classificar el fitxer (\texttt{malware}, \texttt{suspicious}, \texttt{clean}). & Alta \\
+RF-08 & Escaneig ràpid             & Mode d'escaneig limitat a ubicacions de risc i extensions perilloses. & Mitjana \\
+RF-09 & Monitorització en temps real & Detectar i analitzar fitxers nous o modificats de forma reactiva. & Alta \\
+RF-10 & Quarantena                 & Aïllar fitxers sospitosos amb ofuscació XOR, permetent la seva restauració. & Alta \\
+RF-11 & Quarantena automàtica      & En mode de monitorització, enviar automàticament a quarantena les deteccions que superin el llindar configurat. & Mitjana \\
+RF-12 & Historial d'accions        & Registrar totes les deteccions i accions en un fitxer JSON persistent. & Mitjana \\
+RF-13 & Interfície gràfica         & Proporcionar una UI per iniciar escaneigs, consultar deteccions i gestionar la quarantena. & Alta \\
+RF-14 & Configuració persistent    & Permetre modificar i desar paràmetres de l'agent (rutes, llindars, exclusions) sense editar JSON manualment. & Mitjana \\
+RF-15 & Actualització de signatures & Descarregar i integrar noves signatures de MalwareBazaar cada 24 hores de forma automàtica. & Alta \\
+RF-16 & Mostra per a l'anàlisi     & Per a l'anàlisi comparativa, el sistema ha de poder processar un conjunt de mostres de malware real i legítim de mida suficient. & Mitjana \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Requisits No Funcionals}
+
+\begin{table}[H]
+\centering
+\caption{Requisits no funcionals del sistema Asphylax}
+\label{tab:rnf}
+\begin{tabular}{@{}llp{8cm}@{}}
+\toprule
+\textbf{ID} & \textbf{Categoria} & \textbf{Descripció} \\
+\midrule
+RNF-01 & Rendiment    & L'agent ha d'explotar el paral·lelisme de la CPU per reduir el temps d'escaneig en directoris grans. \\
+RNF-02 & Rendiment    & El filtre de Bloom ha de permetre el descarte de fitxers nets en $O(1)$ sense accedir al HashMap. \\
+RNF-03 & Robustesa    & L'agent ha de continuar funcionant si la base de signatures no existeix (arrencada amb base buida). \\
+RNF-04 & Robustesa    & Les operacions d'escriptura sobre fitxers JSON han de ser atòmiques per evitar corrupcions. \\
+RNF-05 & Seguretat    & Els fitxers en quarantena han d'estar ofuscats per evitar execucions accidentals. \\
+RNF-06 & Usabilitat   & La UI no s'ha de bloquejar durant escaneigs llargs (operacions en fils de fons). \\
+RNF-07 & Portabilitat & L'agent i el client han de funcionar a Windows 10/11 de 64 bits. \\
+RNF-08 & Mantenibilitat & L'arquitectura modular ha de permetre afegir nous motors de detecció sense modificar els existents. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+% ═══════════════════════════════════════════════════════════════════════
+\chapter{Estudis i decisions}
+\label{ch:estudisdecisions}
+% ═══════════════════════════════════════════════════════════════════════
+
+\section{Decisions Tecnològiques i de Disseny}
+El sistema Asphylax adopta una arquitectura híbrida basada en la separació entre un client i un agent local. Es detallen les justificacions de les eleccions adoptades:
+
+\begin{itemize}
+    \item \textbf{Llenguatges de programació (Python + Rust):} Es combina l'ús de Python per a la capa superior (interfície gràfica, configuració i coordinació del sistema per la seva facilitat de desenvolupament) amb Rust per al nucli de l'agent local (permet funcionalitats properes al sistema operatiu, millors garanties de rendiment, seguretat de memòria i velocitat de cicle d'escaneig).
+    \item \textbf{Format de dades (JSON):} S'opta per un model basat en JSON com a format principal per a la representació, configuració i intercanvi de dades, evitant l'ús de bases de dades relacionals pesades i facilitant el desacoblament i extensibilitat.
+    \item \textbf{Motor de signatures parcials (YARA-X):} Tot i que inicialment es va plantejar un sistema propi basat en expressions regulars simples, finalment es va decidir integrar YARA-X, una implementació moderna de YARA escrita en Rust, que proporciona un sistema de regles molt més flexible, optimitzat i extensible.
+    \item \textbf{Canal de comunicació IPC (TCP local):} El disseny inicial contemplava un Unix Domain Socket orientat a entorns Linux. Durant el desenvolupament es va optar per un socket TCP local (\texttt{127.0.0.1:7878}), que ofereix compatibilitat multiplataforma immediata (Windows i Linux) mantenint el caràcter estrictament local de la comunicació, sense exposar cap port a la xarxa exterior. El protocol és \textit{newline-delimited JSON} (NDJSON), que permet tant el mode petició/resposta estàndard com el mode \textit{streaming} de múltiples línies per a operacions de llarga durada.
+    \item \textbf{Filtre de Bloom per a signatures:} Amb una base de més d'un milió de signatures SHA-256, una consulta directa al \texttt{HashMap} per a cada fitxer generava un cost de memòria cau elevat. La incorporació d'un filtre de Bloom com a primera capa de filtratge elimina la majoria de consultes negatives en temps $O(1)$ i sense falsos negatius, reduint dràsticament els accessos al HashMap.
+    \item \textbf{Anàlisi PE amb \texttt{pelite}:} Per estendre la detecció a binaris Windows sense signatures ni regles YARA aplicables, s'incorpora l'anàlisi estàtica de la taula d'imports del format Portable Executable. La biblioteca \texttt{pelite} proporciona accés directe a les estructures internes del format PE32 i PE64 sense executar el binari.
+    \item \textbf{Interfície gràfica (PyQt6):} S'escull PyQt6 per la seva maduresa, la integració nativa amb el sistema operatiu i el suport de \texttt{QThread} per a operacions asíncrones, essencial per mantenir la UI reactiva durant escaneigs llargs.
+\end{itemize}
+
+
+% ═══════════════════════════════════════════════════════════════════════
+\chapter{Anàlisi i disseny del sistema}
+\label{ch:analisidisseny}
+% ═══════════════════════════════════════════════════════════════════════
+
+\section{Arquitectura General}
+L'arquitectura d'Asphylax s'ha concebut com un sistema modular de tipus client-agent. El sistema es divideix en dos grans components unificats per un canal de comunicació local. La Figura~\ref{fig:arquitectura_general} en mostra la visió global.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    comp/.style={rectangle, rounded corners=3pt, draw=#1!70, fill=#1!10,
+                 minimum width=5cm, minimum height=0.58cm,
+                 text centered, font=\small\sffamily},
+    grp/.style={rectangle, rounded corners=5pt, draw=black!40, fill=gray!4,
+                inner sep=8pt, line width=0.7pt},
+    arr/.style={<->, line width=1.4pt, -{Stealth[length=6pt,width=5pt]}, draw=codeblue}
+]
+%% CLIENT
+\node[comp=codeblue] (c1) at (0,3.60) {Interfície Gràfica (PyQt6)};
+\node[comp=codeblue] (c2) at (0,2.90) {Controlador d'accions};
+\node[comp=codeblue] (c3) at (0,2.20) {Capa de comunicació};
+\node[comp=codeblue] (c4) at (0,1.50) {Gestor de resultats};
+\node[comp=codeblue] (c5) at (0,0.80) {Gestor de configuració};
+\node[grp, fit=(c1)(c2)(c3)(c4)(c5),
+      label={[font=\bfseries\small]above:Client --- Python / PyQt6}] (cbox) {};
+
+%% AGENT
+\node[comp=codegreen] (a1)  at (9.5,6.40) {Gestor de peticions (IPC)};
+\node[comp=codegreen] (a2)  at (9.5,5.70) {Motor d'escaneig (Rayon)};
+\node[comp=codegreen] (a3)  at (9.5,5.00) {Motor signatures exactes};
+\node[comp=codegreen] (a4)  at (9.5,4.30) {Motor YARA-X};
+\node[comp=codegreen] (a5)  at (9.5,3.60) {Motor heurístic};
+\node[comp=codegreen] (a6)  at (9.5,2.90) {Motor anàlisi PE};
+\node[comp=codegreen] (a7)  at (9.5,2.20) {Motor de decisió};
+\node[comp=codegreen] (a8)  at (9.5,1.50) {Monitor FS (notify)};
+\node[comp=codegreen] (a9)  at (9.5,0.80) {Quarantena XOR};
+\node[comp=codegreen] (a10) at (9.5,0.10) {Actualitzador (MalwareBazaar)};
+\node[grp, fit=(a1)(a2)(a3)(a4)(a5)(a6)(a7)(a8)(a9)(a10),
+      label={[font=\bfseries\small]above:Agent --- Rust}] (abox) {};
+
+%% TCP arrow
+\draw[arr] (cbox.east) --
+    node[above, font=\footnotesize\bfseries]{TCP 127.0.0.1:7878}
+    node[below, font=\scriptsize]{Protocol NDJSON}
+    (abox.west);
+\end{tikzpicture}
+\caption{Arquitectura general d'Asphylax. El client Python gestiona la interacció amb l'usuari; l'agent Rust concentra tota la lògica de detecció. La comunicació s'estableix mitjançant un socket TCP local.}
+\label{fig:arquitectura_general}
+\end{figure}
+
+\subsection{Components del Client (Python)}
+El client constitueix la capa d'interacció amb l'usuari, actuant com a control i visualització en user-space:
+\begin{itemize}
+    \item \textbf{Interfície gràfica (GUI):} Part visible que permet iniciar escaneigs, activar/desactivar la monitorització i consultar alertes.
+    \item \textbf{Controlador d'accions:} Gestiona els esdeveniments de la GUI i els tradueix en comandes estructurades.
+    \item \textbf{Capa de comunicació:} Estableix la connexió a través d'un socket TCP local, s'encarrega de la serialització de missatges JSON i rep les respostes de l'agent.
+    \item \textbf{Gestor de resultats:} Parseja i interpreta les dades rebudes per transmetre-les a la vista.
+    \item \textbf{Gestor de configuració:} Carrega i desa els paràmetres de rutes o funcionament entre execucions.
+\end{itemize}
+
+\subsection{Components de l'Agent (Rust)}
+L'agent concentra el nucli funcional i el pipeline d'anàlisi de dades en mòduls especialitzats:
+\begin{itemize}
+    \item \textbf{Gestor de peticions (Request Handler):} Punt d'entrada de l'agent que rep i distribueix les ordres del client. Implementa un servidor multi-fil: cada connexió TCP s'atén en un fil independent per evitar bloquejos durant operacions llargues.
+    \item \textbf{Motor d'escaneig (Scanner):} Recorre de manera recursiva directoris i prepara els fitxers per a l'anàlisi. Utilitza paral·lelisme de dades amb \texttt{rayon}.
+    \item \textbf{Motor de signatures exactes:} Realitza cerques instantànies de hashes SHA-256 amb filtre de Bloom com a primera capa.
+    \item \textbf{Motor de signatures parcials (YARA):} Executa l'anàlisi de patrons binaris i textuals mitjançant regles YARA.
+    \item \textbf{Motor heurístic:} Detecta indicadors de comportament sospitós per streaming del contingut del fitxer.
+    \item \textbf{Motor d'anàlisi PE:} Analitza la taula d'imports de binaris Windows (PE32/PE64) per detectar crides a funcions d'alt risc.
+    \item \textbf{Motor de decisió:} Combina les evidències dels motors previs per determinar la classificació final.
+    \item \textbf{Mòdul de monitorització en temps real:} Observa canvis en directoris i activa el procés d'anàlisi de forma reactiva.
+    \item \textbf{Gestor de quarantena:} S'encarrega d'aïllar els fitxers perillosos amb ofuscació XOR.
+    \item \textbf{Sistema d'historial:} Emmagatzema l'historial d'accions i deteccions en format JSON.
+    \item \textbf{Actualitzador automàtic:} Descarrega i integra noves signatures des de MalwareBazaar cada hora.
+    \item \textbf{Gestor de signatures:} Administra el format, càrrega i actualització de la base de coneixement.
+\end{itemize}
+
+\section{Protocol de Comunicació IPC}
+
+La comunicació entre el client Python i l'agent Rust s'implementa sobre TCP local a l'adreça \texttt{127.0.0.1:7878}. El protocol és \textit{newline-delimited JSON}: el client envia una línia JSON i l'agent respon amb una o més línies. Per a accions de streaming (\texttt{scan\_progress}, \texttt{subscribe\_monitor\_events}), la connexió es manté oberta i l'agent envia múltiples línies fins que finalitza l'operació. La Taula~\ref{tab:accions_ipc} recull totes les accions disponibles.
+
+\begin{table}[H]
+\centering
+\caption{Accions del protocol IPC d'Asphylax}
+\label{tab:accions_ipc}
+\begin{tabular}{@{}llp{6.5cm}@{}}
+\toprule
+\textbf{Acció} & \textbf{Tipus} & \textbf{Descripció} \\
+\midrule
+\texttt{ping} & Req/Resp & Comprova que l'agent és actiu \\
+\texttt{scan} & Req/Resp & Escaneig complet d'un fitxer o directori \\
+\texttt{scan\_progress} & Streaming & Escaneig amb progrés en temps real \\
+\texttt{quick\_scan} & Req/Resp & Escaneig ràpid de les ubicacions de risc \\
+\texttt{start\_monitoring} & Req/Resp & Inicia el monitor de sistema de fitxers \\
+\texttt{stop\_monitoring} & Req/Resp & Atura el monitor \\
+\texttt{get\_monitor\_status} & Req/Resp & Consulta si el monitor és actiu \\
+\texttt{subscribe\_monitor\_events} & Streaming & Connexió persistent per rebre deteccions en temps real \\
+\texttt{quarantine} & Req/Resp & Envia un fitxer a quarantena \\
+\texttt{list\_quarantine} & Req/Resp & Llista els fitxers en quarantena \\
+\texttt{restore\_quarantine} & Req/Resp & Restaura un fitxer des de quarantena \\
+\texttt{delete\_quarantine} & Req/Resp & Elimina permanentment un fitxer de quarantena \\
+\texttt{list\_history} & Req/Resp & Consulta l'historial d'accions \\
+\texttt{get\_config} & Req/Resp & Obté la configuració actual \\
+\texttt{save\_config} & Req/Resp & Desa una nova configuració \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Model de Dades}
+La configuració, l'historial i l'índex de quarantena es persisteixen com a fitxers JSON humans llegibles, el que facilita la inspecció manual i la integració futura amb altres eines. L'estructura de directoris del projecte és la següent:
+
+\begin{figure}[H]
+\centering
+\begin{tcolorbox}[
+  enhanced,
+  colback=backcolour,
+  colframe=codeblue!45,
+  arc=5pt, boxrule=0.8pt,
+  title={\small\bfseries Estructura de directoris --- Projecte Asphylax},
+  coltitle=white,
+  colbacktitle=codeblue!65,
+  fonttitle=\small\bfseries,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+]
+\begin{lstlisting}[language={}, numbers=none, frame=none,
+                   backgroundcolor=\color{backcolour},
+                   basicstyle=\ttfamily\footnotesize]
+Asphylax/
+  agent/                    <- Agent Rust
+    src/
+      main.rs
+      scanner/              <- Motor d'escaneig paral.lel (Rayon)
+      decision_engine/      <- Agregacio i classificacio final
+      heuristics/           <- Analitzador heuristic per streaming
+      signatures/           <- Bloom filter + HashMap SHA-256
+      yara_engine/          <- Motor YARA-X amb memoria cau
+      pe_analysis/          <- Analisi estatica PE32/PE64
+      monitor/              <- Monitor de sistema de fitxers
+      communication/        <- Servidor IPC multi-fil
+      quarantine/           <- Gestio de quarantena XOR
+      history/              <- Historial d'accions
+      updater/              <- Actualitzador de signatures
+      config/               <- Carrega/desament de config.json
+      models/               <- Estructures de dades compartides
+      paths/                <- Resolucio dinamica de rutes
+      bin/
+        yara_rule_validator.rs
+    Cargo.toml
+  client/                   <- Client Python/PyQt6
+    main.py
+    app/
+      ui/main_window.py
+      services/agent_client.py
+      controllers/
+  data/                     <- Base de dades i configuracio
+    config.json
+    heuristics.json
+    patterns.json
+    yara_rules_validated/   <- Regles YARA actives
+    yara_rules_disabled/    <- Regles invalides o en conflicte
+    signature-base/         <- Repositori Florian Roth (submodul)
+  quarantine/               <- Fitxers en quarantena (XOR)
+  history/                  <- history.json
+  scripts/
+    update_signatures.py
+    validate_yara_rules.py
+\end{lstlisting}
+\end{tcolorbox}
+\caption{Estructura de directoris del projecte Asphylax. Cada subdirectori de \texttt{agent/src/} correspon a un mòdul independent del pipeline de detecció.}
+\label{fig:estructura_directoris}
+\end{figure}
+
+
+% ═══════════════════════════════════════════════════════════════════════
+\chapter{Implementació i proves}
+\label{ch:implementacioproves}
+% ═══════════════════════════════════════════════════════════════════════
+
+\section{Implementació de l'EPIC 2: Motor de Signatures Exactes}
+Aquesta capa constitueix el primer mecanisme de detecció del sistema. Durant el procés d'escaneig, cada fitxer és llegit íntegrament a través d'un recorregut recursiu del sistema de fitxers i es calcula el seu hash SHA256 utilitzant la llibreria \texttt{sha2} de Rust.
+
+La base de signatures es manté en un fitxer JSON local a la ruta \texttt{data/signatures.json}. Cada entrada conté informació del hash, la família de malware, severitat, confiança, etiquetes i font d'origen. Per optimitzar el rendiment, les signatures es carreguen durant l'arrencada de l'agent en una estructura de dos nivells: un \textbf{filtre de Bloom} i un \textbf{HashMap}. Amb la base actual de més d'un milió de signatures, una consulta directa al HashMap per a cada fitxer suposaria un accés a memòria costós i amb mala localitat de memòria cau. El filtre de Bloom actua com a primer filtre de descarte en $O(1)$: si la consulta retorna negatiu, el fitxer és certament net sense necessitat d'accedir al HashMap (zero falsos negatius). Només quan el Bloom retorna positiu es consulta el HashMap per a la confirmació definitiva. La taxa de fals positiu del filtre es configura a l'1\%, el que significa que aproximadament 1 de cada 100 fitxers nets serà consultat innecessàriament al HashMap, però mai un fitxer maliciós serà descartat. La implementació utilitza la crate \texttt{bloomfilter} de l'ecosistema Rust. \textit{Saber més:} \url{https://docs.rs/bloomfilter/}
+
+Addicionalment, per a executables Windows en format PE, es calculen els hashes SHA-256 de cadascuna de les seccions del binari independentment (\texttt{.text}, \texttt{.data}, \texttt{.rdata}, etc.). Això permet detectar variants de malware que han modificat les capçaleres o afegit seccions de \textit{padding} per evadir la detecció per hash global, però que mantenen el codi maliciós original intacte en una secció específica.
+
+L'actualització de la base es recolza en el script Python \texttt{scripts/update\_signatures.py}, que descarrega les signatures de MalwareBazaar cada 24 hores i les integra de forma atòmica (escriptura a fitxer temporal seguida d'un \texttt{os.replace()}) per evitar estats inconsistents en cas de fallada durant l'escriptura. L'agent llança l'actualitzador cada hora en un fil de fons independent. MalwareBazaar és una plataforma pública d'abuse.ch que proporciona hashes SHA-256 de mostres de malware reals, catalogades per família i data. \textit{Saber més:} \url{https://bazaar.abuse.ch}
+
+\section{Implementació de l'EPIC 3: Motor de Signatures Parcials i Optimització}
+El motor de signatures parcials utilitza la integració de \texttt{YARA-X} en Rust. A diferència de les signatures exactes (que requereixen un hash idèntic), les regles YARA permeten descriure patrons estructurals o de contingut que poden aparèixer en múltiples variants d'una mateixa família de malware. Les regles es troben organitzades de forma recursiva al directori \texttt{data/yara\_rules\_validated} sota categories com ransomware, PowerShell sospitós, webshells, eines ofensives, malware Linux, Mimikatz i macros malicioses. El motor fa ús de variables externes contextuals (\texttt{filepath}, \texttt{filename}, \texttt{extension}) injectades en temps d'execució, el que permet escriure regles que adapten la seva lògica en funció de l'extensió o la ruta del fitxer analitzat. Un sistema de validació prèvia i una llista negra de regles conflictives filtren incompatibilitats entre YARA clàssic i YARA-X abans de carregar-les al motor principal. \textit{Saber més:} \url{https://virustotal.github.io/yara-x/}
+
+\subsection{Base de Regles YARA}
+Les regles provenen de dues fonts principals:
+\begin{itemize}
+    \item \textbf{Repositori \textit{signature-base} de Florian Roth:} Un dels repositoris de regles YARA més exhaustius i reconeguts de la comunitat de ciberseguretat, integrat com a submòdul Git a \texttt{data/signature-base/}. Cobreix APTs (Sofacy, Turla, Lazarus, APT28, Winnti), crim organitzat (WannaCry, REvil, Conti, DarkSide, Emotet), eines de \textit{red team} (Cobalt Strike, Metasploit, Mimikatz) i exploits recents (Log4Shell, ProxyShell, Follina). \textit{Saber més:} \url{https://github.com/Neo23x0/signature-base}
+    \item \textbf{Regles pròpies del projecte:} Regles personalitzades a \texttt{data/yara\_rules/}, organitzades en: ransomware (\texttt{ransomware\_indicators.yar}), execució de comandes (\texttt{cmd\_execution.yar}), descàrrega i execució (\texttt{download\_execute.yar}), PowerShell sospitós (\texttt{powershell.yar}), robatori de credencials (\texttt{mimikatz.yar}) i regla de test (\texttt{asphylax\_test.yar}).
+\end{itemize}
+
+\subsection{Sistema de Validació de Regles}
+No totes les regles de \textit{signature-base} compilen amb \texttt{yara-x}. S'ha implementat un sistema de validació en dos passos:
+\begin{enumerate}
+    \item \textbf{Binari validador (\texttt{yara\_rule\_validator}):} Un binari Rust independent que intenta compilar una regla i retorna codi 0 si és vàlida o $>0$ amb el missatge d'error.
+    \item \textbf{Script de validació (\texttt{scripts/validate\_yara\_rules.py}):} Itera sobre totes les regles, crida el validador per a cadascuna, les copia a \texttt{yara\_rules\_validated/} o \texttt{yara\_rules\_disabled/} i genera un informe CSV.
+\end{enumerate}
+En la versió actual, el sistema incorpora 39 regles validades de \textit{signature-base}.
+
+\subsection{Memòria Cau de Regles Compilades}
+La compilació de totes les regles YARA a l'inici de l'agent tarda uns segons. Per evitar recompilar a cada arrencada, el motor serialitza les regles compilades a \texttt{data/yara\_rules.yarc}. En els arrencades posteriors, si el fitxer de cau és present i vàlid, es carrega directament de forma instantània.
+
+\subsection{Paral·lelisme i Fil de Detecció}
+Durant les proves inicials amb directoris grans es va detectar que el recorregut i l'anàlisi seqüencial provocaven temps d'execució molt elevats. Per mitigar l'impacte en rendiment, es va introduir paral·lelisme de dades mitjançant la biblioteca \texttt{Rayon}. Rayon implementa un model de \textit{work-stealing}: els nuclis lliures roben feina dels altres, maximitzant l'ús de la CPU sense necessitat de gestionar fils manualment. El procés es divideix en dues fases:
+\begin{enumerate}
+    \item Recopilació de la llista completa de fitxers de forma ràpida (seqüencial).
+    \item Processament en paral·lel amb \texttt{par\_iter()}, distribuint la càrrega entre els nuclis disponibles de la CPU. Cada fitxer calcula de forma independent el SHA256, executa YARA, l'heurística i l'anàlisi PE, i combina els resultats al final del pipeline. Gràcies al model d'ownership de Rust, el compilador garanteix en temps de compilació que no hi hagi condicions de carrera entre els fils.
+\end{enumerate}
+\textit{Saber més:} \url{https://docs.rs/rayon/}
+
+El progrés s'actualitza de manera atòmica amb \texttt{AtomicUsize} i \texttt{compare\_exchange} per garantir que cada percentatge s'envia exactament una vegada al client. A la part superior, el client gràfic executa el procés en un fil separat mitjançant \texttt{QThread}, el que evita el bloqueig de la interfície i permet actualitzar una barra de progrés de forma asíncrona.
+
+\subsection{Escaneig Ràpid}
+A més de l'escaneig complet, s'ha implementat un mode d'escaneig ràpid que limita l'anàlisi a les ubicacions de major risc amb restriccions addicionals: profunditat màxima de recursió configurable (per defecte 0), filtratge a extensions d'alt risc (\texttt{.exe}, \texttt{.ps1}, \texttt{.bat}, \texttt{.cmd}, \texttt{.js}, \texttt{.vbs}, \texttt{.jar}, \texttt{.msi}, \texttt{.hta}, \texttt{.docm}, \texttt{.xlsm}), mida màxima de 13~MB per fitxer, exclusió de directoris de construcció (\texttt{.git}, \texttt{.venv}, \texttt{node\_modules}, \texttt{target}) i timeout YARA reduït a 5 segons per fitxer.
+
+\section{Implementació de l'EPIC 4: Anàlisi Heurística i Motor de Decisió}
+
+\subsection{Analitzador Heurístic}
+L'analitzador heurístic detecta indicadors de comportament sospitós en el contingut estàtic dels fitxers sense comparar contra cap signatura coneguda. Per gestionar fitxers de qualsevol mida sense esgotar la memòria, la lectura es fa per \textit{streaming} en blocs de 4~KB, acumulant el text analitzable fins a un límit de 2~MB.
+
+Els indicadors individuals que detecta el motor són els següents:
+
+\begin{itemize}
+    \item \textbf{Doble extensió:} Noms de fitxer amb dues extensions (p.ex. \texttt{document.pdf.exe}), tècnica habitual per camuflar executables. Puntuació: 40.
+    \item \textbf{Alta entropia per seccions:} Calcula l'entropia de Shannon de cada bloc de 4~KB i en pren el màxim. Si supera el llindar configurat (per defecte 7,1 bits), indica possible ofuscació, empaquetament o xifrat del contingut. Puntuació: 40.
+    \item \textbf{Cadenes Base64 llargues:} Detecta cadenes codificades en Base64 de longitud superior al llindar configurable (per defecte 40 caràcters), indicatiu de payloads ofuscats. Puntuació: 40.
+    \item \textbf{URLs sospitoses:} Cerca patrons d'URL al contingut. La presència d'URLs en un executable pot indicar comunicació amb servidors de comandament i control (C2). Puntuació: 30.
+    \item \textbf{PowerShell ofuscat:} Detecta l'opció \texttt{-EncodedCommand} i variants abreujades, tècnica habitual en malware que usa PowerShell com a \textit{loader}. Puntuació configurable (60 per defecte).
+    \item \textbf{Comandes sospitoses:} Detecta patrons d'execució de comandes del sistema operatiu associats a activitat maliciosa. Puntuació: 50 per defecte.
+    \item \textbf{Patró de descàrrega i execució:} Detecta la combinació de descàrrega i execució de codi des d'una font remota, indicatiu de comportament de \textit{dropper}. Puntuació: 70 per defecte.
+\end{itemize}
+
+A més dels indicadors individuals, el motor correlaciona combinacions de vectors d'atac:
+\begin{itemize}
+    \item \textbf{Base64 + URL} $\to$ \textit{medium\_risk\_combination} (60 punts)
+    \item \textbf{Doble extensió + URL} $\to$ \textit{high\_risk\_combination} (70 punts)
+    \item \textbf{Alta entropia + Base64 + URL} $\to$ \textit{high\_risk\_combination} (70 punts)
+\end{itemize}
+
+\subsection{Anàlisi de Fitxers PE}
+Per als executables Windows (\texttt{.exe}, \texttt{.dll}, \texttt{.scr}, \texttt{.sys}), s'analitza la taula d'imports del format PE32 i PE64 usant la biblioteca \texttt{pelite}, sense executar el binari. La biblioteca \texttt{pelite} proporciona accés de lectura zero-còpia a les estructures internes del format PE: capçaleres, taules de seccions i taules d'imports, de manera segura i eficient. Les funcions importades es classifiquen en categories:\textit{Saber més:} \url{https://docs.rs/pelite/}
+
+\begin{itemize}
+    \item \textbf{Injecció de processos:} \texttt{VirtualAlloc}, \texttt{VirtualProtect}, \texttt{WriteProcessMemory}, \texttt{ReadProcessMemory}, \texttt{CreateRemoteThread}, \texttt{NtWriteVirtualMemory}, \texttt{NtCreateThreadEx}. Pes: 35 punts per indicador.
+    \item \textbf{Execució de processos:} \texttt{WinExec}, \texttt{ShellExecuteA/W}, \texttt{CreateProcessA/W}. Pes: 15 punts.
+    \item \textbf{Activitat de xarxa:} \texttt{URLDownloadToFile}, \texttt{InternetOpenUrl}, \texttt{WSAStartup}, \texttt{connect}, \texttt{send}, \texttt{recv}. Pes: 10 punts.
+    \item \textbf{Resolució dinàmica d'API:} \texttt{LoadLibraryA/W}, \texttt{LoadLibraryExA/W}. Pes: 55 punts. Tècnica habitual per ocultar les importacions reals i evadir l'anàlisi estàtica.
+\end{itemize}
+
+Si un binari importa poques funcions però utilitza \texttt{LoadLibrary} (patró d'\textit{API hiding}), s'aplica un bonus addicional de 25 punts.
+
+\subsection{Motor de Decisió i Classificació}
+El motor de decisió agrega les deteccions de tots els motors i calcula una puntuació final (0--100). Les regles de puntuació són:
+
+\begin{table}[H]
+\centering
+\caption{Regles de puntuació del motor de decisió}
+\label{tab:scoring}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Motor} & \textbf{Condició} & \textbf{Puntuació} \\
+\midrule
+Hash / Hash seccions PE & Coincidència exacta & 100 (malware immediat) \\
+YARA & Severitat \texttt{critical} & 80 \\
+YARA & Severitat \texttt{high} & 70 \\
+YARA & Severitat \texttt{medium} & 50 \\
+YARA & Severitat \texttt{low} & 30 \\
+Heurística & Variable per indicador & Valor de \texttt{confidence} \\
+PE Analysis & Variable per indicador & Valor de \texttt{confidence} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La classificació final s'obté de la puntuació agregada: $\geq 80$ $\to$ \texttt{malware}, $50$--$79$ $\to$ \texttt{suspicious}, $< 50$ $\to$ \texttt{clean}. La detecció per hash és determinista i no admet ambigüitat: retorna \texttt{malware} directament independentment d'altres indicadors.
+
+\section{Implementació de l'EPIC 5: Monitorització en Temps Real}
+
+\subsection{Arquitectura del Monitor}
+El monitor de sistema de fitxers utilitza la biblioteca \texttt{notify} (versió 6.1.1), que proporciona una abstracció multiplataforma sobre les APIs natives del sistema operatiu: \texttt{ReadDirectoryChangesW} a Windows i \texttt{inotify} a Linux. Gràcies a aquesta abstracció, el codi del monitor és idèntic per a ambdues plataformes. El callback de gestió d'events s'executa en un fil intern de \texttt{notify}, independent del servidor IPC. \textit{Saber més:} \url{https://docs.rs/notify/}
+
+L'estat del monitor es comparteix entre fils a través d'\texttt{Arc<Mutex<AsphylaxFileMonitor>>}. El canal d'events del monitor cap al client Python s'implementa amb \texttt{mpsc::sync\_channel(256)}: el \texttt{Sender} pertany al fil del watcher, i el \texttt{Receiver} s'emmagatzema a l'estat compartit del servidor fins que un client el consumeix amb \texttt{subscribe\_monitor\_events}.
+
+\subsection{Filtres de Seguretat i Anti-Cooldown}
+El callback del watcher aplica múltiples filtres per evitar comportaments no desitjats:
+\begin{enumerate}
+    \item \textbf{Filtre de quarantena:} El directori \texttt{/quarantine} mai s'escaneja per evitar bucles infinits.
+    \item \textbf{Exclusions de ruta i extensió:} Respecta la configuració de l'usuari.
+    \item \textbf{Anti-cooldown:} Un \texttt{HashMap<String, Instant>} global registra l'hora del darrer escaneig de cada fitxer. Si han passat menys de 2 segons, l'event s'ignora. Evita re-escanejos repetits per events consecutius del sistema de fitxers.
+    \item \textbf{Filtre de tipus:} Només processa fitxers regulars i events de creació o modificació.
+\end{enumerate}
+
+\subsection{Streaming d'Events al Client}
+L'acció \texttt{subscribe\_monitor\_events} manté la connexió TCP oberta de forma indefinida. L'agent entra en un bucle de lectura del canal amb timeout de 5 segons: per cada detecció rebuda envia al client un missatge JSON de tipus \texttt{"monitor\_event"}; cada 5 segons sense events envia un \texttt{"heartbeat"} per detectar desconnexions; quan el watcher s'atura (\texttt{stop\_monitoring} destrueix el \texttt{Sender}, tancant el canal), l'agent notifica al client amb \texttt{"monitor\_stopped"} i tanca la connexió.
+
+\subsection{Quarantena Automàtica en Temps Real}
+Si la configuració té \texttt{auto\_quarantine.enabled = true}, cada fitxer detectat pel monitor amb una classificació igual o superior al llindar configurat s'envia automàticament a quarantena sense intervenció de l'usuari. L'event al client inclou el camp \texttt{auto\_quarantined: true} per indicar-ho a la UI.
+
+\subsection{Thread Safety al Client (PyQt6)}
+El subscriptor d'events del monitor al client Python corre en un \textit{daemon thread} de fons. PyQt6 no permet modificar widgets des de fils secundaris. La solució implementada utilitza \texttt{pyqtSignal}:
+\begin{itemize}
+    \item La finestra principal declara senyals tipats: \texttt{monitor\_event\_received(dict)}, \texttt{monitor\_stopped\_signal()}, \texttt{monitor\_error\_signal(str)}.
+    \item El callback d'events és una lambda que emet el senyal: \texttt{lambda event: self.monitor\_event\_received.emit(event)}.
+    \item Els senyals es connecten als \textit{slots} del fil principal, que actualitzen els widgets de manera segura.
+\end{itemize}
+Aquesta arquitectura garanteix que mai es produeixi una condició de carrera en l'actualització de la UI, independentment de la freqüència dels events del monitor.
+
+\section{Implementació de l'EPIC 6: Gestió de Quarantena}
+
+\subsection{Ofuscació XOR}
+Tots els fitxers enviats a quarantena s'ofusquen byte a byte amb una operació XOR amb la clau \texttt{0x5A}. L'operació XOR és simètrica (aplicar-la dues vegades retorna el contingut original), el que permet usar la mateixa funció tant per a la quarantena com per a la restauració. La còpia s'efectua per blocs de 8~KB per evitar carregar fitxers grans completament a la RAM.
+
+L'objectiu de l'ofuscació XOR no és la seguretat criptogràfica, sinó la \textbf{immobilització del malware}: el fitxer ofuscat no pot executar-se accidentalment ni ser reconegut per altres eines com a malware actiu, ja que el seu contingut binari ha estat alterat completament.
+
+\subsection{Gestió de l'Índex}
+Cada fitxer en quarantena rep un UUID v4 únic i s'emmagatzema com \texttt{quarantine/<UUID>\_<nom\_original>}. Les metadades es registren a \texttt{quarantine/quarantine\_index.json}: identificador, ruta original, ruta de quarantena, nom del fitxer, data (RFC 3339 UTC) i estat (\texttt{quarantined}, \texttt{restored} o \texttt{deleted}).
+
+\subsection{Restauració Segura}
+La restauració inclou verificacions de seguretat: el fitxer de quarantena ha d'existir físicament; la ruta original no ha d'existir (es nega la sobreescriptura de fitxers existents); es recrea el directori pare si és necessari. L'operació inversa del XOR reconstrueix el binari original.
+
+\section{Implementació del Client (Python/PyQt6)}
+
+\subsection{Interfície d'Usuari}
+La finestra principal, implementada amb PyQt6, implementa sis pestanyes funcionals. PyQt6 és el binding oficial de Python per a la biblioteca Qt6 de The Qt Company, proporcionant accés a tot el sistema de widgets, el loop d'events i el mecanisme de senyals i slots per a la comunicació entre components. \textit{Saber més:} \url{https://www.riverbankcomputing.com/software/pyqt/}
+
+Les sis pestanyes funcionals són:
+\begin{itemize}
+    \item \textbf{Escaneig:} Permet seleccionar una carpeta i iniciar un escaneig ràpid o focalitzat. El botó principal és el \texttt{LiquidScanButton}, un component visual personalitzat que implementa un efecte de líquid animat sobre una esfera 3D durant l'escaneig, amb el nivell del líquid reflectint el percentatge de progrés generat per una funció sinusoïdal.
+    \item \textbf{Heurística:} Mostra informació sobre el motor heurístic, que s'executa automàticament com a part de qualsevol escaneig.
+    \item \textbf{Monitorització:} Indicador d'estat, comptadors en temps real d'amenaces i fitxers analitzats, taula de deteccions actualitzada en temps real, i àrea de detalls ampliats per cel·la.
+    \item \textbf{Quarantena:} Gestió completa: enviar un fitxer, llistar, restaurar i eliminar permanentment, amb confirmació per a les operacions destructives.
+    \item \textbf{Historial:} Historial complet d'accions del sistema ordenat per data descendent.
+    \item \textbf{Configuració:} Modificació de tots els paràmetres de l'agent sense editar el JSON manualment, amb suport per a temes clar/fosc/sistema.
+\end{itemize}
+
+\subsection{Operacions Asíncrones}
+Per evitar bloquejar la UI durant escaneigs llargs, s'utilitzen \texttt{QThread}:
+\begin{itemize}
+    \item \texttt{ScanWorker}: executa l'escaneig focalitzat en un fil de fons, emetent \texttt{progress\_changed(int)} per actualitzar la barra de progrés i \texttt{scan\_finished(dict)} quan finalitza.
+    \item \texttt{QuickScanWorker}: executa l'escaneig ràpid en un fil de fons i emet \texttt{scan\_finished(dict)}.
+\end{itemize}
+
+\section{Descripció de Proves i Testeig}
+\todo[inline]{Espai reservat per a l'Epic 8. Cal documentar el disseny experimental, les mètriques utilitzades (Falsos Positius, Falsos Negatius, Temps d'escaneig) i l'enllaç de 3 minuts que exigeix la guia per evidenciar els aspectes més rellevants del codi desenvolupat.}
+
+
+% ═══════════════════════════════════════════════════════════════════════
+\chapter{Implantació i resultats}
+\label{ch:implantacio}
+% ═══════════════════════════════════════════════════════════════════════
+
+\section{Resultats i Grau d'Assoliment de l'Escaneig}
+El motor de signatures exactes ha permès gestionar correctament bases de dades de més d'un milió de signatures de MalwareBazaar (1.088.732 en la versió actual). La incorporació del filtre de Bloom ha reduït significativament el cost de les consultes negatives (fitxers legítims), que representen la immensa majoria dels fitxers en un escaneig real. Tot i que la càrrega inicial implica un consum considerable de memòria, el temps d'inicialització de l'agent és acceptable per a un sistema que s'executa de forma persistent en segon pla.
+
+Respecte a les signatures parcials YARA, s'ha constatat el \textit{trade-off} existent entre sensibilitat i especificitat: l'ús de regles YARA més generals facilita la detecció de variants, però incrementa el risc de falsos positius, especialment en entorns de desenvolupament o scripts legítims de PowerShell. Per aquest motiu, el motor de decisió pondera les alertes YARA amb menor confiança que una coincidència exacta de hash, i el sistema de validació de regles elimina les regles massa genèriques o conflictives.
+
+L'anàlisi heurística complementa els motors anteriors per a fitxers sense signatures conegudes. La correlació de vectors d'atac (combinació d'alta entropia, Base64 i URL) ha demostrat ser especialment útil per detectar \textit{droppers} i scripts ofuscats que eludeixen la detecció per hash i YARA.
+
+\section{Estat dels Requisits de Resposta i Limitacions Tecnològiques}
+Com a prototip acadèmic, el sistema opera completament en user-space, el que condiciona directament el seu abast funcional:
+\begin{itemize}
+    \item \textbf{Dependència de coneixement previ:} No detecta amenaces zero-day ni variants polimòrfiques complexes fora de l'entorn de signatures parcials.
+    \item \textbf{Absència de control preventiu real:} El sistema pot llançar alertes o aïllar fitxers, però no pot aturar de forma preventiva l'execució d'un procés crític a nivell de nucli, per la qual cosa no pot actuar com un sistema EDR comercial.
+    \item \textbf{Visibilitat de sistema parcial:} No es poden interceptar crides al sistema del kernel, monitoritzar operacions directes de memòria ni enumerar processos o fitxers que hagin estat ocultats activament per un rootkit real.
+    \item \textbf{Implicacions de l'entorn experimental:} El desenvolupament es valida dins d'un entorn controlat, un context segur però simplificat que pot veure's evitat per codi maliciós que contingui tècniques de detecció d'entorns virtuals.
+\end{itemize}
+
+\section{Demostració de Compliment de Normatives i Vídeo}
+\todo[inline]{Espai reservat per incloure l'enllaç al vídeo de màxim 5 minuts que demostri l'execució de la solució i el compliment de la legislació vigent (Protecció de dades digitals / LSSICE).}
+
+
+% ═══════════════════════════════════════════════════════════════════════
+\chapter{Conclusions}
+\label{ch:conclusions}
+% ═══════════════════════════════════════════════════════════════════════
+\todo[inline]{Espai reservat per al resum de conclusions. Cal diferenciar l'assoliment dels objectius acadèmics del PFG del rendiment final de l'aplicació, comentant les desviacions temporals que hagin pogut sorgir.}
+
+
+% ═══════════════════════════════════════════════════════════════════════
+\chapter{Treball futur}
+\label{ch:treballfutur}
+% ═══════════════════════════════════════════════════════════════════════
+A partir de les limitacions analitzades en el prototip, es plantegen les següents línies d'ampliació per a treballs futurs:
+\begin{itemize}
+    \item Escalabilitat del disseny modular cap a l'ús de canals remots de comunicació.
+    \item Integració de models d'intel·ligència artificial i Machine Learning per a la generació de representacions generatives o discriminatives robustes davant de variants.
+    \item Evolució del monitor cap a l'entorn de Kernel-Space mitjançant el desenvolupament de drivers o mòduls de nucli específics per detectar processos ocults.
+    \item Connexió directa i en temps real amb feeds actius de ciberseguretat.
+    \item Anàlisi dinàmica en entorn \textit{sandbox}: execució controlada de fitxers sospitosos per observar el seu comportament real.
+    \item Implementació com a servei de Windows (persistent entre reinicis) i suport multiplataforma al client.
+\end{itemize}
+
+
+% ═══════════════════════════════════════════════════════════════════════
+\chapter{Bibliografia}
+\label{ch:bibliografia}
+% ═══════════════════════════════════════════════════════════════════════
+
+\begin{thebibliography}{99}
+
+\bibitem{nist-guide}
+National Institute of Standards and Technology (NIST).
+\textit{Guide to Malware Incident Prevention and Handling for Desktops and Laptops}.
+NIST Special Publication 800-83.
+
+\bibitem{microsoft-wanna}
+Microsoft Security Blog (2017).
+\textit{WannaCrypt ransomware worm targets out-of-date systems}.
+
+\bibitem{cisa-ransom}
+Cybersecurity and Infrastructure Security Agency (CISA).
+\textit{\#StopRansomware Guide}.
+
+\bibitem{microsoft-rootkits}
+Microsoft Learn.
+\textit{Rootkits - Microsoft Defender for Endpoint}.
+
+\bibitem{csrc-glossary}
+Computer Security Resource Center (CSRC) - NIST.
+\textit{Malware - Glossary}.
+
+\bibitem{signature-detection}
+Network Threat Detection.
+\textit{Signature-based detection explained}.
+
+\bibitem{fortinet-heuristic}
+Fortinet.
+\textit{What Is Heuristic Analysis? Detection and Removal Methods}.
+
+\bibitem{springer-heuristic}
+Springer Nature Link.
+\textit{Application of Heuristic Scanning in Malware Detection}.
+
+\bibitem{plos-behavior}
+\textit{Demystifying Behavior-Based Malware Detection at Endpoints}.
+PLOS ONE, 2026.
+
+\bibitem{imperva-sandbox}
+Imperva.
+\textit{What Is Malware Sandboxing | Analysis \& Key Features}.
+
+\bibitem{springer-ml}
+\textit{Malware Detection with AI: A Comprehensive Review of Trends and Challenges with Future Directions}.
+Peer-to-Peer Networking and Applications, Springer Nature, 2025.
+
+\bibitem{fortinet-edr}
+Fortinet.
+\textit{What Is Endpoint Detection and Response (EDR)? How Does It Work?}.
+
+\bibitem{crowdstrike-edr}
+CrowdStrike.
+\textit{What is EDR? Endpoint Detection \& Response Defined}.
+
+\end{thebibliography}
+
+
+% ═══════════════════════════════════════════════════════════════════════
+\appendix
+\chapter{Annexos}
+\label{ch:annexos}
+% ═══════════════════════════════════════════════════════════════════════
+
+\section{Manual d'Usuari}
+\todo[inline]{Pendent d'omplir per l'estudiant. S'inclourà com a annex un manual explicatiu de les pantalles del client en Python i la visualització de resultats.}
+
+\section{Manual d'Instal·lació i Configuració}
+
+\subsection{Requisits del Sistema}
+\begin{itemize}
+    \item Windows 10/11 de 64 bits
+    \item Rust toolchain (1.78 o superior): \url{https://rustup.rs}
+    \item Python 3.11 o superior
+    \item Git (per gestionar el submòdul \textit{signature-base})
+\end{itemize}
+
+\subsection{Compilació de l'Agent}
+\begin{lstlisting}[language={},caption={Compilació de l'agent Rust}]
+cd agent
+cargo build --release
+cargo build --bin yara_rule_validator
+\end{lstlisting}
+
+\subsection{Preparació de l'Entorn Python}
+\begin{lstlisting}[language={},caption={Configuració de l'entorn Python}]
+python -m venv .venv
+.venv\Scripts\activate
+pip install PyQt6 requests certifi
+\end{lstlisting}
+
+\subsection{Validació de Regles YARA}
+\begin{lstlisting}[language={},caption={Validació i preparació de les regles YARA}]
+python scripts/validate_yara_rules.py
+\end{lstlisting}
+
+\subsection{Execució}
+\begin{lstlisting}[language={},caption={Execució del sistema}]
+# Terminal 1: Agent Rust (mantenir obert)
+cd agent && cargo run --bin asphylax_agent
+
+# Terminal 2: Client Python
+cd client && python main.py
+\end{lstlisting}
+
+\end{document}

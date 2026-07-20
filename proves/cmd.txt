@@ -1,0 +1,4 @@
+cmd.exe /c whoami
+hellow
+holis
+a

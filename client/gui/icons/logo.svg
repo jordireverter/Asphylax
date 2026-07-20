@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <bx:export>
+      <bx:file format="svg" path="Sin título.svg"/>
+    </bx:export>
+  </defs>
+  <path d="M 250.531 149.456 L 327.932 375.704 L 363.655 375.704 L 250.531 149.456 Z" fill="#8b0000" style="stroke-width: 1;"/>
+  <rect x="188.432" y="292.35" width="122.544" height="26.793" fill="#8b0000" style="stroke-width: 1;"/>
+  <path d="M 250.531 149.456 L 137.407 375.704 L 173.131 375.704 L 250.531 149.456 Z" fill="#ff0000" style="stroke-width: 1;"/>
+</svg>

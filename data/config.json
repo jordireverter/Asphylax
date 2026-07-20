@@ -1,0 +1,86 @@
+{
+  "max_yara_file_size_mb": 15,
+  "heuristics": {
+    "enabled": true,
+    "base64_min_length": 40,
+    "entropy_threshold": 7.0,
+    "confidence": {
+      "double_extension": 40,
+      "base64": 40,
+      "url": 30,
+      "combination": 60,
+      "high_combination": 70,
+      "powershell_encoded": 60,
+      "suspicious_command": 50,
+      "download_execute": 70
+    }
+  },
+  "pe_analysis": {
+    "enabled": true,
+    "confidence": {
+      "suspicious_import": 30,
+      "process_injection": 80,
+      "networking": 15,
+      "packer": 70
+    }
+  },
+  "monitoring": {
+    "enabled": true,
+    "path_to_watch": null
+  },
+  "exclusions": {
+    "paths": [
+      "C:/Windows",
+      "C:/Program Files",
+      "C:/Program Files (x86)",
+      "C:/$Recycle.Bin",
+      "C:/System Volume Information",
+      "C:/Recovery",
+      "C:/Users/jordi/AppData"
+    ],
+    "extensions": [
+      ".tmp",
+      ".log",
+      ".lock",
+      ".part",
+      ".crdownload",
+      ".swp"
+    ]
+  },
+  "ui": {
+    "theme": "system"
+  },
+  "auto_quarantine": {
+    "enabled": false,
+    "minimum_classification": "malware"
+  },
+  "quick_scan": {
+    "max_file_size_mb": 25,
+    "extensions": [
+      ".exe",
+      ".scr",
+      ".bat",
+      ".cmd",
+      ".ps1",
+      ".js",
+      ".vbs",
+      ".jar",
+      ".msi",
+      ".hta",
+      ".docm",
+      ".xlsm"
+    ],
+    "max_depth": 0,
+    "yara_timeout_secs": 7,
+    "excluded_dirs": [
+      ".git",
+      ".venv",
+      "__pycache__",
+      "node_modules",
+      "target",
+      "dist",
+      "build",
+      ".cache"
+    ]
+  }
+}
